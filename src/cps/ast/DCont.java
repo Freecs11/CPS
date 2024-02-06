@@ -7,7 +7,7 @@ import abstractClass.ABSDirs;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import itfIMP.ExecutionState;
+import itfIMP.requestsItfIMP.ExecutionState;
 
 public class DCont extends ABSCont {
 	private int jumps;

@@ -4,7 +4,7 @@ import abstractClass.ABSBExp;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import itfIMP.ExecutionState;
+import itfIMP.requestsItfIMP.ExecutionState;
 
 public class SBExp extends ABSBExp {
 	private final String sensorId;

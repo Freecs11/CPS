@@ -5,8 +5,8 @@ import abstractClass.ABSCont;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import itfIMP.ExecutionState;
-import itfIMP.ProcessingNodeImp;
+import itfIMP.requestsItfIMP.ExecutionState;
+import itfIMP.requestsItfIMP.ProcessingNodeImp;
 
 public class FCont extends ABSCont {
 	private final ABSBase base;

@@ -1,4 +1,4 @@
-package itfIMP;
+package itfIMP.requestsItfIMP;
 
 import java.util.Set;
 

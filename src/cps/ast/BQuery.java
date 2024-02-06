@@ -8,8 +8,8 @@ import abstractClass.ABSQuery;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import itfIMP.ExecutionState;
 import itfIMP.queryResultIMP;
+import itfIMP.requestsItfIMP.ExecutionState;
 
 public class BQuery extends ABSQuery {
 	private final ABSBExp expr;

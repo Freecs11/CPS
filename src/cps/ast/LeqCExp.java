@@ -4,7 +4,7 @@ import abstractClass.ABSCExp;
 import abstractClass.ABSRand;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import itfIMP.ExecutionState;
+import itfIMP.requestsItfIMP.ExecutionState;
 
 public class LeqCExp extends ABSCExp {
 
