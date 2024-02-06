@@ -1,0 +1,8 @@
+Node ( has sensors) :
+    - offer RequestingImplI
+    - offer SensorNodeP2PImplI
+    - offer SensorNodeP2PCI
+    - RequestResultCI is required.
+Client : 
+    - offer RequestResultCI
+    - RequestingCI is required.
