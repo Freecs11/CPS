@@ -1,9 +1,7 @@
 package cps.ast;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Map;
 
 import abstractClass.ABSCont;
@@ -12,8 +10,8 @@ import abstractClass.ABSQuery;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import itfIMP.QueryResultIMP;
 import itfIMP.SensorDataIMP;
-import itfIMP.queryResultIMP;
 
 public class GQuery extends ABSQuery {
 	private final ABSGather gather;
@@ -38,7 +36,7 @@ public class GQuery extends ABSQuery {
 	public QueryResultI eval(ExecutionStateI context) {
 		Map<String, Object> res = (Map<String, Object>) gather.eval(context);
 		Object cont = continuation.eval(context);
-		queryResultIMP currRes = (queryResultIMP) context.getCurrentResult();
+		QueryResultIMP currRes = (QueryResultIMP) context.getCurrentResult();
 		currRes.setGR(true);
 		for (Map.Entry<String, Object> entry : res.entrySet()) {
 			String key = entry.getKey();

@@ -8,7 +8,7 @@ import abstractClass.ABSQuery;
 import cps.interfaces.IParamContext;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import itfIMP.queryResultIMP;
+import itfIMP.QueryResultIMP;
 import itfIMP.requestsItfIMP.ExecutionState;
 
 public class BQuery extends ABSQuery {
@@ -34,7 +34,7 @@ public class BQuery extends ABSQuery {
 		ExecutionState contextIMP = (ExecutionState) context;
 		Boolean res = (Boolean) expr.eval(contextIMP);
 		Object cont = continuation.eval(contextIMP);
-		queryResultIMP currRes = (queryResultIMP) contextIMP.getCurrentResult();
+		QueryResultIMP currRes = (QueryResultIMP) contextIMP.getCurrentResult();
 		HashSet<String> sensors = contextIMP.getPositiveSNG();
 
 		for (String sensor : sensors) {

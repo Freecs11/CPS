@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 
-public class queryResultIMP implements QueryResultI {
+public class QueryResultIMP implements QueryResultI {
 
 	private static final long serialVersionUID = 1L;
 	private Object result;
@@ -16,7 +16,7 @@ public class queryResultIMP implements QueryResultI {
 	private ArrayList<String> positiveSN;
 	private ArrayList<SensorDataI> gatheredSensors;
 
-	public queryResultIMP(boolean isBR, boolean isGR, ArrayList<String> positiveSN,
+	public QueryResultIMP(boolean isBR, boolean isGR, ArrayList<String> positiveSN,
 			ArrayList<SensorDataI> gatheredSensors) {
 		this.isBR = isBR;
 		this.isGR = isGR;

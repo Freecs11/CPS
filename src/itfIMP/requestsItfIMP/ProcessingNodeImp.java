@@ -1,5 +1,7 @@
 package itfIMP.requestsItfIMP;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
@@ -10,54 +12,46 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
 
 public class ProcessingNodeImp implements ProcessingNodeI {
-	
+
 	private PositionI postion;
 	private Set<NodeInfoI> neighbors;
-	private SensorDataI sensorData;
 	private String nodeId;
-	
-	
+	private Map<String, SensorDataI> sensorDataMap;
 
-	public ProcessingNodeImp(PositionI postion, Set<NodeInfoI> neighbors, SensorDataI sensorData, String nodeId) {
+	public ProcessingNodeImp(PositionI postion, Set<NodeInfoI> neighbors, String nodeId) {
 		this.postion = postion;
 		this.neighbors = neighbors;
-		this.sensorData = sensorData;
 		this.nodeId = nodeId;
+		this.sensorDataMap = new HashMap<>();
 	}
 
 	public ProcessingNodeImp() {
-		// TODO Auto-generated constructor stub
+		this.sensorDataMap = new HashMap<>();
 	}
-	
+
 	@Override
 	public String getNodeIdentifier() {
-		// TODO Auto-generated method stub
 		return this.nodeId;
 	}
 
 	@Override
 	public PositionI getPosition() {
-		// TODO Auto-generated method stub
 		return this.postion;
 	}
-	
 
 	@Override
 	public Set<NodeInfoI> getNeighbours() {
-		// TODO Auto-generated method stub
 		return this.neighbors;
 	}
 
 	@Override
 	public SensorDataI getSensorData(String sensorIdentifier) {
-		// TODO Auto-generated method stub
-		return this.sensorData;
+		return this.sensorDataMap.get(sensorIdentifier);
 	}
 
 	@Override
 	public QueryResultI propagateRequest(String nodeIdentifier, RequestContinuationI requestContinuation)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -84,14 +78,6 @@ public class ProcessingNodeImp implements ProcessingNodeI {
 		this.neighbors = neighbors;
 	}
 
-	public SensorDataI getSensorData() {
-		return sensorData;
-	}
-
-	public void setSensorData(SensorDataI sensorData) {
-		this.sensorData = sensorData;
-	}
-
 	public String getNodeId() {
 		return nodeId;
 	}
@@ -100,4 +86,11 @@ public class ProcessingNodeImp implements ProcessingNodeI {
 		this.nodeId = nodeId;
 	}
 
+	public Map<String, SensorDataI> getSensorDataMap() {
+		return sensorDataMap;
+	}
+
+	public void setSensorDataMap(Map<String, SensorDataI> sensorDataMap) {
+		this.sensorDataMap = sensorDataMap;
+	}
 }

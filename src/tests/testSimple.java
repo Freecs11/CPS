@@ -7,6 +7,12 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import cps.ast.AndBExp;
+import cps.ast.BQuery;
+import cps.ast.CExpBExp;
+import cps.ast.CRand;
+import cps.ast.ECont;
+import cps.ast.EQCexp;
 import cps.ast.FGather;
 import cps.ast.GQuery;
 import cps.ast.GeqCExp;
@@ -15,12 +21,6 @@ import cps.ast.OrBExp;
 import cps.ast.Position;
 import cps.ast.RGather;
 import cps.ast.SRand;
-import cps.ast.AndBExp;
-import cps.ast.BQuery;
-import cps.ast.CExpBExp;
-import cps.ast.CRand;
-import cps.ast.ECont;
-import cps.ast.EQCexp;
 import cps.interfaces.IParamContext;
 
 public class testSimple {
