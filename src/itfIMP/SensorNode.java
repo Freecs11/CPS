@@ -22,6 +22,7 @@ public class SensorNode implements RequestingImplI, NodeInfoI {
     private PositionIMP position;
     private double range;
     private EndPointDescriptorI p2pEndPointInfo;
+    private Map<String, SensorDataI> sensors;
 
     public SensorNode(String nodeIdentifier, EndPointDescriptorI endPointInfo, PositionIMP position, double range,
             EndPointDescriptorI p2pEndPointInfo) {
@@ -31,13 +32,26 @@ public class SensorNode implements RequestingImplI, NodeInfoI {
         this.range = range;
         this.p2pEndPointInfo = p2pEndPointInfo;
         ProcessingNodeImp node = new ProcessingNodeImp(position, null, nodeIdentifier);
-        Map<String, SensorDataI> sensors = new HashMap<>();
+        sensors = new HashMap<>();
         SensorDataIMP sensor = new SensorDataIMP(nodeIdentifier, "temperature", 20.0, Instant.now());
         SensorDataIMP sensor2 = new SensorDataIMP(nodeIdentifier, "humidity", 50.0, Instant.now());
         SensorDataIMP sensor3 = new SensorDataIMP(nodeIdentifier, "light", 100.0, Instant.now());
         sensors.put("light", sensor3);
         sensors.put("humidity", sensor2);
         sensors.put("temperature", sensor);
+        node.setSensorDataMap(sensors);
+        this.context = new ExecutionState();
+        this.context.updateProcessingNode(node);
+    }
+
+    public SensorNode(String nodeIdentifier, EndPointDescriptorI endPointInfo, PositionIMP position, double range,
+            EndPointDescriptorI p2pEndPointInfo, Map<String, SensorDataI> sensors) {
+        this.nodeIdentifier = nodeIdentifier;
+        this.endPointInfo = endPointInfo;
+        this.position = position;
+        this.range = range;
+        this.p2pEndPointInfo = p2pEndPointInfo;
+        ProcessingNodeImp node = new ProcessingNodeImp(position, null, nodeIdentifier);
         node.setSensorDataMap(sensors);
         this.context = new ExecutionState();
         this.context.updateProcessingNode(node);

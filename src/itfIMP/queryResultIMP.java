@@ -128,6 +128,9 @@ public class QueryResultIMP implements QueryResultI {
 	public String toString() {
 		// print the result of the query in a readable format
 		if (this.isBooleanRequest()) {
+			if (this.positiveSN.isEmpty()) {
+				return "No positive sensor nodes";
+			}
 			String result = "Positive Sensor Nodes: ";
 			for (String sn : this.positiveSN) {
 				result += sn + " ";

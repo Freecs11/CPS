@@ -36,7 +36,7 @@ public class BQuery extends ABSQuery {
 		Object cont = continuation.eval(contextIMP);
 		QueryResultIMP currRes = (QueryResultIMP) contextIMP.getCurrentResult();
 		HashSet<String> sensors = contextIMP.getPositiveSNG();
-
+		currRes.setBR(true);
 		for (String sensor : sensors) {
 			currRes.addPositiveSN(sensor);
 		}
