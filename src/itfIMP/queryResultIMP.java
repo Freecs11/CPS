@@ -16,6 +16,13 @@ public class QueryResultIMP implements QueryResultI {
 	private ArrayList<String> positiveSN;
 	private ArrayList<SensorDataI> gatheredSensors;
 
+	public QueryResultIMP() {
+		this.isBR = false;
+		this.isGR = false;
+		this.positiveSN = new ArrayList<>();
+		this.gatheredSensors = new ArrayList<>();
+	}
+
 	public QueryResultIMP(boolean isBR, boolean isGR, ArrayList<String> positiveSN,
 			ArrayList<SensorDataI> gatheredSensors) {
 		this.isBR = isBR;
@@ -115,5 +122,24 @@ public class QueryResultIMP implements QueryResultI {
 			this.positiveSN = new ArrayList<>();
 		}
 		this.positiveSN.add(sensorId);
+	}
+
+	@Override
+	public String toString() {
+		// print the result of the query in a readable format
+		if (this.isBooleanRequest()) {
+			String result = "Positive Sensor Nodes: ";
+			for (String sn : this.positiveSN) {
+				result += sn + " ";
+			}
+			return result;
+		} else if (this.isGatherRequest()) {
+			String result = "Gathered Sensors: ";
+			for (SensorDataI sensor : this.gatheredSensors) {
+				result += sensor.toString() + " ";
+			}
+			return result;
+		}
+		return "No result";
 	}
 }

@@ -24,6 +24,7 @@ public class ExecutionState implements ExecutionStateI {
 
 	public ExecutionState() {
 		this.positiveSNG = new HashSet<>();
+		this.queryResult = new QueryResultIMP();
 	}
 
 	public HashSet<String> getPositiveSNG() {
@@ -133,6 +134,11 @@ public class ExecutionState implements ExecutionStateI {
 
 	public void addPositiveSN(String sn) {
 		this.positiveSNG.add(sn);
+	}
+
+	@Override
+	public boolean isContinuationSet() {
+		return this.isFlooding() && this.isDirectional();
 	}
 
 }

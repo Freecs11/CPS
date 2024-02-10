@@ -6,8 +6,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/bcm/cps/sensor-network-interfaces.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/bcm/cps/BCM4Java-28112023.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Freecs/Desktop/CPS-2024/BCM4Java-28112023.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Freecs/Downloads/livraison-3/livraison-3/sensor-network-interfaces.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

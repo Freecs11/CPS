@@ -4,6 +4,7 @@ import bcm.interfaces.ports.NodeComponentInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
@@ -15,11 +16,11 @@ public class NodeComponent extends AbstractComponent {
     protected final SensorNode sensorNode;
     protected final NodeComponentInboundPort inboundPort;
 
-    protected NodeComponent(
+    protected NodeComponent(String uri,
             String sensorNodeInboundPortURI) throws Exception {
         // only one thread to ensure the serialised execution of services
         // inside the component.
-        super(1, 0);
+        super(uri, 1, 0);
         assert sensorNodeInboundPortURI != null;
 
         this.sensorNode = new SensorNode("node1", null, new PositionIMP(20.2, 40.2), 0, null);
@@ -32,6 +33,19 @@ public class NodeComponent extends AbstractComponent {
 
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
+    }
+
+    @Override
+    public void start() throws ComponentStartException {
+        super.start();
+        this.logMessage("starting NodeComponent component.");
+    }
+
+    @Override
+    public void finalise() throws Exception {
+        this.logMessage("stopping provider component.");
+        this.printExecutionLogOnFile("provider");
+        super.finalise();
     }
 
     @Override

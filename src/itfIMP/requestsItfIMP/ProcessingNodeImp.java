@@ -49,19 +49,6 @@ public class ProcessingNodeImp implements ProcessingNodeI {
 		return this.sensorDataMap.get(sensorIdentifier);
 	}
 
-	@Override
-	public QueryResultI propagateRequest(String nodeIdentifier, RequestContinuationI requestContinuation)
-			throws Exception {
-		return null;
-	}
-
-	@Override
-	public void propagateRequestAsync(String nodeIdentifier, RequestContinuationI requestContinuation)
-			throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
 	public PositionI getPostion() {
 		return postion;
 	}

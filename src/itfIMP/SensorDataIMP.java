@@ -72,4 +72,10 @@ public class SensorDataIMP implements SensorDataI {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "SensorDataIMP [nodeIdentifier=" + nodeIdentifier + ", sensorIdentifier=" + sensorIdentifier + ", value="
+                + value + ", timestamp=" + timestamp + ", type=" + type + "]";
+    }
+
 }

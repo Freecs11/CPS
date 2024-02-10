@@ -18,13 +18,13 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
             ComponentI owner) throws Exception {
         super(uri, RequestingCI.class, owner);
         assert uri != null;
-        assert owner instanceof NodeComponent;
+        // assert owner instanceof NodeComponent;
     }
 
     public NodeComponentInboundPort(ComponentI owner)
             throws Exception {
         super(RequestingCI.class, owner);
-        assert owner instanceof NodeComponent;
+        // assert owner instanceof NodeComponent;
     }
 
     @Override
@@ -33,6 +33,7 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
                 new AbstractComponent.AbstractService<QueryResultI>() {
                     @Override
                     public QueryResultI call() throws Exception {
+                        System.out.println("NodeComponentInboundPort.execute");
                         return ((NodeComponent) this.getServiceOwner()).returnQueryResult(request);
                     }
                 });
@@ -40,7 +41,6 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'executeAsync'");
     }
 
@@ -51,13 +51,7 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
 
     @Override
     public boolean isOfferedInterface(Class<? extends OfferedCI> inter) {
-        if (inter == null) {
-            return false;
-        } else if (inter == NodeComponent.class) {
-            return true;
-        } else {
-            return false;
-        }
+        return inter.equals(RequestingCI.class);
     }
 
 }
