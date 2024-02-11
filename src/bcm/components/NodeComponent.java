@@ -36,20 +36,21 @@ public class NodeComponent extends AbstractComponent {
     }
 
     @Override
-    public void start() throws ComponentStartException {
+    public synchronized void start() throws ComponentStartException {
         super.start();
         this.logMessage("starting NodeComponent component.");
     }
 
     @Override
-    public void finalise() throws Exception {
+    public synchronized void finalise() throws Exception {
         this.logMessage("stopping provider component.");
         this.printExecutionLogOnFile("provider");
         super.finalise();
+        // System.out.println("NodeComponent finalise");
     }
 
     @Override
-    public void shutdown() throws ComponentShutdownException {
+    public synchronized void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
             this.inboundPort.unpublishPort();
@@ -57,10 +58,11 @@ public class NodeComponent extends AbstractComponent {
             throw new ComponentShutdownException(e);
         }
         super.shutdown();
+        // System.out.println("NodeComponent shutdown");
     }
 
     @Override
-    public void shutdownNow() throws ComponentShutdownException {
+    public synchronized void shutdownNow() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
             this.inboundPort.unpublishPort();
@@ -68,6 +70,7 @@ public class NodeComponent extends AbstractComponent {
             throw new ComponentShutdownException(e);
         }
         super.shutdownNow();
+        // System.out.println("NodeComponent shutdownNow");
     }
 
     public QueryResultI returnQueryResult(RequestI request) throws Exception {

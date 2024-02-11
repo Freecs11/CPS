@@ -1,6 +1,5 @@
 package bcm.components;
 
-import bcm.connector.NodeConnector;
 import bcm.interfaces.ports.ClientComponentOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -15,9 +14,7 @@ import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
-import query.ast.FinalGather;
-import query.ast.GatherQuery;
-import query.ast.RecursiveGather;
+
 import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class })
@@ -44,7 +41,7 @@ public class ClientComponent extends AbstractComponent {
     }
 
     @Override
-    public void start() throws ComponentStartException {
+    public synchronized void start() throws ComponentStartException {
         this.logMessage("starting client component.");
         super.start();
         // try {
@@ -83,10 +80,13 @@ public class ClientComponent extends AbstractComponent {
     }
 
     @Override
-    public void finalise() throws Exception {
-        this.doPortDisconnection(this.outboundPort.getPortURI());
+    public synchronized void finalise() throws Exception {
+        if (this.outboundPort.connected()) {
+            this.doPortDisconnection(this.outboundPort.getPortURI());
+        }
         this.outboundPort.unpublishPort();
         super.finalise();
+        // System.out.println("finalise ClientComponent");
     }
 
 }
