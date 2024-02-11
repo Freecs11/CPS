@@ -1,18 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="3aaf7aa0-a32a-4c55-a21e-ac0de72b4bf8" name="Changes" comment="" />
+    <list default="true" id="3aaf7aa0-a32a-4c55-a21e-ac0de72b4bf8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/BCM4Java_28112023.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/sensor_network_interfaces.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/provider.log" beforeDir="false" afterPath="$PROJECT_DIR$/provider.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSBExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractBooleanExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSCExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractConditionalExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSCont.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractContinuation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSDir.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSDirs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractDirections.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSGather.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractGather.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/abstractClass/ABSRand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/abstractClass/AbstractRand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/ABase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/ABase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/AndBExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/AndBExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/BQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/BQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/CExpBExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/CExpBExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/CRand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/CRand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/DCont.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/DCont.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/ECont.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/ECont.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/EQCexp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/EQCexp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/FCont.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/FCont.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/FDirs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/FDirs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/FGather.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/FGather.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/GCExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/GCExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/GQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/GQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/GeqCExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/GeqCExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/LCExpr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/LCExpr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/LeqCExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/LeqCExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/NotBExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/NotBExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/OrBExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/OrBExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/RBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/RBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/RDirs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/RDirs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/RGather.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/RGather.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/SBExp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/SBExp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cps/ast/SRand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cps/ast/SRand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/itfIMP/SensorNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/itfIMP/SensorNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/itfIMP/queryResultIMP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/itfIMP/QueryResultIMP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/itfIMP/requestsItfIMP/ExecutionState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/itfIMP/requestsItfIMP/ExecutionState.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2buVVVJL9Wq4IG0fyP1VBEjoqWZ" />
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
@@ -24,9 +77,19 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Freecs/Desktop/M1/CPS/cps",
+    "last_opened_file_path": "C:/Users/Admin/Downloads/livraison-3/livraison-3/sensor-network-interfaces.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -46,10 +109,23 @@
       <option name="presentableId" value="Default" />
       <updated>1707064975303</updated>
       <workItem from="1707064976459" duration="11000" />
+      <workItem from="1707643435608" duration="59000" />
+      <workItem from="1707643516984" duration="613000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

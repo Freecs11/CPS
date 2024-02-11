@@ -8,12 +8,12 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
-import itfIMP.PositionIMP;
-import itfIMP.SensorNode;
+import implementation.PositionIMPL;
+import implementation.SensorNodeIMPL;
 
 @OfferedInterfaces(offered = { RequestingCI.class })
 public class NodeComponent extends AbstractComponent {
-    protected final SensorNode sensorNode;
+    protected final SensorNodeIMPL sensorNode;
     protected final NodeComponentInboundPort inboundPort;
 
     protected NodeComponent(String uri,
@@ -23,7 +23,7 @@ public class NodeComponent extends AbstractComponent {
         super(uri, 1, 0);
         assert sensorNodeInboundPortURI != null;
 
-        this.sensorNode = new SensorNode("node1", null, new PositionIMP(20.2, 40.2), 0, null);
+        this.sensorNode = new SensorNodeIMPL("node1", null, new PositionIMPL(20.2, 40.2), 0, null);
         this.inboundPort = new NodeComponentInboundPort(sensorNodeInboundPortURI,
                 this);
         this.inboundPort.publishPort();

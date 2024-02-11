@@ -1,24 +1,24 @@
 package bcm.components;
 
-import bcm.connector.nodeConnector;
+import bcm.connector.NodeConnector;
 import bcm.interfaces.ports.ClientComponentOutboundPort;
-import cps.ast.AndBExp;
-import cps.ast.BQuery;
-import cps.ast.CExpBExp;
-import cps.ast.CRand;
-import cps.ast.ECont;
-import cps.ast.EQCexp;
-import cps.ast.FGather;
-import cps.ast.GQuery;
-import cps.ast.RGather;
-import cps.ast.SRand;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
-import itfIMP.RequestIMP;
+import implementation.RequestIMPL;
+import query.ast.AndBooleanExpr;
+import query.ast.BooleanQuery;
+import query.ast.ConditionalExprBooleanExpr;
+import query.ast.ConstantRand;
+import query.ast.EmptyContinuation;
+import query.ast.EqualConditionalExpr;
+import query.ast.FinalGather;
+import query.ast.GatherQuery;
+import query.ast.RecursiveGather;
+import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class })
 public class ClientComponent extends AbstractComponent {
@@ -61,10 +61,13 @@ public class ClientComponent extends AbstractComponent {
         super.execute();
         // GQuery query = new GQuery(
         // new RGather("temperature", new FGather("humidity")), new ECont());
-        AndBExp res = new AndBExp(new CExpBExp(new EQCexp(new SRand("humidity"), new CRand(15.0))),
-                new CExpBExp(new EQCexp(new SRand("temperature"), new CRand(15.0))));
-        BQuery query = new BQuery(res, new ECont());
-        this.request = new RequestIMP("req1", query, false, null);
+        AndBooleanExpr res = new AndBooleanExpr(
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("humidity"), new ConstantRand(15.0))),
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("temperature"), new ConstantRand(15.0))));
+        BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
+        this.request = new RequestIMPL("req1", query, false, null);
         RequestI re = this.request;
         this.runTask(new AbstractTask() {
             @Override

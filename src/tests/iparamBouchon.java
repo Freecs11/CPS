@@ -2,25 +2,25 @@ package tests;
 
 import java.util.Map;
 
-public class iparamBouchon implements cps.interfaces.IParamContext {
-    private cps.ast.Position position;
+public class iparamBouchon implements query.interfaces.IParamContext {
+    private query.ast.Position position;
     private String nodeId;
 
     Map<String, Double> map;
 
-    public iparamBouchon(cps.ast.Position position, String nodeId) {
+    public iparamBouchon(query.ast.Position position, String nodeId) {
         this.position = position;
         this.nodeId = nodeId;
         this.map = Map.of("vent", 15.0, "eau", 30.0);
     }
 
     @Override
-    public cps.ast.Position getPosition() {
+    public query.ast.Position getPosition() {
         return this.position;
     }
 
     @Override
-    public void setPosition(cps.ast.Position pos) {
+    public void setPosition(query.ast.Position pos) {
         this.position = pos;
     }
 

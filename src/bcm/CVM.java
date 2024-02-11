@@ -2,13 +2,10 @@ package bcm;
 
 import bcm.components.ClientComponent;
 import bcm.components.NodeComponent;
-import bcm.connector.nodeConnector;
-import bcm.interfaces.ports.ClientComponentOutboundPort;
-import bcm.interfaces.ports.NodeComponentInboundPort;
+import bcm.connector.NodeConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
-import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 
 public class CVM extends AbstractCVM {
 
@@ -57,19 +54,18 @@ public class CVM extends AbstractCVM {
         // Creation phase
         // ---------------------------------------------------------------------
 
-        
         // create the node component
         this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                new Object[] { 
-                		NODE_COMPONENT_URI,
+                new Object[] {
+                        NODE_COMPONENT_URI,
                         URIProviderInboundPortURI });
-        
+
         // create the client component
         this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                 new Object[] {
                         URIGetterOutboundPortURI,
                         CLIENT_COMPONENT_URI,
-                        URIProviderInboundPortURI});
+                        URIProviderInboundPortURI });
         assert this.isDeployedComponent(this.uriNodeURI);
         this.toggleTracing(this.uriNodeURI);
         this.toggleLogging(this.uriNodeURI);
@@ -84,7 +80,7 @@ public class CVM extends AbstractCVM {
 
         // do the connection
         this.doPortConnection(this.uriClientURI, URIGetterOutboundPortURI, URIProviderInboundPortURI,
-                nodeConnector.class.getCanonicalName());
+                NodeConnector.class.getCanonicalName());
 
         // ---------------------------------------------------------------------
         // Deployment done
