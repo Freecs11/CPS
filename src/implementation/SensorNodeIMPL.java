@@ -16,6 +16,10 @@ import implementation.requestsIMPL.ExecutionStateIMPL;
 import implementation.requestsIMPL.ProcessingNodeIMPL;
 
 public class SensorNodeIMPL implements RequestingImplI, NodeInfoI {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3864106092235943836L;
     private ExecutionStateIMPL context;
     private String nodeIdentifier;
     private EndPointDescriptorI endPointInfo;
@@ -33,9 +37,9 @@ public class SensorNodeIMPL implements RequestingImplI, NodeInfoI {
         this.p2pEndPointInfo = p2pEndPointInfo;
         ProcessingNodeIMPL node = new ProcessingNodeIMPL(position, null, nodeIdentifier);
         sensors = new HashMap<>();
-        SensorDataIMPL sensor = new SensorDataIMPL(nodeIdentifier, "temperature", 20.0, Instant.now());
-        SensorDataIMPL sensor2 = new SensorDataIMPL(nodeIdentifier, "humidity", 50.0, Instant.now());
-        SensorDataIMPL sensor3 = new SensorDataIMPL(nodeIdentifier, "light", 100.0, Instant.now());
+        SensorDataIMPL sensor = new SensorDataIMPL(nodeIdentifier, "temperature", 20.0, Instant.now(), Double.class);
+        SensorDataIMPL sensor2 = new SensorDataIMPL(nodeIdentifier, "humidity", 50.0, Instant.now(), Double.class);
+        SensorDataIMPL sensor3 = new SensorDataIMPL(nodeIdentifier, "light", 100.0, Instant.now(), Double.class);
         sensors.put("light", sensor3);
         sensors.put("humidity", sensor2);
         sensors.put("temperature", sensor);

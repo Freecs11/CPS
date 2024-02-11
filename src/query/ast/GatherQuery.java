@@ -41,8 +41,14 @@ public class GatherQuery extends AbstractQuery {
 		for (Map.Entry<String, Object> entry : res.entrySet()) {
 			String key = entry.getKey();
 			Object value = entry.getValue();
+			Class<? extends Serializable> type = null;
+			if (value instanceof Double) {
+				type = Double.class;
+			} else if (value instanceof Boolean) {
+				type = Boolean.class;
+			}
 			SensorDataIMPL sensorData = new SensorDataIMPL(context.getProcessingNode().getNodeIdentifier(),
-					key, (Serializable) value, Instant.now());
+					key, (Serializable) value, Instant.now(), type);
 			currRes.addToGatheredSensors(sensorData);
 		}
 		return currRes;

@@ -14,7 +14,9 @@ import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
-
+import query.ast.FinalGather;
+import query.ast.GatherQuery;
+import query.ast.RecursiveGather;
 import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class })
@@ -56,14 +58,16 @@ public class ClientComponent extends AbstractComponent {
     @Override
     public void execute() throws Exception {
         super.execute();
-        // GQuery query = new GQuery(
-        // new RGather("temperature", new FGather("humidity")), new ECont());
-        AndBooleanExpr res = new AndBooleanExpr(
-                new ConditionalExprBooleanExpr(
-                        new EqualConditionalExpr(new SensorRand("humidity"), new ConstantRand(15.0))),
-                new ConditionalExprBooleanExpr(
-                        new EqualConditionalExpr(new SensorRand("temperature"), new ConstantRand(15.0))));
-        BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
+        GatherQuery query = new GatherQuery(
+                new RecursiveGather("temperature", new FinalGather("humidity")), new EmptyContinuation());
+        // AndBooleanExpr res = new AndBooleanExpr(
+        // new ConditionalExprBooleanExpr(
+        // new EqualConditionalExpr(new SensorRand("humidity"), new
+        // ConstantRand(15.0))),
+        // new ConditionalExprBooleanExpr(
+        // new EqualConditionalExpr(new SensorRand("temperature"), new
+        // ConstantRand(15.0))));
+        // BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
         this.request = new RequestIMPL("req1", query, false, null);
         RequestI re = this.request;
         this.runTask(new AbstractTask() {

@@ -15,12 +15,14 @@ public class SensorDataIMPL implements SensorDataI {
     private Instant timestamp;
     private Class<? extends Serializable> type;
 
-    public SensorDataIMPL(String nodeIdentifier, String sensorIdentifier, Serializable value, Instant timestamp) {
+    public SensorDataIMPL(String nodeIdentifier, String sensorIdentifier, Serializable value, Instant timestamp,
+            Class<? extends Serializable> type) {
         super();
         this.nodeIdentifier = nodeIdentifier;
         this.sensorIdentifier = sensorIdentifier;
         this.value = value;
         this.timestamp = timestamp;
+        this.type = type;
     }
 
     @Override
@@ -74,8 +76,11 @@ public class SensorDataIMPL implements SensorDataI {
 
     @Override
     public String toString() {
-        return "SensorDataIMP [nodeIdentifier=" + nodeIdentifier + ", sensorIdentifier=" + sensorIdentifier + ", value="
-                + value + ", timestamp=" + timestamp + ", type=" + type + "]";
+        return "**************************" + "\nSensorDataIMP [nodeIdentifier=" + nodeIdentifier
+                + "\n sensorIdentifier="
+                + sensorIdentifier
+                + "\n value="
+                + value + "]\n";
     }
 
 }
