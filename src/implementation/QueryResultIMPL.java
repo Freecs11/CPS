@@ -9,9 +9,7 @@ public class QueryResultIMPL implements QueryResultI {
 
 	private static final long serialVersionUID = 1L;
 	private Object result;
-
 	private boolean isBR;
-
 	private boolean isGR;
 	private ArrayList<String> positiveSN;
 	private ArrayList<SensorDataI> gatheredSensors;
@@ -65,16 +63,8 @@ public class QueryResultIMPL implements QueryResultI {
 		this.result = result;
 	}
 
-	public boolean isBR() {
-		return isBR;
-	}
-
 	public void setBR(boolean isBR) {
 		this.isBR = isBR;
-	}
-
-	public boolean isGR() {
-		return isGR;
 	}
 
 	public void setGR(boolean isGR) {
