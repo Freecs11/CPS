@@ -3,16 +3,19 @@ package bcm.components;
 import bcm.interfaces.ports.NodeComponentInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
+import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 import implementation.SensorNodeIMPL;
 
 @OfferedInterfaces(offered = { RequestingCI.class })
+@RequiredInterfaces(required = { RegistrationCI.class })
 public class NodeComponent extends AbstractComponent {
     protected final SensorNodeIMPL sensorNode;
     protected final NodeInfoIMPL nodeInfo;

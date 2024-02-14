@@ -7,6 +7,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
+import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import implementation.RequestIMPL;
 import query.ast.AndBooleanExpr;
 import query.ast.BooleanQuery;
@@ -19,7 +20,7 @@ import query.ast.GatherQuery;
 import query.ast.RecursiveGather;
 import query.ast.SensorRand;
 
-@RequiredInterfaces(required = { RequestingCI.class })
+@RequiredInterfaces(required = { RequestingCI.class, LookupCI.class })
 public class ClientComponent extends AbstractComponent {
     protected String nodeComponentInboundPortURI;
     protected ClientComponentOutboundPort outboundPort;
