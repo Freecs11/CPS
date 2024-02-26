@@ -122,7 +122,7 @@ public class CVM extends AbstractCVM {
     public static void main(String[] args) {
         try {
             CVM cvm = new CVM();
-            cvm.startStandardLifeCycle(2000L);
+            cvm.startStandardLifeCycle(20000L);
             Thread.sleep(10000L);
             System.exit(0);
         } catch (Exception e) {
