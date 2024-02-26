@@ -41,7 +41,7 @@ public class RegistryComponent extends AbstractComponent {
             this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);
             this.lookUpInboundPort.publishPort();
             this.registryInboundPort.publishPort();
-            System.out.println("RegistryComponent constructor done");
+            System.err.println("RegistryComponent constructor done");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,7 +50,7 @@ public class RegistryComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
-        this.logMessage("starting NodeComponent component.");
+        this.logMessage("starting Registry component.");
     }
 
     public void addNodeToMap(NodeInfoI nodeInfo) {

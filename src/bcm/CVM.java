@@ -105,7 +105,9 @@ public class CVM extends AbstractCVM {
         // URIProviderInboundPortURI,
         // NodeConnector.class.getCanonicalName());
 
-        this.doPortConnection(this.uriClientURI, CLIENTS_OUT_BOUND_PORT_URI, REGISTER_IN_BOUND_PORT_URI,
+        this.doPortConnection(this.uriClientURI, 
+        		CLIENTS_OUT_BOUND_PORT_URI, 
+        		LOOKUP_IN_BOUND_PORT_URI,
                 LookUpRegistryConnector.class.getCanonicalName());
         // ---------------------------------------------------------------------
         // Deployment done

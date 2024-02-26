@@ -15,7 +15,12 @@ import implementation.LookUpIMPL;
 public class ClientRegisterOutboundPort extends AbstractOutboundPort
         implements LookupCI {
 
-    public ClientRegisterOutboundPort(String uri, ComponentI owner) throws Exception {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3133551134835072507L;
+
+	public ClientRegisterOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, LookupCI.class, owner);
         assert uri != null;
         // assert owner instanceof ClientComponent;

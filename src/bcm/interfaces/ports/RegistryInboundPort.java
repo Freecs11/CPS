@@ -8,7 +8,6 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
@@ -16,7 +15,12 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 
 public class RegistryInboundPort extends AbstractInboundPort
         implements RegistrationCI, BCM4JavaEndPointDescriptorI {
-    public RegistryInboundPort(
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2017915843726837790L;
+
+	public RegistryInboundPort(
             String uri,
             ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);

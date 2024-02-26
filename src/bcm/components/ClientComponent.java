@@ -78,7 +78,6 @@ public class ClientComponent extends AbstractComponent {
         super.execute();
         GatherQuery query = new GatherQuery(
                 new RecursiveGather("temperature", new FinalGather("humidity")), new EmptyContinuation());
-        ConnectionInfoI res = null;
         String nodeIdentifier = "node1";
         // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
         // .findByIdentifier(nodeIdentifier);
@@ -89,11 +88,15 @@ public class ClientComponent extends AbstractComponent {
                 try {
                     System.err.println("NodeInfo:  dkjfkj ");
                     ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
-                            .findByIdentifier(nodeIdentifier);
+                            .findByIdentifier(nodeIdentifier); // modify to return an implementation of connectionInfo
                     // Boolean res =
                     // ClientComponent.this.clientRegisterOutboundPort.registered(nodeIdentifier);
-                    System.err.println("NodeInfo:  e ");
-
+                    System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                    ClientComponent.this.outboundPort = new ClientComponentOutboundPort(nodeInfo.nodeIdentifier(),
+                            ClientComponent.this);
+                    ClientComponent.this.outboundPort.publishPort();
+                    // ClientComponent.this.doPortConnection(ClientComponent.this.outboundPort.getPortURI(),
+                    // nodeInfo.endPointInfo(), LookUpRegistryConnector.class.getCanonicalName());
                 } catch (Exception e) {
                     System.err.println("NodeInfo:");
 
@@ -110,19 +113,19 @@ public class ClientComponent extends AbstractComponent {
         // new EqualConditionalExpr(new SensorRand("temperature"), new
         // ConstantRand(15.0))));
         // BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
-        // this.request = new RequestIMPL("req1", query, false, null);
-        // RequestI re = this.request;
-        // this.runTask(new AbstractTask() {
-        // @Override
-        // public void run() {
-        // try {
-        // QueryResultI res = ClientComponent.this.outboundPort.execute(re);
-        // ClientComponent.this.logMessage("Query result: " + res.toString());
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        // }
-        // });
+        this.request = new RequestIMPL("req1", query, false, null); // change later
+        RequestI re = this.request;
+        this.runTask(new AbstractTask() {
+            @Override
+            public void run() {
+                try {
+                    QueryResultI res = ClientComponent.this.outboundPort.execute(re);
+                    ClientComponent.this.logMessage("Query result: " + res.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
