@@ -2,6 +2,7 @@ package bcm;
 
 import bcm.components.ClientComponent;
 import bcm.components.NodeComponent;
+import bcm.components.RegistryComponent;
 import bcm.connector.NodeConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
@@ -13,10 +14,15 @@ public class CVM extends AbstractCVM {
     protected static final String NODE_COMPONENT_URI = "my-URI-provider";
     /** URI of the consumer component (convenience). */
     protected static final String CLIENT_COMPONENT_URI = "my-URI-consumer";
+
     /** URI of the provider outbound port (simplifies the connection). */
     protected static final String URIGetterOutboundPortURI = "oport";
     /** URI of the consumer inbound port (simplifies the connection). */
     protected static final String URIProviderInboundPortURI = "iport";
+
+    protected static final String URINodeRegisterInboundPortURI = "register-inbound-port";
+    protected static final String URINodeLookupInboundPortURI = "lookup-inbound-port";
+    protected static final String URINodeRegisterOutboundURI = "register-outbound-port";
 
     public CVM() throws Exception {
         super();
@@ -32,6 +38,8 @@ public class CVM extends AbstractCVM {
      * and shutdown.
      */
     protected String uriClientURI;
+
+    protected String uriRegisterURI;
 
     @Override
     public void deploy() throws Exception {
@@ -58,7 +66,12 @@ public class CVM extends AbstractCVM {
         this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                 new Object[] {
                         NODE_COMPONENT_URI,
-                        URIProviderInboundPortURI });
+                        URIProviderInboundPortURI,
+                        URINodeRegisterInboundPortURI });
+        this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
+                new Object[] {
+                        URINodeRegisterInboundPortURI,
+                        1, 0 });
 
         // create the client component
         this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
@@ -81,6 +94,7 @@ public class CVM extends AbstractCVM {
         // do the connection
         this.doPortConnection(this.uriClientURI, URIGetterOutboundPortURI, URIProviderInboundPortURI,
                 NodeConnector.class.getCanonicalName());
+        this.doPortConnection(this.uriNodeURI, 
 
         // ---------------------------------------------------------------------
         // Deployment done

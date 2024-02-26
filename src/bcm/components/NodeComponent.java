@@ -1,5 +1,8 @@
 package bcm.components;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import bcm.interfaces.ports.NodeComponentInboundPort;
 import bcm.interfaces.ports.NodeComponentOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -7,6 +10,7 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
@@ -18,6 +22,7 @@ import implementation.SensorNodeIMPL;
 @OfferedInterfaces(offered = { RequestingCI.class })
 @RequiredInterfaces(required = { RegistrationCI.class })
 public class NodeComponent extends AbstractComponent {
+    protected Set<NodeInfoI> neighbours;
     protected final SensorNodeIMPL sensorNode;
     protected final NodeInfoIMPL nodeInfo;
     protected final NodeComponentInboundPort inboundPort;
@@ -30,6 +35,7 @@ public class NodeComponent extends AbstractComponent {
         super(uri, 1, 0);
         assert sensorNodeInboundPortURI != null;
         assert registryInbountPortURI != null;
+        this.neighbours = new HashSet<>();
         this.nodeInfo = new NodeInfoIMPL("node1", new PositionIMPL(20.20, 10.25), null, null, 25.0);
         this.sensorNode = new SensorNodeIMPL(nodeInfo);
         this.inboundPort = new NodeComponentInboundPort(sensorNodeInboundPortURI,
@@ -48,6 +54,11 @@ public class NodeComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
+        try {
+            this.neighbours = outboundPort.register(nodeInfo);
+        } catch (Exception e) {
+            throw new ComponentStartException(e);
+        }
         this.logMessage("starting NodeComponent component.");
     }
 
