@@ -1,6 +1,7 @@
 package bcm.components;
 
 import bcm.interfaces.ports.NodeComponentInboundPort;
+import bcm.interfaces.ports.NodeComponentOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -20,18 +21,22 @@ public class NodeComponent extends AbstractComponent {
     protected final SensorNodeIMPL sensorNode;
     protected final NodeInfoIMPL nodeInfo;
     protected final NodeComponentInboundPort inboundPort;
+    protected final NodeComponentOutboundPort outboundPort;
 
     protected NodeComponent(String uri,
-            String sensorNodeInboundPortURI) throws Exception {
+            String sensorNodeInboundPortURI, String registryInbountPortURI) throws Exception {
         // only one thread to ensure the serialised execution of services
         // inside the component.
         super(uri, 1, 0);
         assert sensorNodeInboundPortURI != null;
+        assert registryInbountPortURI != null;
         this.nodeInfo = new NodeInfoIMPL("node1", new PositionIMPL(20.20, 10.25), null, null, 25.0);
         this.sensorNode = new SensorNodeIMPL(nodeInfo);
         this.inboundPort = new NodeComponentInboundPort(sensorNodeInboundPortURI,
                 this);
+        this.outboundPort = new NodeComponentOutboundPort(registryInbountPortURI, this);
         this.inboundPort.publishPort();
+        this.outboundPort.publishPort();
 
         this.getTracer().setTitle("Node Component");
         this.getTracer().setRelativePosition(1, 1);
