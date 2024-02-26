@@ -70,7 +70,6 @@ public class RegistryComponent extends AbstractComponent {
         this.logMessage("stopping provider component.");
         this.printExecutionLogOnFile("provider");
         super.finalise();
-        // System.out.println("NodeComponent finalise");
     }
 
     @Override
@@ -83,7 +82,6 @@ public class RegistryComponent extends AbstractComponent {
             throw new ComponentShutdownException(e);
         }
         super.shutdown();
-        // System.out.println("NodeComponent shutdown");
     }
 
     @Override
@@ -96,7 +94,6 @@ public class RegistryComponent extends AbstractComponent {
             throw new ComponentShutdownException(e);
         }
         super.shutdownNow();
-        // System.out.println("NodeComponent shutdownNow");
     }
 
 }
