@@ -33,6 +33,13 @@ public class RegistryComponent extends AbstractComponent {
         this.nodesMap = new HashMap<>();
         this.lookup = new LookUpIMPL(nodesMap);
         this.registry = new RegistrationIMPL(nodesMap);
+        try {
+            this.lookUpInboundPort = new LookupInboundPort(((LookUpIMPL) this.lookup).getURI(), this);
+            this.registryInboundPort = new RegistryInboundPort("registry", this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

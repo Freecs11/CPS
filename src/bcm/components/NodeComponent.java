@@ -3,6 +3,7 @@ package bcm.components;
 import java.util.HashSet;
 import java.util.Set;
 
+import bcm.connector.RegistryConnector;
 import bcm.interfaces.ports.NodeComponentInboundPort;
 import bcm.interfaces.ports.NodeComponentOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -54,6 +55,13 @@ public class NodeComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
+        try {
+            this.doPortConnection(this.outboundPort.getPortURI(), "registry-inbound-port",
+                    RegistryConnector.class.getCanonicalName());
+        } catch (Exception e) {
+            throw new ComponentStartException(e);
+        }
+
         try {
             this.neighbours = outboundPort.register(nodeInfo);
         } catch (Exception e) {

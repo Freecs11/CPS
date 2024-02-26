@@ -78,7 +78,7 @@ public class CVM extends AbstractCVM {
                 new Object[] {
                         URIGetterOutboundPortURI,
                         CLIENT_COMPONENT_URI,
-                        URIProviderInboundPortURI });
+                        URINodeLookupInboundPortURI });
         assert this.isDeployedComponent(this.uriNodeURI);
         this.toggleTracing(this.uriNodeURI);
         this.toggleLogging(this.uriNodeURI);
@@ -92,9 +92,10 @@ public class CVM extends AbstractCVM {
         // ---------------------------------------------------------------------
 
         // do the connection
-        this.doPortConnection(this.uriClientURI, URIGetterOutboundPortURI, URIProviderInboundPortURI,
-                NodeConnector.class.getCanonicalName());
-        this.doPortConnection(this.uriNodeURI, 
+        // Connection directe Client<->Node
+        // this.doPortConnection(this.uriClientURI, URIGetterOutboundPortURI,
+        // URIProviderInboundPortURI,
+        // NodeConnector.class.getCanonicalName());
 
         // ---------------------------------------------------------------------
         // Deployment done

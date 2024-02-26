@@ -12,6 +12,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 
 public class RegistrationIMPL implements RegistrationCI {
+    String uri = "registration";
     private Map<String, NodeInfoI> nodesMap;
 
     public RegistrationIMPL() {
@@ -31,7 +32,7 @@ public class RegistrationIMPL implements RegistrationCI {
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
         Set<NodeInfoI> result = new HashSet<>();
         this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
-        if (this.nodesMap.containsKey(nodeInfo.nodeIdentifier())) {
+        if (this.nodesMap.containsKey(nodeInfo.nodeIdentifier())) { // TO BE REMOVED
             for (NodeInfoI n : nodesMap.values()) {
                 if (nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
                         && nodeInfo.nodePosition().distance(n.nodePosition()) < n.nodeRange()

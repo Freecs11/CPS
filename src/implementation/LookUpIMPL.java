@@ -11,10 +11,15 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 
 public class LookUpIMPL implements LookupCI {
+    public String uri = "lookup";
     private Map<String, NodeInfoI> nodesMap;
 
     public LookUpIMPL() {
         this.nodesMap = new HashMap<>();
+    }
+
+    public String getURI() {
+        return this.uri;
     }
 
     public LookUpIMPL(Map<String, NodeInfoI> hashMap) {
