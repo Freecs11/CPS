@@ -55,10 +55,16 @@ public class NodeComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
+
         try {
-            this.doPortConnection(this.outboundPort.getPortURI(), "registry-inbound-port",
-                    RegistryConnector.class.getCanonicalName());
+            // this.doPortConnection(this.outboundPort.getPortURI(),
+            // "registry-inbound-port",
+            // RegistryConnector.class.getCanonicalName());
+            System.out.println("IM LOOKING FOR THIS");
+            System.out.println(this.outboundPort.getPortURI());
+
         } catch (Exception e) {
+
             throw new ComponentStartException(e);
         }
 

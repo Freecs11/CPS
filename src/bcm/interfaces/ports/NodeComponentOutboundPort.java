@@ -3,7 +3,6 @@ package bcm.interfaces.ports;
 import java.util.Set;
 
 import bcm.components.ClientComponent;
-import bcm.components.RegistryComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
@@ -16,12 +15,11 @@ public class NodeComponentOutboundPort extends AbstractOutboundPort
     public NodeComponentOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);
         assert uri != null;
-        assert owner instanceof RegistryComponent;
     }
 
     public NodeComponentOutboundPort(ComponentI owner) throws Exception {
         super(RegistrationCI.class, owner);
-        assert owner instanceof RegistryComponent;
+        assert owner instanceof ClientComponent;
     }
 
     @Override

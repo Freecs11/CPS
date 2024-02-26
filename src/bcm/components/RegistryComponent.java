@@ -36,6 +36,8 @@ public class RegistryComponent extends AbstractComponent {
         try {
             this.lookUpInboundPort = new LookupInboundPort(((LookUpIMPL) this.lookup).getURI(), this);
             this.registryInboundPort = new RegistryInboundPort("registry", this);
+            this.lookUpInboundPort.publishPort();
+            this.registryInboundPort.publishPort();
 
         } catch (Exception e) {
             e.printStackTrace();

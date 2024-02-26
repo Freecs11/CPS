@@ -21,6 +21,7 @@ public class RegistryInboundPort extends AbstractInboundPort
             ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);
         assert uri != null;
+
     }
 
     public RegistryInboundPort(ComponentI owner) throws Exception {
