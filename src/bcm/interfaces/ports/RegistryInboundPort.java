@@ -48,6 +48,7 @@ public class RegistryInboundPort extends AbstractInboundPort
                         return ((RegistryComponent) this.getServiceOwner()).registered(nodeIdentifier);
                     }
                 });
+
     }
 
     @Override

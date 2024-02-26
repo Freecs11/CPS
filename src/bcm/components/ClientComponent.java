@@ -26,28 +26,29 @@ import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class })
 public class ClientComponent extends AbstractComponent {
-    protected String nodeComponentInboundPortURI;
-    protected String lookupInboundPortURI;
     protected ClientComponentOutboundPort outboundPort;
     protected ClientRegisterOutboundPort clientRegisterOutboundPort;
     protected RequestI request;
 
     protected ClientComponent(String uri,
-            String outboundPortURI,
-            String lookupInboundPortURI) throws Exception {
-        super(outboundPortURI, 1, 0);
+            String outboundPortURI) throws Exception {
+        super(uri, 1, 0);
         System.out.println("was in here for a breif moment" + uri);
         System.out.println("and the other is : " + outboundPortURI);
         // assert outboundPortURI != null;
-        this.outboundPort = new ClientComponentOutboundPort(uri, this);
-        this.outboundPort.localPublishPort();
-        this.clientRegisterOutboundPort = new ClientRegisterOutboundPort(uri, this);
-        this.clientRegisterOutboundPort.localPublishPort();
-        this.lookupInboundPortURI = lookupInboundPortURI;
+        // this.outboundPort = new ClientComponentOutboundPort(uri, this);
+        // this.outboundPort.localPublishPort();
+        // this.lookupInboundPortURI = lookupInboundPortURI;
+        System.err.println("tihs : " + this.isPortExisting(outboundPortURI));
+        this.clientRegisterOutboundPort = new ClientRegisterOutboundPort(outboundPortURI, this);
+        System.err.println("clientRegisterOutboundPortURI: " + this.clientRegisterOutboundPort.getPortURI());
+        this.clientRegisterOutboundPort.publishPort();
         this.getTracer().setTitle("Client Component");
         this.getTracer().setRelativePosition(1, 1);
-        System.out.println("nodeInboundPortURI is set to : " + this.nodeComponentInboundPortURI);
-        System.out.println("the OutboundPortURI is : " + this.outboundPort.getPortURI());
+        // System.out.println("nodeInboundPortURI is set to : " +
+        // this.nodeComponentInboundPortURI);
+        // System.out.println("the OutboundPortURI is : " +
+        // this.outboundPort.getPortURI());
         AbstractComponent.checkImplementationInvariant(this);
     }
 
@@ -55,12 +56,13 @@ public class ClientComponent extends AbstractComponent {
     public synchronized void start() throws ComponentStartException {
         this.logMessage("starting client component.");
         super.start();
-        try {
-            this.doPortConnection(this.lookupInboundPortURI, this.clientRegisterOutboundPort.getPortURI(),
-                    LookUpRegistryConnector.class.getCanonicalName());
-        } catch (Exception e) {
-            throw new ComponentStartException(e);
-        }
+        // try {
+        // this.doPortConnection(this.lookupInboundPortURI,
+        // this.clientRegisterOutboundPort.getPortURI(),
+        // LookUpRegistryConnector.class.getCanonicalName());
+        // } catch (Exception e) {
+        // throw new ComponentStartException(e);
+        // }
 
         // try {
         // this.doPortConnection(this.outboundPort.getPortURI(),
@@ -76,21 +78,30 @@ public class ClientComponent extends AbstractComponent {
         super.execute();
         GatherQuery query = new GatherQuery(
                 new RecursiveGather("temperature", new FinalGather("humidity")), new EmptyContinuation());
-
+        ConnectionInfoI res = null;
         String nodeIdentifier = "node1";
+        // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
+        // .findByIdentifier(nodeIdentifier);
+        // System.err.println("NodeInfo: " + nodeInfo.toString());
         this.runTask(new AbstractTask() {
             @Override
             public void run() {
                 try {
+                    System.err.println("NodeInfo:  dkjfkj ");
                     ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
                             .findByIdentifier(nodeIdentifier);
-                    System.out.println("NodeInfo: " + nodeInfo.toString());
+                    // Boolean res =
+                    // ClientComponent.this.clientRegisterOutboundPort.registered(nodeIdentifier);
+                    System.err.println("NodeInfo:  e ");
 
                 } catch (Exception e) {
+                    System.err.println("NodeInfo:");
+
                     e.printStackTrace();
                 }
             }
         });
+
         // AndBooleanExpr res = new AndBooleanExpr(
         // new ConditionalExprBooleanExpr(
         // new EqualConditionalExpr(new SensorRand("humidity"), new
@@ -99,19 +110,19 @@ public class ClientComponent extends AbstractComponent {
         // new EqualConditionalExpr(new SensorRand("temperature"), new
         // ConstantRand(15.0))));
         // BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
-        this.request = new RequestIMPL("req1", query, false, null);
-        RequestI re = this.request;
-        this.runTask(new AbstractTask() {
-            @Override
-            public void run() {
-                try {
-                    QueryResultI res = ClientComponent.this.outboundPort.execute(re);
-                    ClientComponent.this.logMessage("Query result: " + res.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        // this.request = new RequestIMPL("req1", query, false, null);
+        // RequestI re = this.request;
+        // this.runTask(new AbstractTask() {
+        // @Override
+        // public void run() {
+        // try {
+        // QueryResultI res = ClientComponent.this.outboundPort.execute(re);
+        // ClientComponent.this.logMessage("Query result: " + res.toString());
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
+        // }
+        // });
     }
 
     @Override

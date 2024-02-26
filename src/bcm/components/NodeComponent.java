@@ -30,18 +30,19 @@ public class NodeComponent extends AbstractComponent {
     protected final NodeComponentOutboundPort outboundPort;
 
     protected NodeComponent(String uri,
-            String sensorNodeInboundPortURI, String registryInbountPortURI) throws Exception {
+            String sensorNodeInboundPortURI,
+            String node_to_reg_OutboundPortURI) throws Exception {
         // only one thread to ensure the serialised execution of services
         // inside the component.
         super(uri, 1, 0);
         assert sensorNodeInboundPortURI != null;
-        assert registryInbountPortURI != null;
+        assert node_to_reg_OutboundPortURI != null;
         this.neighbours = new HashSet<>();
         this.nodeInfo = new NodeInfoIMPL("node1", new PositionIMPL(20.20, 10.25), null, null, 25.0);
         this.sensorNode = new SensorNodeIMPL(nodeInfo);
         this.inboundPort = new NodeComponentInboundPort(sensorNodeInboundPortURI,
                 this);
-        this.outboundPort = new NodeComponentOutboundPort(registryInbountPortURI, this);
+        this.outboundPort = new NodeComponentOutboundPort(node_to_reg_OutboundPortURI, this);
         this.inboundPort.publishPort();
         this.outboundPort.publishPort();
 
@@ -56,7 +57,7 @@ public class NodeComponent extends AbstractComponent {
     public synchronized void start() throws ComponentStartException {
         super.start();
         try {
-            this.doPortConnection(this.outboundPort.getPortURI(), "registry-inbound-port",
+            this.doPortConnection(this.outboundPort.getPortURI(), "register-inbound-port",
                     RegistryConnector.class.getCanonicalName());
         } catch (Exception e) {
             throw new ComponentStartException(e);

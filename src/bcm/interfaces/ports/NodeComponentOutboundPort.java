@@ -16,12 +16,12 @@ public class NodeComponentOutboundPort extends AbstractOutboundPort
     public NodeComponentOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);
         assert uri != null;
-        assert owner instanceof RegistryComponent;
+        
     }
 
     public NodeComponentOutboundPort(ComponentI owner) throws Exception {
         super(RegistrationCI.class, owner);
-        assert owner instanceof RegistryComponent;
+//        assert owner instanceof RegistryComponent;
     }
 
     @Override
