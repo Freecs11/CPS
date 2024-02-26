@@ -1,6 +1,7 @@
 package bcm.components;
 
 import bcm.interfaces.ports.ClientComponentOutboundPort;
+import bcm.interfaces.ports.LookupInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
