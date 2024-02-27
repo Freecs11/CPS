@@ -1,6 +1,7 @@
 package bcm.components;
 
 import bcm.connector.LookUpRegistryConnector;
+import bcm.connector.NodeConnector;
 import bcm.interfaces.ports.ClientComponentOutboundPort;
 import bcm.interfaces.ports.ClientRegisterOutboundPort;
 import bcm.interfaces.ports.LookupInboundPort;
@@ -12,6 +13,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
+import implementation.EndPointDescIMP;
 import implementation.RequestIMPL;
 import query.ast.AndBooleanExpr;
 import query.ast.BooleanQuery;
@@ -95,8 +97,10 @@ public class ClientComponent extends AbstractComponent {
                     ClientComponent.this.outboundPort = new ClientComponentOutboundPort(nodeInfo.nodeIdentifier(),
                             ClientComponent.this);
                     ClientComponent.this.outboundPort.publishPort();
-                    // ClientComponent.this.doPortConnection(ClientComponent.this.outboundPort.getPortURI(),
-                    // nodeInfo.endPointInfo(), LookUpRegistryConnector.class.getCanonicalName());
+                    ClientComponent.this.doPortConnection(
+                            ClientComponent.this.outboundPort.getPortURI(),
+                            ((EndPointDescIMP) nodeInfo.endPointInfo()).getURI(),
+                            NodeConnector.class.getCanonicalName());
                 } catch (Exception e) {
                     System.err.println("NodeInfo:");
 

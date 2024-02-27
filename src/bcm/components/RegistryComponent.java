@@ -76,11 +76,20 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     public boolean registered(String nodeIdentifier) throws Exception {
-        return this.registry.registered(nodeIdentifier);
+        return this.nodesMap.containsKey(nodeIdentifier);
     }
 
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
-        return this.registry.register(nodeInfo);
+        Set<NodeInfoI> result = new HashSet<>();
+        for (NodeInfoI n : nodesMap.values()) {
+            if (n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
+                    || nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
+                            && (!n.nodeIdentifier().equals(nodeInfo.nodeIdentifier()))) {
+                result.add(n);
+            }
+        }
+        this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
+        return result;
     }
 
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
@@ -95,6 +104,8 @@ public class RegistryComponent extends AbstractComponent {
     public synchronized void finalise() throws Exception {
         this.logMessage("stopping provider component.");
         this.printExecutionLogOnFile("provider");
+        this.nodesMap.keySet().stream().forEach(x -> this.logMessage(x));
+
         super.finalise();
     }
 

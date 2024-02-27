@@ -31,16 +31,15 @@ public class RegistrationIMPL implements RegistrationCI {
     @Override
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
         Set<NodeInfoI> result = new HashSet<>();
-        this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
-        if (this.nodesMap.containsKey(nodeInfo.nodeIdentifier())) { // TO BE REMOVED
-            for (NodeInfoI n : nodesMap.values()) {
-                if (nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
-                        && nodeInfo.nodePosition().distance(n.nodePosition()) < n.nodeRange()
-                        && !nodeInfo.nodeIdentifier().equals(n.nodeIdentifier())) {
-                    result.add(nodeInfo);
-                }
+        for (NodeInfoI n : nodesMap.values()) {
+            if (n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
+                    || nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
+                            && (!n.nodeIdentifier().equals(nodeInfo.nodeIdentifier()))) {
+                System.err.println("jdijdjd");
+                result.add(nodeInfo);
             }
         }
+        this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
         return result;
     }
 

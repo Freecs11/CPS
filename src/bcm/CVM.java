@@ -8,11 +8,14 @@ import bcm.connector.NodeConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
+import implementation.NodeInfoIMPL;
+import implementation.PositionIMPL;
 
 public class CVM extends AbstractCVM {
 
     /** URI of the provider component (convenience). */
     protected static final String NODE_COMPONENT_URI = "node-URI";
+    protected static final String NODE2_COMPONENT_URI = "node2-URI";
     /** URI of the consumer component (convenience). */
     protected static final String CLIENT_COMPONENT_URI = "client-URI";
     protected static final String REGISTER_COMPONENT_URI = "register-URI";
@@ -27,6 +30,8 @@ public class CVM extends AbstractCVM {
     protected static final String CLIENTS_OUT_BOUND_PORT_URI = "client-outbound-port";
     protected static final String NODE_TO_REG_OUT_BOUND_PORT_URI = "node2reg-outbound-port";
     protected static final String NODE_IN_BOUND_PORT_URI = "node-inbound-port";
+    protected static final String NODE2_TO_REG_OUT_BOUND_PORT_URI = "node2_2reg-outbound-port";
+    protected static final String NODE2_IN_BOUND_PORT_URI = "node2-inbound-port";
 
     public CVM() throws Exception {
         super();
@@ -37,6 +42,7 @@ public class CVM extends AbstractCVM {
      * and shutdown.
      */
     protected String uriNodeURI;
+    protected String uriNode2URI;
     /**
      * Reference to the consumer component to share between deploy
      * and shutdown.
@@ -72,11 +78,21 @@ public class CVM extends AbstractCVM {
                         LOOKUP_IN_BOUND_PORT_URI,
                         REGISTER_IN_BOUND_PORT_URI });
         // create the node component
+
+        this.uriNode2URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                new Object[] {
+                        NODE2_COMPONENT_URI,
+                        NODE2_IN_BOUND_PORT_URI,
+                        NODE2_TO_REG_OUT_BOUND_PORT_URI,
+                        "node2",
+                        10.0, 20.0, 20.0});
         this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                 new Object[] {
                         NODE_COMPONENT_URI,
                         NODE_IN_BOUND_PORT_URI,
-                        NODE_TO_REG_OUT_BOUND_PORT_URI }); // to be changed
+                        NODE_TO_REG_OUT_BOUND_PORT_URI,
+                        "node1",
+                        20.0, 20.0, 45.0 }); 
 
         // create the client component
         this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
@@ -86,6 +102,10 @@ public class CVM extends AbstractCVM {
         assert this.isDeployedComponent(this.uriNodeURI);
         this.toggleTracing(this.uriNodeURI);
         this.toggleLogging(this.uriNodeURI);
+
+        assert this.isDeployedComponent(this.uriNode2URI);
+        this.toggleTracing(this.uriNode2URI);
+        this.toggleLogging(this.uriNode2URI);
 
         assert this.isDeployedComponent(this.uriClientURI);
         this.toggleTracing(this.uriClientURI);
@@ -105,9 +125,9 @@ public class CVM extends AbstractCVM {
         // URIProviderInboundPortURI,
         // NodeConnector.class.getCanonicalName());
 
-        this.doPortConnection(this.uriClientURI, 
-        		CLIENTS_OUT_BOUND_PORT_URI, 
-        		LOOKUP_IN_BOUND_PORT_URI,
+        this.doPortConnection(this.uriClientURI,
+                CLIENTS_OUT_BOUND_PORT_URI,
+                LOOKUP_IN_BOUND_PORT_URI,
                 LookUpRegistryConnector.class.getCanonicalName());
         // ---------------------------------------------------------------------
         // Deployment done

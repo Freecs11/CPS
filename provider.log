@@ -1,2 +1,6 @@
-1708968680144|starting Registry component.
-1708968700172|stopping provider component.
+1709052939678|node1
+1709052939679|neighbours:
+1709052939680|node2
+1709052939681|registered : true
+1709052939681|starting NodeComponent component.
+1709052959711|stopping provider component.
