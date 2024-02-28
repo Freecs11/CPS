@@ -16,11 +16,11 @@ public class ClientRegisterOutboundPort extends AbstractOutboundPort
         implements LookupCI {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3133551134835072507L;
+     * 
+     */
+    private static final long serialVersionUID = -3133551134835072507L;
 
-	public ClientRegisterOutboundPort(String uri, ComponentI owner) throws Exception {
+    public ClientRegisterOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, LookupCI.class, owner);
         assert uri != null;
         // assert owner instanceof ClientComponent;
@@ -33,10 +33,7 @@ public class ClientRegisterOutboundPort extends AbstractOutboundPort
 
     @Override
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
-        System.err.println("ClientRfgfgfgfe");
-        ConnectionInfoI d = ((LookupCI) this.getConnector()).findByIdentifier(sensorNodeId);
-        System.err.println("was here ");
-        return d;
+        return ((LookupCI) this.getConnector()).findByIdentifier(sensorNodeId);
     }
 
     @Override

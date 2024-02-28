@@ -40,7 +40,6 @@ public class RegistryComponent extends AbstractComponent {
             this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);
             this.lookUpInboundPort.publishPort();
             this.registryInboundPort.publishPort();
-            System.err.println("RegistryComponent constructor done");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,13 +56,10 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
-        System.err.println("print was here");
         return this.nodesMap.get(sensorNodeId);
-        // return this.lookup.findByIdentifier(sensorNodeId);
     }
 
     public Set<ConnectionInfoI> findByZone(GeographicalZoneI z) throws Exception {
-        // return this.lookup.findByZone(z);
         assert z != null;
         Set<ConnectionInfoI> result = new HashSet<>();
         for (NodeInfoI nodeInfo : nodesMap.values()) {
@@ -114,7 +110,6 @@ public class RegistryComponent extends AbstractComponent {
         try {
             this.lookUpInboundPort.unpublishPort();
             this.registryInboundPort.unpublishPort();
-            System.err.println("RegistryComponent shutdown done");
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
@@ -129,7 +124,6 @@ public class RegistryComponent extends AbstractComponent {
                 this.lookUpInboundPort.unpublishPort();
             if (this.registryInboundPort.isPublished())
                 this.registryInboundPort.unpublishPort();
-            System.err.println("RegistryComponent shutdownNow done");
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
