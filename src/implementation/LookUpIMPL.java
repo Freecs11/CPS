@@ -36,8 +36,7 @@ public class LookUpIMPL implements LookupCI {
 
     @Override
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
-        System.err.println("print ");
-    	return this.nodesMap.get(sensorNodeId);
+        return this.nodesMap.get(sensorNodeId);
     }
 
     @Override

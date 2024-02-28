@@ -35,7 +35,6 @@ public class RegistrationIMPL implements RegistrationCI {
             if (n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
                     || nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
                             && (!n.nodeIdentifier().equals(nodeInfo.nodeIdentifier()))) {
-                System.err.println("jdijdjd");
                 result.add(nodeInfo);
             }
         }

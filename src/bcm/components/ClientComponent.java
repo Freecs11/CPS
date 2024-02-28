@@ -35,15 +35,11 @@ public class ClientComponent extends AbstractComponent {
     protected ClientComponent(String uri,
             String outboundPortURI) throws Exception {
         super(uri, 1, 0);
-        System.out.println("was in here for a breif moment" + uri);
-        System.out.println("and the other is : " + outboundPortURI);
         // assert outboundPortURI != null;
         // this.outboundPort = new ClientComponentOutboundPort(uri, this);
         // this.outboundPort.localPublishPort();
         // this.lookupInboundPortURI = lookupInboundPortURI;
-        System.err.println("tihs : " + this.isPortExisting(outboundPortURI));
         this.clientRegisterOutboundPort = new ClientRegisterOutboundPort(outboundPortURI, this);
-        System.err.println("clientRegisterOutboundPortURI: " + this.clientRegisterOutboundPort.getPortURI());
         this.clientRegisterOutboundPort.publishPort();
         this.getTracer().setTitle("Client Component");
         this.getTracer().setRelativePosition(1, 1);
@@ -58,21 +54,6 @@ public class ClientComponent extends AbstractComponent {
     public synchronized void start() throws ComponentStartException {
         this.logMessage("starting client component.");
         super.start();
-        // try {
-        // this.doPortConnection(this.lookupInboundPortURI,
-        // this.clientRegisterOutboundPort.getPortURI(),
-        // LookUpRegistryConnector.class.getCanonicalName());
-        // } catch (Exception e) {
-        // throw new ComponentStartException(e);
-        // }
-
-        // try {
-        // this.doPortConnection(this.outboundPort.getPortURI(),
-        // this.nodeComponentInboundPortURI,
-        // nodeConnector.class.getCanonicalName());
-        // } catch (Exception e) {
-        // throw new ComponentStartException(e);
-        // }
     }
 
     @Override
@@ -88,12 +69,11 @@ public class ClientComponent extends AbstractComponent {
             @Override
             public void run() {
                 try {
-                    System.err.println("NodeInfo:  dkjfkj ");
                     ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
                             .findByIdentifier(nodeIdentifier); // modify to return an implementation of connectionInfo
                     // Boolean res =
                     // ClientComponent.this.clientRegisterOutboundPort.registered(nodeIdentifier);
-                    System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                    // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
                     ClientComponent.this.outboundPort = new ClientComponentOutboundPort(nodeInfo.nodeIdentifier(),
                             ClientComponent.this);
                     ClientComponent.this.outboundPort.publishPort();
@@ -102,8 +82,6 @@ public class ClientComponent extends AbstractComponent {
                             ((EndPointDescIMP) nodeInfo.endPointInfo()).getURI(),
                             NodeConnector.class.getCanonicalName());
                 } catch (Exception e) {
-                    System.err.println("NodeInfo:");
-
                     e.printStackTrace();
                 }
             }

@@ -7,7 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Freecs/Downloads/livraison-5/livraison-5/BCM4Java-23022024.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Freecs/Downloads/livraison-3/livraison-3/sensor-network-interfaces.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/livraison-3/livraison-3/sensor-network-interfaces.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/livraison-5/livraison-5/BCM4Java-23022024.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
