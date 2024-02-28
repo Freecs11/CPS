@@ -41,18 +41,21 @@ public class NodeComponent extends AbstractComponent {
     protected final HashMap<NodeInfoI, NodeP2POutboundPort> p2poutboundPorts;
     protected final String p2pInboundPortURI;
     protected final NodeComponentOutboundPort outboundPort;
+    protected final String registryPortURI;
 
     protected NodeComponent(String uri,
             String sensorNodeInboundPortURI,
             String node_to_reg_OutboundPortURI,
             String nodeId,
             Double x, Double y,
-            Double range) throws Exception {
+            Double range,
+            String registryPortURI) throws Exception {
         // only one thread to ensure the serialised execution of services
         // inside the component.
         super(uri, 1, 0);
         assert sensorNodeInboundPortURI != null;
         assert node_to_reg_OutboundPortURI != null;
+        assert registryPortURI != null;
         this.p2pInboundPortURI = AbstractInboundPort.generatePortURI();
         this.neighbours = new HashSet<>();
         this.inboundPort = new NodeComponentInboundPort(sensorNodeInboundPortURI,
@@ -66,6 +69,7 @@ public class NodeComponent extends AbstractComponent {
         this.outboundPort = new NodeComponentOutboundPort(node_to_reg_OutboundPortURI, this);
         this.inboundPort.publishPort();
         this.outboundPort.publishPort();
+        this.registryPortURI = registryPortURI;
 
         EndPointDescIMP thisP2P = new EndPointDescIMP(this.inboundPort.getPortURI());
         this.nodeInfo = new NodeInfoIMPL(nodeId,
@@ -82,16 +86,9 @@ public class NodeComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
-
         try {
-            this.doPortConnection(this.outboundPort.getPortURI(), "register-inbound-port",
+            this.doPortConnection(this.outboundPort.getPortURI(), this.registryPortURI,
                     RegistryConnector.class.getCanonicalName());
-        } catch (Exception e) {
-
-            throw new ComponentStartException(e);
-        }
-
-        try {
             this.logMessage(((NodeInfoIMPL) nodeInfo).nodeIdentifier());
             this.neighbours = outboundPort.register(nodeInfo);
             this.logMessage("neighbours:");
@@ -134,11 +131,6 @@ public class NodeComponent extends AbstractComponent {
         if (this.outboundPort.connected()) {
             this.doPortDisconnection(this.outboundPort.getPortURI());
             this.outboundPort.unpublishPort();
-        } // this.p2poutboundPort.unpublishPort();
-        for (NodeP2POutboundPort p2poutboundPort : this.p2poutboundPorts.values()) {
-            if (p2poutboundPort.connected()) {
-                this.ask4Disconnection(nodeInfo);
-            }
         }
         super.finalise();
         // System.out.println("NodeComponent finalise");
@@ -242,8 +234,6 @@ public class NodeComponent extends AbstractComponent {
         try {
             NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
             this.doPortDisconnection(nodePort.getPortURI());
-            nodePort.ask4Disconnection(this.nodeInfo);
-            this.p2poutboundPorts.remove(neighbour);
         } catch (Exception e) {
             e.printStackTrace();
         }
