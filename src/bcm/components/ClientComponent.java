@@ -10,11 +10,14 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import implementation.EndPointDescIMP;
+import implementation.RequestContinuationIMPL;
 import implementation.RequestIMPL;
+import implementation.requestsIMPL.ExecutionStateIMPL;
 import query.ast.AndBooleanExpr;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
@@ -95,8 +98,9 @@ public class ClientComponent extends AbstractComponent {
         // new EqualConditionalExpr(new SensorRand("temperature"), new
         // ConstantRand(15.0))));
         // BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
-        this.request = new RequestIMPL("req1", query, false, null); // change later
-        RequestI re = this.request;
+        // this.request = new RequestIMPL("req1", query, false, null); // change later
+        RequestI request = new RequestIMPL("req1", query, false, null);
+        RequestContinuationI re = new RequestContinuationIMPL(request, new ExecutionStateIMPL());
         this.runTask(new AbstractTask() {
             @Override
             public void run() {

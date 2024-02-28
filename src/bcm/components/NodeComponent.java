@@ -28,6 +28,7 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import implementation.EndPointDescIMP;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
+import implementation.RequestContinuationIMPL;
 import implementation.SensorNodeIMPL;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
@@ -41,13 +42,15 @@ public class NodeComponent extends AbstractComponent {
     protected final HashMap<NodeInfoI, NodeP2POutboundPort> p2poutboundPorts;
     protected final String p2pInboundPortURI;
     protected final NodeComponentOutboundPort outboundPort;
+    protected final String registerInboundPortURI;
 
     protected NodeComponent(String uri,
             String sensorNodeInboundPortURI,
             String node_to_reg_OutboundPortURI,
             String nodeId,
             Double x, Double y,
-            Double range) throws Exception {
+            Double range,
+            String registerInboundPortURI) throws Exception {
         // only one thread to ensure the serialised execution of services
         // inside the component.
         super(uri, 1, 0);
@@ -63,6 +66,8 @@ public class NodeComponent extends AbstractComponent {
         this.outboundPort = new NodeComponentOutboundPort(node_to_reg_OutboundPortURI, this);
         this.inboundPort.publishPort();
         this.outboundPort.publishPort();
+
+        this.registerInboundPortURI = registerInboundPortURI;
 
         EndPointDescIMP thisP2P = new EndPointDescIMP(this.inboundPort.getPortURI());
         this.nodeInfo = new NodeInfoIMPL(nodeId,
@@ -81,7 +86,7 @@ public class NodeComponent extends AbstractComponent {
         super.start();
 
         try {
-            this.doPortConnection(this.outboundPort.getPortURI(), "register-inbound-port",
+            this.doPortConnection(this.outboundPort.getPortURI(), this.registerInboundPortURI,
                     RegistryConnector.class.getCanonicalName());
         } catch (Exception e) {
 
@@ -89,6 +94,7 @@ public class NodeComponent extends AbstractComponent {
         }
 
         try {
+
             this.logMessage(((NodeInfoIMPL) nodeInfo).nodeIdentifier());
             this.neighbours = outboundPort.register(nodeInfo);
             this.logMessage("neighbours:");
@@ -111,7 +117,6 @@ public class NodeComponent extends AbstractComponent {
     @Override
     public synchronized void finalise() throws Exception {
         this.logMessage("stopping node component : " + this.nodeInfo.nodeIdentifier());
-        this.printExecutionLogOnFile("nodeComponent : " + this.nodeInfo.nodeIdentifier());
         for (NodeInfoI neighbour : neighbours) {
             this.ask4Disconnection(neighbour);
             this.p2poutboundPorts.get(neighbour).unpublishPort();
@@ -202,7 +207,8 @@ public class NodeComponent extends AbstractComponent {
     }
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
-        return null;
+        QueryResultI tr = this.sensorNode.execute(((RequestContinuationIMPL) request).getRequest());
+
     }
 
     public void executeAsync(RequestContinuationI request) throws Exception {
