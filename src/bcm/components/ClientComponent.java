@@ -138,6 +138,10 @@ public class ClientComponent extends AbstractComponent {
             this.doPortDisconnection(this.outboundPort.getPortURI());
         }
         this.outboundPort.unpublishPort();
+        if (this.clientRegisterOutboundPort.connected()) {
+            this.doPortDisconnection(this.clientRegisterOutboundPort.getPortURI());
+        }
+        this.clientRegisterOutboundPort.unpublishPort();
         super.finalise();
         // System.out.println("finalise ClientComponent");
     }

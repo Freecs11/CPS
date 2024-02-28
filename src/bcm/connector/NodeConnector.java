@@ -2,15 +2,22 @@ package bcm.connector;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
+import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
 
 public class NodeConnector extends AbstractConnector
-        implements RequestingCI, RequestContinuationI {
+        implements RequestingCI, SensorNodeP2PCI {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5097548577299456605L;
 
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
@@ -23,33 +30,24 @@ public class NodeConnector extends AbstractConnector
     }
 
     @Override
-    public String requestURI() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'requestURI'");
+    public void ask4Disconnection(NodeInfoI neighbour) throws Exception {
+        ((SensorNodeP2PCI) this.offering).ask4Disconnection(neighbour);
     }
 
     @Override
-    public QueryI getQueryCode() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getQueryCode'");
+    public void ask4Connection(NodeInfoI newNeighbour) throws Exception {
+        // return ((RequestingCI) this.offering).execute(request);
+        ((SensorNodeP2PCI) this.offering).ask4Connection(newNeighbour);
     }
 
     @Override
-    public boolean isAsynchronous() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isAsynchronous'");
+    public QueryResultI execute(RequestContinuationI request) throws Exception {
+        return ((SensorNodeP2PCI) this.offering).execute(request);
     }
 
     @Override
-    public ConnectionInfoI clientConnectionInfo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clientConnectionInfo'");
-    }
-
-    @Override
-    public ExecutionStateI getExecutionState() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getExecutionState'");
+    public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
+        ((SensorNodeP2PCI) this.offering).executeAsync(requestContinuation);
     }
 
 }

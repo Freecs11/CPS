@@ -85,14 +85,14 @@ public class CVM extends AbstractCVM {
                         NODE2_IN_BOUND_PORT_URI,
                         NODE2_TO_REG_OUT_BOUND_PORT_URI,
                         "node2",
-                        10.0, 20.0, 20.0});
+                        10.0, 20.0, 20.0 });
         this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                 new Object[] {
                         NODE_COMPONENT_URI,
                         NODE_IN_BOUND_PORT_URI,
                         NODE_TO_REG_OUT_BOUND_PORT_URI,
                         "node1",
-                        20.0, 20.0, 45.0 }); 
+                        20.0, 20.0, 45.0 });
 
         // create the client component
         this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
@@ -146,7 +146,7 @@ public class CVM extends AbstractCVM {
     @Override
     public void shutdown() throws Exception {
         assert this.allFinalised();
-
+        
         super.shutdown();
         // System.out.println("CVM shutdown");
     }
@@ -154,7 +154,7 @@ public class CVM extends AbstractCVM {
     public static void main(String[] args) {
         try {
             CVM cvm = new CVM();
-            cvm.startStandardLifeCycle(20000L);
+            cvm.startStandardLifeCycle(200L);
             Thread.sleep(10000L);
             System.exit(0);
         } catch (Exception e) {

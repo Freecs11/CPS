@@ -34,7 +34,6 @@ public class RegistryComponent extends AbstractComponent {
             String registerInboundPortURI) {
         super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
         this.nodesMap = new HashMap<>();
-        // this.lookup = new LookUpIMPL(nodesMap);
         this.registry = new RegistrationIMPL(nodesMap);
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
@@ -115,6 +114,7 @@ public class RegistryComponent extends AbstractComponent {
         try {
             this.lookUpInboundPort.unpublishPort();
             this.registryInboundPort.unpublishPort();
+            System.err.println("RegistryComponent shutdown done");
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
@@ -125,8 +125,11 @@ public class RegistryComponent extends AbstractComponent {
     public synchronized void shutdownNow() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
-            this.lookUpInboundPort.unpublishPort();
-            this.registryInboundPort.unpublishPort();
+            if (this.lookUpInboundPort.isPublished())
+                this.lookUpInboundPort.unpublishPort();
+            if (this.registryInboundPort.isPublished())
+                this.registryInboundPort.unpublishPort();
+            System.err.println("RegistryComponent shutdownNow done");
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
