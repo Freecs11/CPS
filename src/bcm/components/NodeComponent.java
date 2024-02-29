@@ -1,9 +1,12 @@
 package bcm.components;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import abstractQuery.AbstractQuery;
 import bcm.connector.NodeConnector;
 import bcm.connector.RegistryConnector;
 import bcm.interfaces.ports.NodeComponentInboundPort;
@@ -22,20 +25,31 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
+import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PImplI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
+import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingImplI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
+import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
 import implementation.EndPointDescIMP;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
+import implementation.QueryResultIMPL;
 import implementation.RequestContinuationIMPL;
-import implementation.SensorNodeIMPL;
+import implementation.RequestIMPL;
+import implementation.SensorDataIMPL;
+import implementation.requestsIMPL.ExecutionStateIMPL;
+import implementation.requestsIMPL.ProcessingNodeIMPL;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
 @RequiredInterfaces(required = { RegistrationCI.class })
-public class NodeComponent extends AbstractComponent {
+public class NodeComponent extends AbstractComponent
+        implements RequestingImplI, SensorNodeP2PImplI {
     protected Set<NodeInfoI> neighbours;
-    protected final SensorNodeIMPL sensorNode;
+    private ExecutionStateIMPL context;
+    private ProcessingNodeI processingNode;
+    private Map<String, SensorDataI> sensors;
     protected final NodeInfoIMPL nodeInfo;
     protected final NodeComponentInboundPort inboundPort;
     protected final NodeP2PInboundPort p2pInboundPort;
@@ -72,11 +86,23 @@ public class NodeComponent extends AbstractComponent {
         EndPointDescIMP thisP2P = new EndPointDescIMP(this.inboundPort.getPortURI());
         this.nodeInfo = new NodeInfoIMPL(nodeId,
                 new PositionIMPL(x, y), thisP2P, this.p2pInboundPort, range);
-        this.sensorNode = new SensorNodeIMPL(nodeInfo);
-
         this.getTracer().setTitle("Node Component: " + nodeId);
         this.getTracer().setRelativePosition(1, 1);
 
+        this.sensors = new HashMap<>();
+        SensorDataIMPL sensor = new SensorDataIMPL(nodeInfo.nodeIdentifier(), "temperature",
+                20.0, Instant.now(), Double.class);
+        SensorDataIMPL sensor2 = new SensorDataIMPL(nodeInfo.nodeIdentifier(), "humidity", 50.0,
+                Instant.now(), Double.class);
+        SensorDataIMPL sensor3 = new SensorDataIMPL(nodeInfo.nodeIdentifier(), "light", 100.0,
+                Instant.now(), Double.class);
+        this.sensors.put("light", sensor3);
+        this.sensors.put("humidity", sensor2);
+        this.sensors.put("temperature", sensor);
+        this.processingNode = new ProcessingNodeIMPL(this.nodeInfo.nodePosition(), null,
+                this.nodeInfo.nodeIdentifier());
+        ((ProcessingNodeIMPL) this.processingNode).setSensorDataMap(this.sensors);
+        this.context = new ExecutionStateIMPL(this.processingNode);
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
     }
@@ -97,6 +123,7 @@ public class NodeComponent extends AbstractComponent {
 
             this.logMessage(((NodeInfoIMPL) nodeInfo).nodeIdentifier());
             this.neighbours = outboundPort.register(nodeInfo);
+            ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
             this.logMessage("neighbours:");
             neighbours.stream().forEach(x -> this.logMessage(((NodeInfoIMPL) x).nodeIdentifier()));
             this.logMessage("registered : " + outboundPort.registered(nodeInfo.nodeIdentifier()) +
@@ -180,12 +207,8 @@ public class NodeComponent extends AbstractComponent {
         // System.out.println("NodeComponent shutdownNow");
     }
 
-    public QueryResultI returnQueryResult(RequestI request) throws Exception {
-        return this.sensorNode.execute(request);
-    }
-
     public void executeAsync(RequestI request) throws Exception {
-        this.sensorNode.executeAsync(request);
+        // TODO Auto-generated method stub
     }
 
     public void ask4Connection(NodeInfoI newNeighbour)
@@ -207,8 +230,7 @@ public class NodeComponent extends AbstractComponent {
     }
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
-        QueryResultI tr = this.sensorNode.execute(((RequestContinuationIMPL) request).getRequest());
-
+        return null;
     }
 
     public void executeAsync(RequestContinuationI request) throws Exception {
@@ -222,6 +244,25 @@ public class NodeComponent extends AbstractComponent {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public QueryResultI execute(RequestI request) throws Exception {
+        if (request == null) {
+            throw new Exception("Request is null");
+        }
+        RequestI req = (RequestIMPL) request;
+        if (req.getQueryCode() == null) {
+            throw new Exception("Query is null");
+        }
+        AbstractQuery query = (AbstractQuery) req.getQueryCode();
+        QueryResultI result = (QueryResultIMPL) query.eval(this.context);
+        System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
+        if (!this.context.isContinuationSet()) {
+            return result;
+        }
+        RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
+        return this.execute(continuation);
     }
 
 }

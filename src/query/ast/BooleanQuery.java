@@ -33,9 +33,9 @@ public class BooleanQuery extends AbstractQuery {
 	public QueryResultI eval(ExecutionStateI context) {
 		ExecutionStateIMPL contextIMP = (ExecutionStateIMPL) context;
 		// Boolean res = (Boolean) expr.eval(contextIMP); // Never used
-		// Object cont = continuation.eval(contextIMP); // Never used
+		continuation.eval(context); // Never used
 		QueryResultIMPL currRes = (QueryResultIMPL) contextIMP.getCurrentResult();
-		HashSet<String> sensors = contextIMP.getPositiveSNG();
+		HashSet<String> sensors = (HashSet) contextIMP.getPositiveSNG();
 		currRes.setBR(true);
 		for (String sensor : sensors) {
 			currRes.addPositiveSN(sensor);

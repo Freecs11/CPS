@@ -36,7 +36,7 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
                     @Override
                     public QueryResultI call() throws Exception {
                         System.out.println("NodeComponentInboundPort.execute");
-                        return ((NodeComponent) this.getServiceOwner()).returnQueryResult(request);
+                        return ((NodeComponent) this.getServiceOwner()).execute(request);
                     }
                 });
     }

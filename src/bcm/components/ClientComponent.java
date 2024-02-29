@@ -25,8 +25,10 @@ import query.ast.ConstantRand;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
 import query.ast.FinalGather;
+import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
 import query.ast.RecursiveGather;
+import query.ast.RelativeBase;
 import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class })
@@ -63,7 +65,9 @@ public class ClientComponent extends AbstractComponent {
     public void execute() throws Exception {
         super.execute();
         GatherQuery query = new GatherQuery(
-                new RecursiveGather("temperature", new FinalGather("humidity")), new EmptyContinuation());
+                new RecursiveGather("temperature",
+                        new FinalGather("humidity")),
+                new FloodingContinuation(new RelativeBase(), 15.0));
         String nodeIdentifier = "node1";
         // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
         // .findByIdentifier(nodeIdentifier);
@@ -100,12 +104,13 @@ public class ClientComponent extends AbstractComponent {
         // BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
         // this.request = new RequestIMPL("req1", query, false, null); // change later
         RequestI request = new RequestIMPL("req1", query, false, null);
-        RequestContinuationI re = new RequestContinuationIMPL(request, new ExecutionStateIMPL());
+        // RequestContinuationI re = new RequestContinuationIMPL(request, new
+        // ExecutionStateIMPL());
         this.runTask(new AbstractTask() {
             @Override
             public void run() {
                 try {
-                    QueryResultI res = ClientComponent.this.outboundPort.execute(re);
+                    QueryResultI res = ClientComponent.this.outboundPort.execute(request);
                     ClientComponent.this.logMessage("Query result: " + res.toString());
                 } catch (Exception e) {
                     e.printStackTrace();

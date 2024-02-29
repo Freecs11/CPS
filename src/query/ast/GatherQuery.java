@@ -35,7 +35,7 @@ public class GatherQuery extends AbstractQuery {
 	@Override
 	public QueryResultI eval(ExecutionStateI context) {
 		Map<String, Object> res = (Map<String, Object>) gather.eval(context);
-		// Object cont = continuation.eval(context); // Not used yet
+		continuation.eval(context);
 		QueryResultIMPL currRes = (QueryResultIMPL) context.getCurrentResult();
 		currRes.setGR(true);
 		for (Map.Entry<String, Object> entry : res.entrySet()) {

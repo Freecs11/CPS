@@ -36,7 +36,7 @@ public class NodeP2PInboundPort extends AbstractInboundPort implements Requestin
                     @Override
                     public QueryResultI call() throws Exception {
                         System.out.println("NodeComponentInboundPort.execute");
-                        return ((NodeComponent) this.getServiceOwner()).returnQueryResult(request);
+                        return ((NodeComponent) this.getServiceOwner()).execute(request);
                     }
                 });
     }

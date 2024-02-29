@@ -20,18 +20,24 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	private int hops = 0;
 	private Boolean isFlooding = null;
 	private Double maxDistance = null;
-	private HashSet<String> positiveSNG;
+	private Set<String> positiveSNG;
+
+	public ExecutionStateIMPL(ProcessingNodeI processingNode) {
+		this.positiveSNG = new HashSet<>();
+		this.queryResult = new QueryResultIMPL();
+		this.processingNode = processingNode;
+	}
 
 	public ExecutionStateIMPL() {
 		this.positiveSNG = new HashSet<>();
 		this.queryResult = new QueryResultIMPL();
 	}
 
-	public HashSet<String> getPositiveSNG() {
+	public Set<String> getPositiveSNG() {
 		return positiveSNG;
 	}
 
-	public void setPositiveSNG(HashSet<String> positiveSNG) {
+	public void setPositiveSNG(Set<String> positiveSNG) {
 		this.positiveSNG = positiveSNG;
 	}
 
@@ -137,7 +143,22 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	}
 
 	public boolean isContinuationSet() {
-		return this.isFlooding() && this.isDirectional();
+		return this.isFlooding() || this.isDirectional();
+	}
+
+	@Override
+	public String toString() {
+		return "ExecutionStateIMPL{" +
+				"processingNode=" + processingNode +
+				", queryResult=" + queryResult +
+				", isDirectional=" + isDirectional +
+				", directions=" + directions +
+				", maxHops=" + maxHops +
+				", hops=" + hops +
+				", isFlooding=" + isFlooding +
+				", maxDistance=" + maxDistance +
+				", positiveSNG=" + positiveSNG +
+				'}';
 	}
 
 }

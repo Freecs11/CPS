@@ -6,6 +6,7 @@ import java.util.Map;
 import abstractQuery.AbstractGather;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import implementation.requestsIMPL.ExecutionStateIMPL;
 import query.interfaces.IParamContext;
 
 public class FinalGather extends AbstractGather {
