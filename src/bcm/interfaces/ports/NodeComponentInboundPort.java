@@ -44,9 +44,9 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
     @Override
     public void executeAsync(RequestI request) throws Exception {
         this.owner.handleRequest(
-                new AbstractComponent.AbstractService<>() {
+                new AbstractComponent.AbstractService<Void>() {
                     @Override
-                    public Object call() throws Exception {
+                    public Void call() throws Exception {
                         System.out.println("NodeComponentInboundPort.execute");
                         ((NodeComponent) this.getServiceOwner()).executeAsync(request);
                         return null;
@@ -67,9 +67,9 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
     @Override
     public void ask4Disconnection(NodeInfoI neighbour) throws Exception {
         this.owner.handleRequest(
-                new AbstractComponent.AbstractService<>() {
+                new AbstractComponent.AbstractService<Void>() {
                     @Override
-                    public Object call() throws Exception {
+                    public Void call() throws Exception {
                         System.out.println("NodeComponentInboundPort.execute");
                         ((NodeComponent) this.getServiceOwner()).ask4Disconnection(neighbour);
                         return null;
@@ -77,12 +77,13 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
                 });
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void ask4Connection(NodeInfoI newNeighbour) throws Exception {
         this.owner.handleRequest(
-                new AbstractComponent.AbstractService<>() {
+                new AbstractComponent.AbstractService<Void>() {
                     @Override
-                    public Object call() throws Exception {
+                    public Void call() throws Exception {
                         System.out.println("NodeComponentInboundPort.execute");
                         ((NodeComponent) this.getServiceOwner()).ask4Connection(newNeighbour);
                         return null;
@@ -102,12 +103,13 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
                 });
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
         this.owner.handleRequest(
-                new AbstractComponent.AbstractService<>() {
+                new AbstractComponent.AbstractService<Void>() {
                     @Override
-                    public Object call() throws Exception {
+                    public Void call() throws Exception {
                         System.out.println("NodeComponentInboundPort.execute");
                         ((NodeComponent) this.getServiceOwner()).executeAsync(requestContinuation);
                         return null;

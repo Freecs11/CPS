@@ -16,11 +16,11 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 public class RegistryInboundPort extends AbstractInboundPort
         implements RegistrationCI, BCM4JavaEndPointDescriptorI {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2017915843726837790L;
+     * 
+     */
+    private static final long serialVersionUID = 2017915843726837790L;
 
-	public RegistryInboundPort(
+    public RegistryInboundPort(
             String uri,
             ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);
@@ -83,9 +83,9 @@ public class RegistryInboundPort extends AbstractInboundPort
     @Override
     public void unregister(String nodeIdentifier) throws Exception {
         this.owner.handleRequest(
-                new AbstractComponent.AbstractService<>() {
+                new AbstractComponent.AbstractService<Void>() {
                     @Override
-                    public Object call() throws Exception {
+                    public Void call() throws Exception {
                         System.out.println("RegistryInboundPort.unregister");
                         ((RegistryComponent) this.getServiceOwner()).unregister(nodeIdentifier);
                         return null;

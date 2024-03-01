@@ -46,7 +46,7 @@ import implementation.requestsIMPL.ExecutionStateIMPL;
 import implementation.requestsIMPL.ProcessingNodeIMPL;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
-@RequiredInterfaces(required = { RegistrationCI.class })
+@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
     protected Set<NodeInfoI> neighbours;

@@ -1,17 +1,21 @@
 package tests;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class iparamBouchon implements query.interfaces.IParamContext {
     private query.ast.Position position;
     private String nodeId;
 
-    Map<String, Double> map;
+    private Map<String, Double> map;
 
     public iparamBouchon(query.ast.Position position, String nodeId) {
         this.position = position;
         this.nodeId = nodeId;
-        this.map = Map.of("vent", 15.0, "eau", 30.0);
+        this.map = new HashMap<String, Double>();
+        this.map.put("vent", 15.0);
+        this.map.put("eau", 30.0);
+       
     }
 
     @Override
