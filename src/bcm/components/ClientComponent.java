@@ -30,6 +30,7 @@ import query.ast.FinalDirections;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
+import query.ast.RecursiveDirections;
 import query.ast.RecursiveGather;
 import query.ast.RelativeBase;
 import query.ast.SensorRand;
@@ -71,7 +72,8 @@ public class ClientComponent extends AbstractComponent {
                 new RecursiveGather("temperature",
                         new FinalGather("humidity")),
                 // new FloodingContinuation(new RelativeBase(), 15.0));
-                new DirectionContinuation(3, new FinalDirections(Direction.SE)));
+                // new DirectionContinuation(3, new FinalDirections(Direction.SE)));
+                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
         String nodeIdentifier = "node1";
         // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
         // .findByIdentifier(nodeIdentifier);

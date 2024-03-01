@@ -52,6 +52,7 @@ public class CVM extends AbstractCVM {
         protected String uriNode3URI;
         protected String uriNode4URI;
         protected String uriNode5URI;
+        protected String uriNode6URI;
         /**
          * Reference to the consumer component to share between deploy
          * and shutdown.
@@ -175,8 +176,8 @@ public class CVM extends AbstractCVM {
                                                 AbstractInboundPort.generatePortURI(),
                                                 AbstractOutboundPort.generatePortURI(),
                                                 "node4",
-                                                4.0,
-                                                2.0,
+                                                1.0,
+                                                3.0,
                                                 40.0,
                                                 REGISTER_IN_BOUND_PORT_URI
                                 });
@@ -187,9 +188,21 @@ public class CVM extends AbstractCVM {
                                                 AbstractInboundPort.generatePortURI(),
                                                 AbstractOutboundPort.generatePortURI(),
                                                 "node5",
-                                                5.0,
                                                 1.0,
-                                                45.0,
+                                                1.0,
+                                                40.0,
+                                                REGISTER_IN_BOUND_PORT_URI
+                                });
+
+                this.uriNode6URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                                new Object[] {
+                                                "URI-ajnode6",
+                                                AbstractInboundPort.generatePortURI(),
+                                                AbstractOutboundPort.generatePortURI(),
+                                                "node6",
+                                                4.0,
+                                                4.0,
+                                                40.0,
                                                 REGISTER_IN_BOUND_PORT_URI
                                 });
 

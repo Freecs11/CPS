@@ -266,25 +266,52 @@ public class NodeComponent extends AbstractComponent
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
+
+        // we add the node to the visited nodes in the state to avoid loops
+        ((ExecutionStateIMPL) state).addNodeVisited(this.nodeInfo.nodeIdentifier());
         // Directional
         if (state.isDirectional()) {
             state.incrementHops();
+            ((ExecutionStateIMPL) state).addNodeVisited(this.nodeInfo.nodeIdentifier());
             if (((ExecutionStateIMPL) state).noMoreHops()) {
                 return result;
             }
             // New continuation
-            RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
-            for (Direction direction : ((ExecutionStateIMPL) state).getDirections()) {
-                NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
-                if (neighbour != null && !neighbour.nodeIdentifier().equals(lastNode.getNodeIdentifier())) {
-                    NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
-                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+            Direction direction = ((ExecutionStateIMPL) state).getCurrentDirection();
+            NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
+
+            // explanation to thinh :
+            // if the neighbour is null, we remove the direction from the state and we get a
+            // new one if there is one
+            // if the neighbour is not null, we execute the continuation on the neighbour (
+            // same direction as the one we are coming from)
+            // direction is updated in the state only if ( no more neighbours in the current
+            // direction )
+            // we also keep track of the visited nodes to avoid loops
+            // code is ugly but it works
+
+            if (neighbour == null) {
+                ((ExecutionStateIMPL) state).removeDirection(direction);
+                if (((ExecutionStateIMPL) state).getDirections().isEmpty()) {
+                    return result;
                 }
+                direction = ((ExecutionStateIMPL) state).getDirections().iterator().next();
+                ((ExecutionStateIMPL) state).setCurrentDirection(direction);
+                neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
+            }
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
+            if (neighbour != null
+                    && !((ExecutionStateIMPL) state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
+                NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                if (nodePort != null)
+                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
             }
         }
 
         // Flooding
-        else {
+        else
+
+        {
             if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
                 return result;
             }
@@ -294,9 +321,10 @@ public class NodeComponent extends AbstractComponent
             // New continuation
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
             for (NodeInfoI neighbour : neighbours) {
-                if (!neighbour.nodeIdentifier().equals(lastNode.getNodeIdentifier())) {
+                if (!((ExecutionStateIMPL) state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
                     NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
-                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                    if (nodePort != null)
+                        ((QueryResultIMPL) result).update(nodePort.execute(continuation));
                 }
             }
         }
@@ -349,15 +377,18 @@ public class NodeComponent extends AbstractComponent
 
         // Directional if not flooding
         else {
-            for (Direction direction : context.getDirections()) {
-                RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
-                NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
-                if (neighbour != null) {
-                    System.err.println("NEIGHBOUR: " + neighbour.nodeIdentifier());
-                    NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
-                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
-                }
+            // for (Direction direction : context.getDirections()) {
+            Direction direction = directions.iterator().next();
+            ((ExecutionStateIMPL) this.context).setCurrentDirection(direction);
+            ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
+            RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
+            NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
+            if (neighbour != null) {
+                System.err.println("NEIGHBOUR: " + neighbour.nodeIdentifier());
+                NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                ((QueryResultIMPL) result).update(nodePort.execute(continuation));
             }
+            // }
         }
 
         // ((QueryResultIMPL) result).update(this.execute(continuation));

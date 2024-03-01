@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
+import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
@@ -21,16 +22,41 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	private Boolean isFlooding = null;
 	private Double maxDistance = null;
 	private Set<String> positiveSNG;
+	private Set<String> nodesVisited;
+	private Direction currentDirection;
 
 	public ExecutionStateIMPL(ProcessingNodeI processingNode) {
 		this.positiveSNG = new HashSet<>();
 		this.queryResult = new QueryResultIMPL();
+		this.nodesVisited = new HashSet<>();
 		this.processingNode = processingNode;
 	}
 
 	public ExecutionStateIMPL() {
 		this.positiveSNG = new HashSet<>();
 		this.queryResult = new QueryResultIMPL();
+		this.nodesVisited = new HashSet<>();
+		this.nodesVisited = new HashSet<>();
+	}
+
+	public Set<String> getNodesVisited() {
+		return nodesVisited;
+	}
+
+	public void setNodesVisited(Set<String> nodesVisited) {
+		this.nodesVisited = nodesVisited;
+	}
+
+	public void addNodeVisited(String node) {
+		this.nodesVisited.add(node);
+	}
+
+	public void setCurrentDirection(Direction currentDirection) {
+		this.currentDirection = currentDirection;
+	}
+
+	public Direction getCurrentDirection() {
+		return currentDirection;
 	}
 
 	public Set<String> getPositiveSNG() {
@@ -80,6 +106,12 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 			this.directions = directions;
 		} else {
 			this.directions.addAll(directions);
+		}
+	}
+
+	public void removeDirection(Direction direction) {
+		if (this.directions != null) {
+			this.directions.remove(direction);
 		}
 	}
 
