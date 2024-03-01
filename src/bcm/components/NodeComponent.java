@@ -75,9 +75,11 @@ public class NodeComponent extends AbstractComponent
         this.inboundPort = new NodeComponentInboundPort(sensorNodeInboundPortURI,
                 this);
         this.p2poutboundPorts = new HashMap<>();
+        // TODO: Need to put this into NodeInfo (p2pEndpointInfo)
         this.p2pInboundPort = new NodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.p2pInboundPort.publishPort();
         this.outboundPort = new NodeComponentOutboundPort(node_to_reg_OutboundPortURI, this);
+        // TODO: Need to put this into NodeInfo (endpointInfo)
         this.inboundPort.publishPort();
         this.outboundPort.publishPort();
 
@@ -102,6 +104,8 @@ public class NodeComponent extends AbstractComponent
         this.processingNode = new ProcessingNodeIMPL(this.nodeInfo.nodePosition(), null,
                 this.nodeInfo.nodeIdentifier());
         ((ProcessingNodeIMPL) this.processingNode).setSensorDataMap(this.sensors);
+        // TODO: Need to change this to init a new State and then use the setter
+        // (updatePN)
         this.context = new ExecutionStateIMPL(this.processingNode);
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
