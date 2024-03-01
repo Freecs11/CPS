@@ -65,6 +65,16 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		}
 	}
 
+	public Double getMaxDistance() {
+		return this.maxDistance;
+	}
+
+	public void updateMaxDistance(Double maxDistance) {
+		if (this.maxDistance != null) {
+			this.maxDistance = maxDistance;
+		}
+	}
+
 	public void setDirections(Set<Direction> directions) {
 		if (this.directions == null) {
 			this.directions = directions;

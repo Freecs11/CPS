@@ -21,7 +21,9 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
@@ -31,6 +33,7 @@ import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PImplI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingImplI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
+import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
 import implementation.EndPointDescIMP;
 import implementation.NodeInfoIMPL;
@@ -234,7 +237,54 @@ public class NodeComponent extends AbstractComponent
     }
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
-        return null;
+        ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
+        PositionI lastPosition = state.getProcessingNode().getPosition();
+        ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
+
+        // Local execution
+        if (request == null) {
+            throw new Exception("Request is null");
+        }
+        if (request.getQueryCode() == null) {
+            throw new Exception("Query is null");
+        }
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
+        QueryResultI result = (QueryResultIMPL) query.eval(this.context);
+        // Directional
+        if (state.isDirectional()) {
+            if (this.context.noMoreHops()) {
+                return result;
+            }
+            state.incrementHops();
+            // New continuation
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
+            for (Direction direction : context.getDirections()) {
+                NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
+                if (neighbour != null) {
+                    NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                }
+            }
+        }
+
+        // Flooding
+        else {
+            if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
+                return result;
+            }
+            Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
+            Double distanceTraveled = this.processingNode.getPosition().distance(lastPosition);
+            ((ExecutionStateIMPL) state).updateMaxDistance(currentMaxDist - distanceTraveled);
+            // New continuation
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
+            for (NodeInfoI neighbour : neighbours) {
+                NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+            }
+        }
+
+        // Return final result
+        return result;
     }
 
     public void executeAsync(RequestContinuationI request) throws Exception {
@@ -269,14 +319,26 @@ public class NodeComponent extends AbstractComponent
         }
 
         RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
+
         // Flooding
         if (context.isFlooding()) {
-
+            for (NodeInfoI neighbour : neighbours) {
+                NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+            }
         }
+
         // Directional if not flooding
         else {
-
+            for (Direction direction : context.getDirections()) {
+                NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
+                if (neighbour != null) {
+                    NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                }
+            }
         }
+
         // ((QueryResultIMPL) result).update(this.execute(continuation));
         return result;
     }

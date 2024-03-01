@@ -18,8 +18,6 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
-import implementation.LookUpIMPL;
-import implementation.RegistrationIMPL;
 
 @OfferedInterfaces(offered = {
         LookupCI.class, RegistrationCI.class })
@@ -73,37 +71,58 @@ public class RegistryComponent extends AbstractComponent {
         return this.nodesMap.containsKey(nodeIdentifier);
     }
 
-    public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
+    private boolean inRangeOfEachOther(NodeInfoI n, NodeInfoI nodeInfo) {
+        return n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
+                || nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
+                        && (!n.nodeIdentifier().equals(nodeInfo.nodeIdentifier()));
+    }
 
+    public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
+        // Init the result set
         Set<NodeInfoI> result = new HashSet<>();
+
+        // Find the neighbours of the new node in the 4 directions
+        Map<Direction, NodeInfoI> directionalNeighbours = new HashMap<>();
+
+        // Look at the hashmap of all nodes and find the neighbours of the new node
         for (NodeInfoI n : nodesMap.values()) {
-            if (n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
-                    || nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
-                            && (!n.nodeIdentifier().equals(nodeInfo.nodeIdentifier()))) {
-                result.add(n);
+            if (inRangeOfEachOther(n, nodeInfo)) {
+                Direction nDir = nodeInfo.nodePosition().directionFrom(n.nodePosition());
+                if (directionalNeighbours.containsKey(nDir)) {
+                    Double currentDist = directionalNeighbours.get(nDir).nodePosition()
+                            .distance(nodeInfo.nodePosition());
+                    Double newDist = n.nodePosition().distance(nodeInfo.nodePosition());
+                    if (newDist < currentDist) {
+                        directionalNeighbours.put(nDir, n);
+                    }
+                } else {
+                    directionalNeighbours.put(nDir, n);
+                }
             }
         }
-
-        Map<Direction, NodeInfoI> directionalNeighbours = new HashMap<>();
-        for (Direction dir : Direction.values()) {
-            // max 1 neighbour per direction and max 4 neighbours
-            directionalNeighbours.put(dir, this.findNewNeighbour(nodeInfo, dir));
+        for (NodeInfoI node : directionalNeighbours.values()) {
+            result.add(node);
         }
-        result = new HashSet<>(directionalNeighbours.values());
         this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
         return result;
     }
 
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
+        Double minDist = Double.POSITIVE_INFINITY;
+        NodeInfoI newNeighbor = null;
         for (NodeInfoI node : this.nodesMap.values()) {
             PositionI nodePosition = node.nodePosition();
-            if ((node.nodePosition().distance(nodeInfo.nodePosition()) < node.nodeRange()
-                    || nodeInfo.nodePosition().distance(node.nodePosition()) < nodeInfo.nodeRange()
-                            && (!node.nodeIdentifier().equals(nodeInfo.nodeIdentifier())))) {
-                return node;
+            if (inRangeOfEachOther(node, nodeInfo)) {
+                if (nodeInfo.nodePosition().directionFrom(nodePosition).equals(d)) {
+                    Double dist = nodePosition.distance(nodeInfo.nodePosition());
+                    if (dist < minDist) {
+                        minDist = dist;
+                        newNeighbor = node;
+                    }
+                }
             }
         }
-        return null;
+        return newNeighbor;
     }
 
     public void unregister(String nodeIdentifier) throws Exception {

@@ -35,6 +35,7 @@ public class FloodingContinuation extends AbstractContinuation {
 		procNode.setPostion(pos);
 		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context;
 		contextCC.setIsFlooding(true);
+		contextCC.setDirectional(false);
 		contextCC.setMaxDistance(this.distance);
 		contextCC.updateProcessingNode(procNode);
 		return null;

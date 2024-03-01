@@ -39,9 +39,10 @@ public class DirectionContinuation extends AbstractContinuation {
 	@Override
 	public Object eval(ExecutionStateI context) {
 		Set<Direction> directions = (Set<Direction>) direction.eval(context);
-		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context; 
+		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context;
 		contextCC.setMaxHops(jumps);
 		contextCC.setDirectional(true);
+		contextCC.setIsFlooding(false);
 		contextCC.setDirections(directions);
 		return null;
 	}
