@@ -364,8 +364,8 @@ public class NodeComponent extends AbstractComponent
             return result;
         }
 
-        Set<Direction> directions = this.context.getDirections();
-        System.err.println("DIRECTIONS: " + directions.toString());
+        // Set<Direction> directions = this.context.getDirections();
+        // System.err.println("DIRECTIONS: " + directions.toString());
         // Flooding
         if (context.isFlooding()) {
             RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
@@ -378,8 +378,7 @@ public class NodeComponent extends AbstractComponent
         // Directional if not flooding
         else {
             // for (Direction direction : context.getDirections()) {
-            Direction direction = directions.iterator().next();
-            ((ExecutionStateIMPL) this.context).setCurrentDirection(direction);
+            Direction direction = ((ExecutionStateIMPL) this.context).getCurrentDirection();
             ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
             RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
             NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);

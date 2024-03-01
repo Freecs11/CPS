@@ -6,6 +6,7 @@ import java.util.Set;
 import abstractQuery.AbstractDirections;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import implementation.requestsIMPL.ExecutionStateIMPL;
 import query.interfaces.IParamContext;
 
 public class FinalDirections extends AbstractDirections {
@@ -21,6 +22,7 @@ public class FinalDirections extends AbstractDirections {
 		Direction dir = this.direction;
 		Set<Direction> dirs = new HashSet<Direction>();
 		dirs.add(dir);
+		((ExecutionStateIMPL) context).setCurrentDirection(dir);
 		return dirs;
 	}
 
