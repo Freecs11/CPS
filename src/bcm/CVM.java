@@ -8,6 +8,8 @@ import bcm.connector.NodeConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
+import fr.sorbonne_u.components.ports.AbstractInboundPort;
+import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 
@@ -16,6 +18,7 @@ public class CVM extends AbstractCVM {
     /** URI of the provider component (convenience). */
     protected static final String NODE_COMPONENT_URI = "node-URI";
     protected static final String NODE2_COMPONENT_URI = "node2-URI";
+    protected static final String NODE3_COMPONENT_URI = "node3-URI";
     /** URI of the consumer component (convenience). */
     protected static final String CLIENT_COMPONENT_URI = "client-URI";
     protected static final String REGISTER_COMPONENT_URI = "register-URI";
@@ -33,6 +36,9 @@ public class CVM extends AbstractCVM {
     protected static final String NODE2_TO_REG_OUT_BOUND_PORT_URI = "node2_2reg-outbound-port";
     protected static final String NODE2_IN_BOUND_PORT_URI = "node2-inbound-port";
 
+    protected static final String NODE3_TO_REG_OUT_BOUND_PORT_URI = "node3_reg-outbound-port";
+    protected static final String NODE3_IN_BOUND_PORT_URI = "node3-inbound-port";
+
     public CVM() throws Exception {
         super();
     }
@@ -43,6 +49,9 @@ public class CVM extends AbstractCVM {
      */
     protected String uriNodeURI;
     protected String uriNode2URI;
+    protected String uriNode3URI;
+    protected String uriNode4URI;
+    protected String uriNode5URI;
     /**
      * Reference to the consumer component to share between deploy
      * and shutdown.
@@ -96,6 +105,39 @@ public class CVM extends AbstractCVM {
                         20.0, 20.0, 45.0,
                         REGISTER_IN_BOUND_PORT_URI });
 
+        this.uriNode3URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                new Object[] {
+                        NODE3_COMPONENT_URI,
+                        NODE3_IN_BOUND_PORT_URI,
+                        NODE3_TO_REG_OUT_BOUND_PORT_URI,
+                        "node3",
+                        20.5, 20.5, 30.0,
+                        REGISTER_IN_BOUND_PORT_URI });
+
+        this.uriNode4URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                new Object[] {
+                        "URI-ajnode4",
+                        AbstractInboundPort.generatePortURI(),
+                        AbstractOutboundPort.generatePortURI(),
+                        "node4",
+                        21.0,
+                        31.0,
+                        45.0,
+                        REGISTER_IN_BOUND_PORT_URI
+                });
+
+        this.uriNode5URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                new Object[] {
+                        "URI-ajnode5",
+                        AbstractInboundPort.generatePortURI(),
+                        AbstractOutboundPort.generatePortURI(),
+                        "node5",
+                        31.0,
+                        31.0,
+                        45.0,
+                        REGISTER_IN_BOUND_PORT_URI
+                });
+
         // create the client component
         this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                 new Object[] {
@@ -108,6 +150,10 @@ public class CVM extends AbstractCVM {
         assert this.isDeployedComponent(this.uriNode2URI);
         this.toggleTracing(this.uriNode2URI);
         this.toggleLogging(this.uriNode2URI);
+
+        assert this.isDeployedComponent(this.uriNode3URI);
+        this.toggleTracing(this.uriNode3URI);
+        this.toggleLogging(this.uriNode3URI);
 
         assert this.isDeployedComponent(this.uriClientURI);
         this.toggleTracing(this.uriClientURI);
@@ -156,7 +202,7 @@ public class CVM extends AbstractCVM {
     public static void main(String[] args) {
         try {
             CVM cvm = new CVM();
-            cvm.startStandardLifeCycle(2000L);
+            cvm.startStandardLifeCycle(5000L);
             Thread.sleep(10000L);
             System.exit(0);
         } catch (Exception e) {

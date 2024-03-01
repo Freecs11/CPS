@@ -222,8 +222,21 @@ public class NodeComponent extends AbstractComponent
             throws Exception {
         try {
             NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(newNeighbour);
-            if (nodePort != null) {
-
+            // if the port is not created yet
+            // create a new port and connect this node to the neighbor
+            if (nodePort == null) {
+                nodePort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
+                nodePort.publishPort();
+                this.p2poutboundPorts.put(newNeighbour, nodePort);
+                this.doPortConnection(nodePort.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        NodeConnector.class.getCanonicalName());
+                this.logMessage("askForConnection: " + newNeighbour.nodeIdentifier() + " connected");
+                nodePort.getOwner().logMessage(this.nodeInfo.nodeIdentifier() + " is the one asking");
+            }
+            // if the port is already created we connect
+            // and ask the neighbor to connect back
+            else {
                 this.doPortConnection(nodePort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
                         NodeConnector.class.getCanonicalName());
@@ -231,6 +244,7 @@ public class NodeComponent extends AbstractComponent
                 nodePort.ask4Connection(this.nodeInfo);
                 nodePort.getOwner().logMessage(this.nodeInfo.nodeIdentifier() + " is the one asking");
             }
+
         } catch (Exception e) {
             throw new Exception("Error in ask4Connection" + e.getMessage());
         }
@@ -313,7 +327,7 @@ public class NodeComponent extends AbstractComponent
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
         // System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
 
-        // End of Continuation
+        // Check if not continuation
         if (!this.context.isContinuationSet()) {
             return result;
         }
