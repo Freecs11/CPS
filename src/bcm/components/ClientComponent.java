@@ -71,7 +71,7 @@ public class ClientComponent extends AbstractComponent {
                 new RecursiveGather("temperature",
                         new FinalGather("humidity")),
                 // new FloodingContinuation(new RelativeBase(), 15.0));
-                new DirectionContinuation(1, new FinalDirections(Direction.SE)));
+                new DirectionContinuation(3, new FinalDirections(Direction.SE)));
         String nodeIdentifier = "node1";
         // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
         // .findByIdentifier(nodeIdentifier);

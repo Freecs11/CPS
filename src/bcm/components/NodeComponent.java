@@ -268,13 +268,13 @@ public class NodeComponent extends AbstractComponent
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
         // Directional
         if (state.isDirectional()) {
-            if (this.context.noMoreHops()) {
+            state.incrementHops();
+            if (((ExecutionStateIMPL) state).noMoreHops()) {
                 return result;
             }
-            state.incrementHops();
             // New continuation
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
-            for (Direction direction : context.getDirections()) {
+            for (Direction direction : ((ExecutionStateIMPL) state).getDirections()) {
                 NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
                 if (neighbour != null && !neighbour.nodeIdentifier().equals(lastNode.getNodeIdentifier())) {
                     NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
@@ -329,17 +329,18 @@ public class NodeComponent extends AbstractComponent
         }
         AbstractQuery query = (AbstractQuery) req.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-        // System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
+        System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
 
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
             return result;
         }
 
-        RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
-
+        Set<Direction> directions = this.context.getDirections();
+        System.err.println("DIRECTIONS: " + directions.toString());
         // Flooding
         if (context.isFlooding()) {
+            RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
                 ((QueryResultIMPL) result).update(nodePort.execute(continuation));
@@ -349,8 +350,10 @@ public class NodeComponent extends AbstractComponent
         // Directional if not flooding
         else {
             for (Direction direction : context.getDirections()) {
+                RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
                 NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
                 if (neighbour != null) {
+                    System.err.println("NEIGHBOUR: " + neighbour.nodeIdentifier());
                     NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
                     ((QueryResultIMPL) result).update(nodePort.execute(continuation));
                 }

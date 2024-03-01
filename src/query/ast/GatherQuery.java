@@ -48,7 +48,8 @@ public class GatherQuery extends AbstractQuery {
 				type = Boolean.class;
 			}
 			SensorDataIMPL sensorData = new SensorDataIMPL(context.getProcessingNode().getNodeIdentifier(),
-					key, (Serializable) value, Instant.now(), type);
+					key, (Serializable) value, Instant.now(), type); // to modify to get the type and the time from the
+																		// sensor
 			currRes.addToGatheredSensors(sensorData);
 		}
 		return currRes;
