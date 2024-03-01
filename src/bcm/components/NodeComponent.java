@@ -261,12 +261,24 @@ public class NodeComponent extends AbstractComponent
         }
         AbstractQuery query = (AbstractQuery) req.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-        System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
+        // System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
+
+        // End of Continuation
         if (!this.context.isContinuationSet()) {
             return result;
         }
+
         RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
-        return this.execute(continuation);
+        // Flooding
+        if (context.isFlooding()) {
+
+        }
+        // Directional if not flooding
+        else {
+
+        }
+        // ((QueryResultIMPL) result).update(this.execute(continuation));
+        return result;
     }
 
 }

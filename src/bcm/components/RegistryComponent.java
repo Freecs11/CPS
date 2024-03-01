@@ -15,6 +15,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.GeographicalZoneI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import implementation.LookUpIMPL;
@@ -23,7 +24,6 @@ import implementation.RegistrationIMPL;
 @OfferedInterfaces(offered = {
         LookupCI.class, RegistrationCI.class })
 public class RegistryComponent extends AbstractComponent {
-    protected RegistrationCI registry;
     protected LookupInboundPort lookUpInboundPort;
     protected RegistryInboundPort registryInboundPort;
     protected Map<String, NodeInfoI> nodesMap;
@@ -34,7 +34,6 @@ public class RegistryComponent extends AbstractComponent {
             String registerInboundPortURI) {
         super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
         this.nodesMap = new HashMap<>();
-        this.registry = new RegistrationIMPL(nodesMap);
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
             this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);
@@ -75,6 +74,7 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
+
         Set<NodeInfoI> result = new HashSet<>();
         for (NodeInfoI n : nodesMap.values()) {
             if (n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
@@ -83,16 +83,31 @@ public class RegistryComponent extends AbstractComponent {
                 result.add(n);
             }
         }
+
+        Map<Direction, NodeInfoI> directionalNeighbours = new HashMap<>();
+        for (Direction dir : Direction.values()) {
+            // max 1 neighbour per direction and max 4 neighbours
+            directionalNeighbours.put(dir, this.findNewNeighbour(nodeInfo, dir));
+        }
+        result = new HashSet<>(directionalNeighbours.values());
         this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
         return result;
     }
 
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
-        return this.registry.findNewNeighbour(nodeInfo, d);
+        for (NodeInfoI node : this.nodesMap.values()) {
+            PositionI nodePosition = node.nodePosition();
+            if ((node.nodePosition().distance(nodeInfo.nodePosition()) < node.nodeRange()
+                    || nodeInfo.nodePosition().distance(node.nodePosition()) < nodeInfo.nodeRange()
+                            && (!node.nodeIdentifier().equals(nodeInfo.nodeIdentifier())))) {
+                return node;
+            }
+        }
+        return null;
     }
 
     public void unregister(String nodeIdentifier) throws Exception {
-        this.registry.unregister(nodeIdentifier);
+        this.nodesMap.remove(nodeIdentifier);
     }
 
     @Override
