@@ -88,13 +88,68 @@ public class CVM extends AbstractCVM {
                         REGISTER_IN_BOUND_PORT_URI });
         // create the node component
 
+        // this.uriNode2URI =
+        // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+        // new Object[] {
+        // NODE2_COMPONENT_URI,
+        // NODE2_IN_BOUND_PORT_URI,
+        // NODE2_TO_REG_OUT_BOUND_PORT_URI,
+        // "node2",
+        // 10.0, 40.0, 20.0,
+        // REGISTER_IN_BOUND_PORT_URI });
+        // this.uriNodeURI =
+        // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+        // new Object[] {
+        // NODE_COMPONENT_URI,
+        // NODE_IN_BOUND_PORT_URI,
+        // NODE_TO_REG_OUT_BOUND_PORT_URI,
+        // "node1",
+        // 20.0, 50.0, 15.0,
+        // REGISTER_IN_BOUND_PORT_URI });
+
+        // this.uriNode3URI =
+        // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+        // new Object[] {
+        // NODE3_COMPONENT_URI,
+        // NODE3_IN_BOUND_PORT_URI,
+        // NODE3_TO_REG_OUT_BOUND_PORT_URI,
+        // "node3",
+        // 20.5, 20.5, 10.0,
+        // REGISTER_IN_BOUND_PORT_URI });
+
+        // this.uriNode4URI =
+        // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+        // new Object[] {
+        // "URI-ajnode4",
+        // AbstractInboundPort.generatePortURI(),
+        // AbstractOutboundPort.generatePortURI(),
+        // "node4",
+        // 21.0,
+        // 31.0,
+        // 15.0,
+        // REGISTER_IN_BOUND_PORT_URI
+        // });
+
+        // this.uriNode5URI =
+        // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+        // new Object[] {
+        // "URI-ajnode5",
+        // AbstractInboundPort.generatePortURI(),
+        // AbstractOutboundPort.generatePortURI(),
+        // "node5",
+        // 31.0,
+        // 31.0,
+        // 45.0,
+        // REGISTER_IN_BOUND_PORT_URI
+        // });
+
         this.uriNode2URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                 new Object[] {
                         NODE2_COMPONENT_URI,
                         NODE2_IN_BOUND_PORT_URI,
                         NODE2_TO_REG_OUT_BOUND_PORT_URI,
                         "node2",
-                        10.0, 20.0, 20.0,
+                        2.0, 4.0, 45.0,
                         REGISTER_IN_BOUND_PORT_URI });
         this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                 new Object[] {
@@ -102,7 +157,7 @@ public class CVM extends AbstractCVM {
                         NODE_IN_BOUND_PORT_URI,
                         NODE_TO_REG_OUT_BOUND_PORT_URI,
                         "node1",
-                        20.0, 20.0, 45.0,
+                        1.0, 5.0, 45.0,
                         REGISTER_IN_BOUND_PORT_URI });
 
         this.uriNode3URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
@@ -111,7 +166,7 @@ public class CVM extends AbstractCVM {
                         NODE3_IN_BOUND_PORT_URI,
                         NODE3_TO_REG_OUT_BOUND_PORT_URI,
                         "node3",
-                        20.5, 20.5, 30.0,
+                        3.0, 3.0, 40.0,
                         REGISTER_IN_BOUND_PORT_URI });
 
         this.uriNode4URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
@@ -120,9 +175,9 @@ public class CVM extends AbstractCVM {
                         AbstractInboundPort.generatePortURI(),
                         AbstractOutboundPort.generatePortURI(),
                         "node4",
-                        21.0,
-                        31.0,
-                        45.0,
+                        4.0,
+                        2.0,
+                        40.0,
                         REGISTER_IN_BOUND_PORT_URI
                 });
 
@@ -132,8 +187,8 @@ public class CVM extends AbstractCVM {
                         AbstractInboundPort.generatePortURI(),
                         AbstractOutboundPort.generatePortURI(),
                         "node5",
-                        31.0,
-                        31.0,
+                        5.0,
+                        1.0,
                         45.0,
                         REGISTER_IN_BOUND_PORT_URI
                 });

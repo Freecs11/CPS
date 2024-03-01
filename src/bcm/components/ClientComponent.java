@@ -9,6 +9,7 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
@@ -22,8 +23,10 @@ import query.ast.AndBooleanExpr;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
+import query.ast.DirectionContinuation;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
+import query.ast.FinalDirections;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
@@ -67,7 +70,8 @@ public class ClientComponent extends AbstractComponent {
         GatherQuery query = new GatherQuery(
                 new RecursiveGather("temperature",
                         new FinalGather("humidity")),
-                new FloodingContinuation(new RelativeBase(), 15.0));
+                // new FloodingContinuation(new RelativeBase(), 15.0));
+                new DirectionContinuation(1, new FinalDirections(Direction.SE)));
         String nodeIdentifier = "node1";
         // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
         // .findByIdentifier(nodeIdentifier);

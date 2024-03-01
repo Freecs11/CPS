@@ -252,7 +252,9 @@ public class NodeComponent extends AbstractComponent
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
-        PositionI lastPosition = state.getProcessingNode().getPosition();
+        ProcessingNodeI lastNode = state.getProcessingNode();
+        PositionI lastPosition = lastNode.getPosition();
+
         ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
 
         // Local execution
@@ -274,7 +276,7 @@ public class NodeComponent extends AbstractComponent
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
             for (Direction direction : context.getDirections()) {
                 NodeInfoI neighbour = this.outboundPort.findNewNeighbour(nodeInfo, direction);
-                if (neighbour != null) {
+                if (neighbour != null && !neighbour.nodeIdentifier().equals(lastNode.getNodeIdentifier())) {
                     NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
                     ((QueryResultIMPL) result).update(nodePort.execute(continuation));
                 }
@@ -292,8 +294,10 @@ public class NodeComponent extends AbstractComponent
             // New continuation
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
             for (NodeInfoI neighbour : neighbours) {
-                NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
-                ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                if (!neighbour.nodeIdentifier().equals(lastNode.getNodeIdentifier())) {
+                    NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(neighbour);
+                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                }
             }
         }
 
