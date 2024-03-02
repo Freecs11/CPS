@@ -1,9 +1,11 @@
 package query.ast;
 
 import abstractQuery.AbstractBooleanExpr;
+import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;
+import javafx.scene.Node;
 import query.interfaces.IParamContext;
 
 public class SensorBooleanExpr extends AbstractBooleanExpr {
@@ -21,15 +23,15 @@ public class SensorBooleanExpr extends AbstractBooleanExpr {
 	public Boolean eval(ExecutionStateI context) {
 		ExecutionStateIMPL contextIMP = (ExecutionStateIMPL) context;
 		SensorDataI sensorData = contextIMP.getProcessingNode().getSensorData(sensorId);
+		String nodeId = contextIMP.getProcessingNode().getNodeIdentifier();
 		if (sensorData.getType() == Boolean.class) {
-
 			Boolean resB = (Boolean) sensorData.getValue();
-			if (resB) {
-				contextIMP.addPositiveSN(sensorId);
+			if (Boolean.TRUE.equals(resB)) {
+				contextIMP.addPositiveSN(nodeId);
 			}
 			return resB;
 		}
-		return null; // should throw error
+		return false; // sensorData.getType() != Boolean.class
 	}
 
 	@Override

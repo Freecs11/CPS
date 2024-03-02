@@ -30,6 +30,7 @@ import query.ast.FinalDirections;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
+import query.ast.OrBooleanExpr;
 import query.ast.RecursiveDirections;
 import query.ast.RecursiveGather;
 import query.ast.RelativeBase;
@@ -100,16 +101,15 @@ public class ClientComponent extends AbstractComponent {
             }
         });
 
-        // AndBooleanExpr res = new AndBooleanExpr(
-        // new ConditionalExprBooleanExpr(
-        // new EqualConditionalExpr(new SensorRand("humidity"), new
-        // ConstantRand(15.0))),
-        // new ConditionalExprBooleanExpr(
-        // new EqualConditionalExpr(new SensorRand("temperature"), new
-        // ConstantRand(15.0))));
-        // BooleanQuery query = new BooleanQuery(res, new EmptyContinuation());
-        // this.request = new RequestIMPL("req1", query, false, null); // change later
-        RequestI request = new RequestIMPL("req1", query, false, null);
+        OrBooleanExpr res = new OrBooleanExpr(
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("humidity"), new ConstantRand(20.0))),
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("temperature"), new ConstantRand(20.0))));
+        BooleanQuery query2 = new BooleanQuery(res,
+                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
+        this.request = new RequestIMPL("req1", query2, false, null); // change later
+        // RequestI request = new RequestIMPL("req1", query, false, null);
         // RequestContinuationI re = new RequestContinuationIMPL(request, new
         // ExecutionStateIMPL());
         this.runTask(new AbstractTask() {

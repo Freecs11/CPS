@@ -181,7 +181,11 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	}
 
 	public void addPositiveSN(String sn) {
-		this.positiveSNG.add(sn);
+		if (this.positiveSNG == null) {
+			this.positiveSNG = new HashSet<>();
+		}
+		if (!this.positiveSNG.contains(sn))
+			this.positiveSNG.add(sn);
 	}
 
 	public boolean isContinuationSet() {

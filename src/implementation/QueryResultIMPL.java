@@ -110,7 +110,8 @@ public class QueryResultIMPL implements QueryResultI {
 		if (this.positiveSN == null) {
 			this.positiveSN = new ArrayList<>();
 		}
-		this.positiveSN.add(sensorId);
+		if (!this.positiveSN.contains(sensorId))
+			this.positiveSN.add(sensorId);
 	}
 
 	@Override
@@ -120,9 +121,9 @@ public class QueryResultIMPL implements QueryResultI {
 			if (this.positiveSN.isEmpty()) {
 				return "No positive sensor nodes";
 			}
-			String result = "Positive Sensor Nodes: ";
+			String result = "\nPositive Sensor Nodes:--->| \u2193 \n";
 			for (String sn : this.positiveSN) {
-				result += sn + " ";
+				result += "		  |--- " + sn + "\n";
 			}
 			return result;
 		} else if (this.isGatherRequest()) {

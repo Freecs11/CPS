@@ -40,14 +40,9 @@ public class EqualConditionalExpr extends AbstractConditionalExpr {
 
 		Boolean resB = Double.compare(rand1Eval, rand2Eval) == 0;
 
-		if (this.rand1 instanceof SensorRand && resB) {
-			SensorRand rand1IMP = (SensorRand) this.rand1;
-			contextIMP.addPositiveSN(rand1IMP.getSensorId());
-		}
-
-		if (this.rand2 instanceof SensorRand && resB) {
-			SensorRand rand2IMP = (SensorRand) this.rand2;
-			contextIMP.addPositiveSN(rand2IMP.getSensorId());
+		String nodeInfo = contextIMP.getProcessingNode().getNodeIdentifier();
+		if (Boolean.TRUE.equals(resB)) {
+			contextIMP.addPositiveSN(nodeInfo);
 		}
 
 		return resB;

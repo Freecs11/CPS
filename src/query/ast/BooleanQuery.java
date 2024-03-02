@@ -32,7 +32,7 @@ public class BooleanQuery extends AbstractQuery {
 	@Override
 	public QueryResultI eval(ExecutionStateI context) {
 		ExecutionStateIMPL contextIMP = (ExecutionStateIMPL) context;
-		// Boolean res = (Boolean) expr.eval(contextIMP); // Never used
+		expr.eval(contextIMP); // we need to evaluate the expression to get the positive sensors
 		continuation.eval(context);
 		QueryResultIMPL currRes = (QueryResultIMPL) contextIMP.getCurrentResult();
 		HashSet<String> sensors = (HashSet) contextIMP.getPositiveSNG();
