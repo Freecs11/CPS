@@ -1,7 +1,7 @@
 package query.ast;
 
-import abstractQuery.AbstractBooleanExpr;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import query.abstraction.AbstractBooleanExpr;
 import query.interfaces.IParamContext;
 
 public class NotBooleanExpr extends AbstractBooleanExpr {

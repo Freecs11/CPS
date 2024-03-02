@@ -2,11 +2,11 @@ package query.ast;
 
 import java.util.Set;
 
-import abstractQuery.AbstractContinuation;
-import abstractQuery.AbstractDirections;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;
+import query.abstraction.AbstractContinuation;
+import query.abstraction.AbstractDirections;
 import query.interfaces.IParamContext;
 
 public class DirectionContinuation extends AbstractContinuation {
@@ -38,6 +38,7 @@ public class DirectionContinuation extends AbstractContinuation {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object eval(ExecutionStateI context) {
+		// TODO: The directions need to be a sequence of directions that we pop()
 		Set<Direction> directions = (Set<Direction>) direction.eval(context);
 		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context;
 		contextCC.setMaxHops(jumps);

@@ -1,11 +1,11 @@
 package query.ast;
 
-import abstractQuery.AbstractBase;
-import abstractQuery.AbstractContinuation;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;
 import implementation.requestsIMPL.ProcessingNodeIMPL;
+import query.abstraction.AbstractBase;
+import query.abstraction.AbstractContinuation;
 import query.interfaces.IParamContext;
 
 public class FloodingContinuation extends AbstractContinuation {

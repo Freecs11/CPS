@@ -1,4 +1,4 @@
-package abstractQuery;
+package query.abstraction;
 
 import query.interfaces.IEval;
 

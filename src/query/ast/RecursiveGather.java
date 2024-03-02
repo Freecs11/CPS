@@ -2,9 +2,9 @@ package query.ast;
 
 import java.util.Map;
 
-import abstractQuery.AbstractGather;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import query.abstraction.AbstractGather;
 import query.interfaces.IParamContext;
 
 public class RecursiveGather extends AbstractGather {

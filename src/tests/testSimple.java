@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import implementation.PositionIMPL;
 import query.ast.AndBooleanExpr;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
@@ -18,7 +19,6 @@ import query.ast.GatherQuery;
 import query.ast.GreaterOrEqualConditionalExpr;
 import query.ast.LesserOrEqualConditionalExpr;
 import query.ast.OrBooleanExpr;
-import query.ast.Position;
 import query.ast.RecursiveGather;
 import query.ast.SensorRand;
 import query.interfaces.IParamContext;
@@ -31,19 +31,22 @@ public class testSimple {
         GatherQuery res = new GatherQuery(
                 new RecursiveGather("eau", new FinalGather("vent")), new EmptyContinuation());
 
-        IParamContext context = new iparamBouchon(new Position(10, 0), "id");
+        IParamContext context = new iparamBouchon(new PositionIMPL(10, 0), "id");
         Map<String, Double> result = res.eval(context);
         // returns a map {vent=25, eau=25}
-        assertEquals((Double) 15.0 , (Double) result.get("vent"));
-        assertEquals((Double) result.get("eau"),(Double) 30.0);
+        assertEquals((Double) 15.0, (Double) result.get("vent"));
+        assertEquals((Double) result.get("eau"), (Double) 30.0);
     }
 
     @Test
     public void testBQuery_AndBExp() {
-        AndBooleanExpr res = new AndBooleanExpr(new ConditionalExprBooleanExpr(new EqualConditionalExpr(new SensorRand("vent"), new ConstantRand(15.0))),
-                new ConditionalExprBooleanExpr(new EqualConditionalExpr(new SensorRand("vent"), new ConstantRand(15.0))));
+        AndBooleanExpr res = new AndBooleanExpr(
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("vent"), new ConstantRand(15.0))),
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("vent"), new ConstantRand(15.0))));
         BooleanQuery ress = new BooleanQuery(res, new EmptyContinuation());
-        IParamContext context = new iparamBouchon(new Position(10, 0), "id");
+        IParamContext context = new iparamBouchon(new PositionIMPL(10, 0), "id");
 
         Boolean r = (Boolean) ress.eval(context);
         System.out.println(" and " + res.eval(context));
@@ -58,11 +61,14 @@ public class testSimple {
 
     @Test
     public void testBQuery_GeqCExp() {
-        GreaterOrEqualConditionalExpr res = new GreaterOrEqualConditionalExpr(new SensorRand("vent"), new ConstantRand(10.0));
-        LesserOrEqualConditionalExpr res2 = new LesserOrEqualConditionalExpr(new SensorRand("eau"), new ConstantRand(20.0)); // faux
-        OrBooleanExpr res3 = new OrBooleanExpr(new ConditionalExprBooleanExpr(res), new ConditionalExprBooleanExpr(res2));
+        GreaterOrEqualConditionalExpr res = new GreaterOrEqualConditionalExpr(new SensorRand("vent"),
+                new ConstantRand(10.0));
+        LesserOrEqualConditionalExpr res2 = new LesserOrEqualConditionalExpr(new SensorRand("eau"),
+                new ConstantRand(20.0)); // faux
+        OrBooleanExpr res3 = new OrBooleanExpr(new ConditionalExprBooleanExpr(res),
+                new ConditionalExprBooleanExpr(res2));
         BooleanQuery ress = new BooleanQuery(res3, new EmptyContinuation());
-        IParamContext context = new iparamBouchon(new Position(10, 0), "id");
+        IParamContext context = new iparamBouchon(new PositionIMPL(10, 0), "id");
         Boolean r = (Boolean) ress.eval(context);
         System.out.println(" geq " + res.eval(context));
         assertTrue(r);

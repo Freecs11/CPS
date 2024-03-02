@@ -1,8 +1,8 @@
 package query.ast;
 
-import abstractQuery.AbstractRand;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import query.abstraction.AbstractRand;
 import query.interfaces.IParamContext;
 
 public class SensorRand extends AbstractRand {

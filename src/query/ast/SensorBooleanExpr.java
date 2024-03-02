@@ -1,11 +1,10 @@
 package query.ast;
 
-import abstractQuery.AbstractBooleanExpr;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;
-import javafx.scene.Node;
+import query.abstraction.AbstractBooleanExpr;
 import query.interfaces.IParamContext;
 
 public class SensorBooleanExpr extends AbstractBooleanExpr {

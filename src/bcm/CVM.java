@@ -210,7 +210,8 @@ public class CVM extends AbstractCVM {
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 CLIENT_COMPONENT_URI,
-                                                CLIENTS_OUT_BOUND_PORT_URI }); // to be changed
+                                                LOOKUP_IN_BOUND_PORT_URI
+                                }); // to be changed
                 assert this.isDeployedComponent(this.uriNodeURI);
                 this.toggleTracing(this.uriNodeURI);
                 this.toggleLogging(this.uriNodeURI);
@@ -232,20 +233,6 @@ public class CVM extends AbstractCVM {
                 this.toggleLogging(this.uriRegisterURI);
 
                 // ---------------------------------------------------------------------
-                // Connection phase
-                // ---------------------------------------------------------------------
-
-                // do the connection
-                // Connection directe Client<->Node
-                // this.doPortConnection(this.uriClientURI, URIGetterOutboundPortURI,
-                // URIProviderInboundPortURI,
-                // NodeConnector.class.getCanonicalName());
-
-                this.doPortConnection(this.uriClientURI,
-                                CLIENTS_OUT_BOUND_PORT_URI,
-                                LOOKUP_IN_BOUND_PORT_URI,
-                                LookUpRegistryConnector.class.getCanonicalName());
-                // ---------------------------------------------------------------------
                 // Deployment done
                 // ---------------------------------------------------------------------
                 super.deploy();
@@ -253,8 +240,6 @@ public class CVM extends AbstractCVM {
 
         @Override
         public void finalise() throws Exception {
-                // Port disconnection
-                this.doPortDisconnection(this.uriClientURI, CLIENTS_OUT_BOUND_PORT_URI);
                 super.finalise();
                 // System.out.println("CVM finalise");
         }
@@ -270,8 +255,8 @@ public class CVM extends AbstractCVM {
         public static void main(String[] args) {
                 try {
                         CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(50000L);
-                        Thread.sleep(10000L);
+                        cvm.startStandardLifeCycle(1000L);
+                        Thread.sleep(2000L);
                         System.exit(0);
                 } catch (Exception e) {
                         throw new RuntimeException(e);

@@ -1,8 +1,8 @@
 package query.ast;
 
-import abstractQuery.AbstractContinuation;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;
+import query.abstraction.AbstractContinuation;
 import query.interfaces.IParamContext;
 
 public class EmptyContinuation extends AbstractContinuation {

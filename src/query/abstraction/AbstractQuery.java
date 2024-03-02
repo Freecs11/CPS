@@ -1,4 +1,4 @@
-package abstractQuery;
+package query.abstraction;
 
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
 import query.interfaces.IEval;

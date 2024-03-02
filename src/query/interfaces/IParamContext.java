@@ -1,12 +1,12 @@
 package query.interfaces;
 
-import query.ast.Position;
+import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 
 public interface IParamContext {
 
-	public Position getPosition();
+	public PositionI getPosition();
 
-	public void setPosition(Position pos);
+	public void setPosition(PositionI pos);
 
 	public String getNodeId();
 

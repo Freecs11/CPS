@@ -1,9 +1,9 @@
 package query.ast;
 
-import abstractQuery.AbstractConditionalExpr;
-import abstractQuery.AbstractRand;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;
+import query.abstraction.AbstractConditionalExpr;
+import query.abstraction.AbstractRand;
 import query.interfaces.IParamContext;
 
 public class LesserThanConditionalExpr extends AbstractConditionalExpr {

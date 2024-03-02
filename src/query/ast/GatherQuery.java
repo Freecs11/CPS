@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Map;
 
-import abstractQuery.AbstractContinuation;
-import abstractQuery.AbstractGather;
-import abstractQuery.AbstractQuery;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.QueryResultIMPL;
 import implementation.SensorDataIMPL;
+import query.abstraction.AbstractContinuation;
+import query.abstraction.AbstractGather;
+import query.abstraction.AbstractQuery;
 import query.interfaces.IParamContext;
 
 public class GatherQuery extends AbstractQuery {

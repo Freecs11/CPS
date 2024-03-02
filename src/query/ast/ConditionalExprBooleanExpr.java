@@ -1,8 +1,8 @@
 package query.ast;
 
-import abstractQuery.AbstractBooleanExpr;
-import abstractQuery.AbstractConditionalExpr;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import query.abstraction.AbstractBooleanExpr;
+import query.abstraction.AbstractConditionalExpr;
 import query.interfaces.IParamContext;
 
 public class ConditionalExprBooleanExpr extends AbstractBooleanExpr {
