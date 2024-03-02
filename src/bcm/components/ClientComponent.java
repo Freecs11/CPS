@@ -3,11 +3,12 @@ package bcm.components;
 import bcm.connector.LookUpRegistryConnector;
 import bcm.connector.NodeConnector;
 import bcm.interfaces.ports.ClientComponentOutboundPort;
-import bcm.interfaces.ports.ClientRegisterOutboundPort;
+import bcm.interfaces.ports.Client2RegisterOutboundPort;
 import bcm.interfaces.ports.LookupInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
@@ -39,18 +40,16 @@ import query.ast.SensorRand;
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class })
 public class ClientComponent extends AbstractComponent {
     protected ClientComponentOutboundPort outboundPort;
-    protected ClientRegisterOutboundPort clientRegisterOutboundPort;
+    protected Client2RegisterOutboundPort client2RegisterOutboundPort;
+    protected String registryInboundPortURI;
     protected RequestI request;
 
-    protected ClientComponent(String uri,
-            String outboundPortURI) throws Exception {
+    protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
         super(uri, 1, 0);
-        // assert outboundPortURI != null;
-        // this.outboundPort = new ClientComponentOutboundPort(uri, this);
-        // this.outboundPort.localPublishPort();
-        // this.lookupInboundPortURI = lookupInboundPortURI;
-        this.clientRegisterOutboundPort = new ClientRegisterOutboundPort(outboundPortURI, this);
-        this.clientRegisterOutboundPort.publishPort();
+        this.client2RegisterOutboundPort = new Client2RegisterOutboundPort(AbstractOutboundPort.generatePortURI(),
+                this);
+        this.client2RegisterOutboundPort.publishPort();
+        this.registryInboundPortURI = registryInboundPortURI;
         this.getTracer().setTitle("Client Component");
         this.getTracer().setRelativePosition(1, 1);
         // System.out.println("nodeInboundPortURI is set to : " +
@@ -58,35 +57,36 @@ public class ClientComponent extends AbstractComponent {
         // System.out.println("the OutboundPortURI is : " +
         // this.outboundPort.getPortURI());
         AbstractComponent.checkImplementationInvariant(this);
+        // TODO: recheck this check
+        AbstractComponent.checkInvariant(this);
     }
 
     @Override
     public synchronized void start() throws ComponentStartException {
         this.logMessage("starting client component.");
         super.start();
+        // ---------Connection to the registry component---------
+        try {
+            this.doPortConnection(this.client2RegisterOutboundPort.getPortURI(),
+                    registryInboundPortURI,
+                    LookUpRegistryConnector.class.getCanonicalName());
+        } catch (Exception e) {
+            throw new ComponentStartException(e);
+        }
     }
 
     @Override
     public void execute() throws Exception {
         super.execute();
-        GatherQuery query = new GatherQuery(
-                new RecursiveGather("temperature",
-                        new FinalGather("humidity")),
-                // new FloodingContinuation(new RelativeBase(), 15.0));
-                // new DirectionContinuation(3, new FinalDirections(Direction.SE)));
-                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
+
+        // Finding node with identifier "node1"
         String nodeIdentifier = "node1";
-        // ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
-        // .findByIdentifier(nodeIdentifier);
-        // System.err.println("NodeInfo: " + nodeInfo.toString());
         this.runTask(new AbstractTask() {
             @Override
             public void run() {
                 try {
-                    ConnectionInfoI nodeInfo = ClientComponent.this.clientRegisterOutboundPort
+                    ConnectionInfoI nodeInfo = ClientComponent.this.client2RegisterOutboundPort
                             .findByIdentifier(nodeIdentifier); // modify to return an implementation of connectionInfo
-                    // Boolean res =
-                    // ClientComponent.this.clientRegisterOutboundPort.registered(nodeIdentifier);
                     // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
                     ClientComponent.this.outboundPort = new ClientComponentOutboundPort(nodeInfo.nodeIdentifier(),
                             ClientComponent.this);
@@ -101,17 +101,32 @@ public class ClientComponent extends AbstractComponent {
             }
         });
 
+        // -------------------Gather Query Test-------------------
+        // GatherQuery query = new GatherQuery(
+        // new RecursiveGather("temperature",
+        // new FinalGather("humidity")),
+        // // new FloodingContinuation(new RelativeBase(), 15.0));
+        // // new DirectionContinuation(3, new FinalDirections(Direction.SE)));
+        // new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new
+        // FinalDirections(Direction.NE))));
+
+        // -------------Boolean Query Test---------------
         OrBooleanExpr res = new OrBooleanExpr(
                 new ConditionalExprBooleanExpr(
                         new EqualConditionalExpr(new SensorRand("humidity"), new ConstantRand(20.0))),
                 new ConditionalExprBooleanExpr(
                         new EqualConditionalExpr(new SensorRand("temperature"), new ConstantRand(20.0))));
+
         BooleanQuery query2 = new BooleanQuery(res,
                 new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
-        this.request = new RequestIMPL("req1", query2, false, null); // change later
-        // RequestI request = new RequestIMPL("req1", query, false, null);
-        // RequestContinuationI re = new RequestContinuationIMPL(request, new
-        // ExecutionStateIMPL());
+
+        // ------Actual Request to look up-------
+        this.request = new RequestIMPL("req1",
+                // query,
+                query2,
+                false,
+                null); // change later
+
         this.runTask(new AbstractTask() {
             @Override
             public void run() {
@@ -131,10 +146,10 @@ public class ClientComponent extends AbstractComponent {
             this.doPortDisconnection(this.outboundPort.getPortURI());
         }
         this.outboundPort.unpublishPort();
-        if (this.clientRegisterOutboundPort.connected()) {
-            this.doPortDisconnection(this.clientRegisterOutboundPort.getPortURI());
+        if (this.client2RegisterOutboundPort.connected()) {
+            this.doPortDisconnection(this.client2RegisterOutboundPort.getPortURI());
         }
-        this.clientRegisterOutboundPort.unpublishPort();
+        this.client2RegisterOutboundPort.unpublishPort();
         super.finalise();
         // System.out.println("finalise ClientComponent");
     }
