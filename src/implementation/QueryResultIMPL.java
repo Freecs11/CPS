@@ -121,17 +121,19 @@ public class QueryResultIMPL implements QueryResultI {
 			if (this.positiveSN.isEmpty()) {
 				return "No positive sensor nodes";
 			}
-			String result = "\nPositive Sensor Nodes:--->| \u2193 \n";
+			StringBuilder bld = new StringBuilder();
+			bld.append("\nPositive Sensor Nodes:--->| \u2193 \n");
 			for (String sn : this.positiveSN) {
-				result += "		  |--- " + sn + "\n";
+				bld.append("  |--- " + sn + "\n");
 			}
-			return result;
+			return bld.toString();
 		} else if (this.isGatherRequest()) {
-			String result = "Gathered Sensors: ";
+			StringBuilder bld = new StringBuilder();
+			bld.append("\nGathered Sensors:--->| \u2193 \n");
 			for (SensorDataI sensor : this.gatheredSensors) {
-				result += sensor.toString() + " ";
+				bld.append("  |--- " + sensor.toString() + "\n");
 			}
-			return result;
+			return bld.toString();
 		}
 		return "No result";
 	}
