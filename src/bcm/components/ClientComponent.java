@@ -7,6 +7,7 @@ import bcm.interfaces.ports.Client2RegisterOutboundPort;
 import bcm.interfaces.ports.LookupInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
@@ -39,21 +40,26 @@ import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class })
 public class ClientComponent extends AbstractComponent {
-    protected ClientComponentOutboundPort outboundPort;
-    protected Client2RegisterOutboundPort client2RegisterOutboundPort;
+    protected ClientComponentOutboundPort client2NodeOutboundPort;
+    protected Client2RegisterOutboundPort client2RegistryOutboundPort;
     protected String registryInboundPortURI;
     protected RequestI request;
 
     protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
         super(uri, 1, 0);
-        this.client2RegisterOutboundPort = new Client2RegisterOutboundPort(AbstractOutboundPort.generatePortURI(),
+        // ---------Init the ports---------
+        this.client2RegistryOutboundPort = new Client2RegisterOutboundPort(
+                AbstractOutboundPort.generatePortURI(),
                 this);
-        this.client2RegisterOutboundPort.publishPort();
+        this.client2RegistryOutboundPort.publishPort();
         this.registryInboundPortURI = registryInboundPortURI;
+        this.client2NodeOutboundPort = new ClientComponentOutboundPort(
+                AbstractOutboundPort.generatePortURI(),
+                this);
+        this.client2NodeOutboundPort.publishPort();
         this.getTracer().setTitle("Client Component");
         this.getTracer().setRelativePosition(1, 1);
         AbstractComponent.checkImplementationInvariant(this);
-        // TODO: recheck this check
         AbstractComponent.checkInvariant(this);
     }
 
@@ -63,7 +69,7 @@ public class ClientComponent extends AbstractComponent {
         super.start();
         // ---------Connection to the registry component---------
         try {
-            this.doPortConnection(this.client2RegisterOutboundPort.getPortURI(),
+            this.doPortConnection(this.client2RegistryOutboundPort.getPortURI(),
                     registryInboundPortURI,
                     LookUpRegistryConnector.class.getCanonicalName());
         } catch (Exception e) {
@@ -81,14 +87,11 @@ public class ClientComponent extends AbstractComponent {
             @Override
             public void run() {
                 try {
-                    ConnectionInfoI nodeInfo = ClientComponent.this.client2RegisterOutboundPort
+                    ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
                             .findByIdentifier(nodeIdentifier); // modify to return an implementation of connectionInfo
                     // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
-                    ClientComponent.this.outboundPort = new ClientComponentOutboundPort(nodeInfo.nodeIdentifier(),
-                            ClientComponent.this);
-                    ClientComponent.this.outboundPort.publishPort();
                     ClientComponent.this.doPortConnection(
-                            ClientComponent.this.outboundPort.getPortURI(),
+                            ClientComponent.this.client2NodeOutboundPort.getPortURI(),
                             ((EndPointDescIMP) nodeInfo.endPointInfo()).getURI(),
                             NodeConnector.class.getCanonicalName());
                 } catch (Exception e) {
@@ -127,9 +130,9 @@ public class ClientComponent extends AbstractComponent {
             @Override
             public void run() {
                 try {
-                    QueryResultI res = ClientComponent.this.outboundPort.execute(request);
+                    QueryResultI res = ClientComponent.this.client2NodeOutboundPort.execute(request);
                     ClientComponent.this.logMessage("Query result: " + res.toString());
-                    ClientComponent.this.doPortDisconnection(ClientComponent.this.outboundPort.getPortURI());
+                    ClientComponent.this.doPortDisconnection(ClientComponent.this.client2NodeOutboundPort.getPortURI());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,16 +142,15 @@ public class ClientComponent extends AbstractComponent {
 
     @Override
     public synchronized void finalise() throws Exception {
-        if (this.outboundPort.connected()) {
-            this.doPortDisconnection(this.outboundPort.getPortURI());
+        if (this.client2NodeOutboundPort.connected()) {
+            this.doPortDisconnection(this.client2NodeOutboundPort.getPortURI());
         }
-        this.outboundPort.unpublishPort();
-        if (this.client2RegisterOutboundPort.connected()) {
-            this.doPortDisconnection(this.client2RegisterOutboundPort.getPortURI());
+        this.client2NodeOutboundPort.unpublishPort();
+        if (this.client2RegistryOutboundPort.connected()) {
+            this.doPortDisconnection(this.client2RegistryOutboundPort.getPortURI());
         }
-        this.client2RegisterOutboundPort.unpublishPort();
+        this.client2RegistryOutboundPort.unpublishPort();
         super.finalise();
         // System.out.println("finalise ClientComponent");
     }
-
 }
