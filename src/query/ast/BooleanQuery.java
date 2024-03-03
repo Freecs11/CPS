@@ -35,7 +35,7 @@ public class BooleanQuery extends AbstractQuery {
 		expr.eval(contextIMP); // we need to evaluate the expression to get the positive sensors
 		continuation.eval(context);
 		QueryResultIMPL currRes = (QueryResultIMPL) contextIMP.getCurrentResult();
-		HashSet<String> sensors = (HashSet) contextIMP.getPositiveSNG();
+		HashSet<String> sensors = (HashSet<String>) contextIMP.getPositiveSNG();
 		currRes.setBR(true);
 		for (String sensor : sensors) {
 			currRes.addPositiveSN(sensor);

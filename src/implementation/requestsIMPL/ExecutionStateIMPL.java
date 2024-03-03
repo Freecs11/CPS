@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
-import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
@@ -14,7 +13,7 @@ import implementation.QueryResultIMPL;
 public class ExecutionStateIMPL implements ExecutionStateI {
 
 	private ProcessingNodeI processingNode;
-	private QueryResultIMPL queryResult;
+	private QueryResultI queryResult;
 	private Boolean isDirectional = null;
 	private Set<Direction> directions;
 	private Integer maxHops = null;
@@ -133,7 +132,7 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	public void addToCurrentResult(QueryResultI result) {
 		if (getCurrentResult().isBooleanRequest() == result.isBooleanRequest()
 				&& getCurrentResult().isGatherRequest() == result.isGatherRequest()) {
-			queryResult.update(result);
+			((QueryResultIMPL) queryResult).update(result);
 		}
 	}
 

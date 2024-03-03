@@ -1,6 +1,5 @@
 package query.ast;
 
-import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.requestsIMPL.ExecutionStateIMPL;

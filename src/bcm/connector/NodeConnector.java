@@ -36,7 +36,6 @@ public class NodeConnector extends AbstractConnector
 
     @Override
     public void ask4Connection(NodeInfoI newNeighbour) throws Exception {
-        // return ((RequestingCI) this.offering).execute(request);
         ((SensorNodeP2PCI) this.offering).ask4Connection(newNeighbour);
     }
 

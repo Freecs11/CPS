@@ -7,12 +7,12 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 public class NodeInfoIMPL implements NodeInfoI {
 
     private final String nodeIdentifier;
-    private final PositionIMPL position;
+    private final PositionI position;
     private final EndPointDescriptorI endpoint;
     private final EndPointDescriptorI p2pEndpoint;
     private final double range;
 
-    public NodeInfoIMPL(String nodeIdentifier, PositionIMPL position, EndPointDescriptorI endpoint,
+    public NodeInfoIMPL(String nodeIdentifier, PositionI position, EndPointDescriptorI endpoint,
             EndPointDescriptorI p2pEndpoint, double range) {
         this.nodeIdentifier = nodeIdentifier;
         this.position = position;

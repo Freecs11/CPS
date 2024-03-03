@@ -37,7 +37,7 @@ import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingImplI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
-import implementation.EndPointDescIMP;
+import implementation.EndPointDescIMPL;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 import implementation.QueryResultIMPL;
@@ -53,10 +53,10 @@ import query.abstraction.AbstractQuery;
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
     protected Set<NodeInfoI> neighbours;
-    private ExecutionStateIMPL context;
+    private ExecutionStateI context;
     private ProcessingNodeI processingNode;
     private Map<String, SensorDataI> sensors;
-    protected final NodeInfoIMPL nodeInfo;
+    protected final NodeInfoI nodeInfo;
     protected final NodeComponentInboundPort clientInboundPort;
     protected final NodeP2PInboundPort p2pInboundPort;
     protected final HashMap<NodeInfoI, NodeP2POutboundPort> nodeInfoToP2POutboundPortMap;
@@ -83,7 +83,7 @@ public class NodeComponent extends AbstractComponent
         this.clientInboundPort.publishPort();
         this.node2RegistryOutboundPort.publishPort();
         this.registerInboundPortURI = registryInboundPortURI;
-        EndPointDescriptorI endpoint = new EndPointDescIMP(this.clientInboundPort.getPortURI());
+        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.clientInboundPort.getPortURI());
         this.nodeInfo = new NodeInfoIMPL(nodeId,
                 new PositionIMPL(x, y), endpoint, this.p2pInboundPort, range);
         this.getTracer().setTitle("Node Component: " + nodeId);
@@ -401,13 +401,12 @@ public class NodeComponent extends AbstractComponent
         if (request == null) {
             throw new Exception("Request is null");
         }
-        RequestI req = (RequestIMPL) request;
-        if (req.getQueryCode() == null) {
+        if (request.getQueryCode() == null) {
             throw new Exception("Query is null");
         }
-        AbstractQuery query = (AbstractQuery) req.getQueryCode();
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-        System.err.println("STATE: " + ((ExecutionStateIMPL) this.context));
+        System.err.println("STATE: " + this.context.toString());
 
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
@@ -418,7 +417,7 @@ public class NodeComponent extends AbstractComponent
         // System.err.println("DIRECTIONS: " + directions.toString());
         // Flooding
         if (context.isFlooding()) {
-            RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 ((QueryResultIMPL) result).update(nodePort.execute(continuation));
@@ -430,7 +429,7 @@ public class NodeComponent extends AbstractComponent
             // for (Direction direction : context.getDirections()) {
             Direction direction = ((ExecutionStateIMPL) this.context).getCurrentDirection();
             ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
-            RequestContinuationI continuation = new RequestContinuationIMPL(req, this.context);
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
             NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
             if (neighbour != null) {
                 System.err.println("NEIGHBOUR: " + neighbour.nodeIdentifier());

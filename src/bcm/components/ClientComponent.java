@@ -17,7 +17,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
-import implementation.EndPointDescIMP;
+import implementation.EndPointDescIMPL;
 import implementation.RequestContinuationIMPL;
 import implementation.RequestIMPL;
 import implementation.requestsIMPL.ExecutionStateIMPL;
@@ -92,7 +92,7 @@ public class ClientComponent extends AbstractComponent {
                     // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
                     ClientComponent.this.doPortConnection(
                             ClientComponent.this.client2NodeOutboundPort.getPortURI(),
-                            ((EndPointDescIMP) nodeInfo.endPointInfo()).getURI(),
+                            ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
                             NodeConnector.class.getCanonicalName());
                 } catch (Exception e) {
                     e.printStackTrace();

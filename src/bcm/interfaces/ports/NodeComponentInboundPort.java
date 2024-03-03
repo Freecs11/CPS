@@ -77,7 +77,6 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
                 });
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void ask4Connection(NodeInfoI newNeighbour) throws Exception {
         this.owner.handleRequest(
@@ -103,7 +102,6 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
                 });
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
         this.owner.handleRequest(

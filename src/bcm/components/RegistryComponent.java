@@ -27,14 +27,14 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 public class RegistryComponent extends AbstractComponent {
     protected LookupInboundPort lookUpInboundPort;
     protected RegistryInboundPort registryInboundPort;
-    protected Map<String, NodeInfoI> nodesMap;
+    protected Map<String, NodeInfoI> nodeIDToNodeInfoMap;
 
-    protected RegistryComponent(String reflectionInboundPortURI,
+    protected RegistryComponent(String uri,
             int nbThreads, int nbSchedulableThreads,
             String lookupInboundPortURI,
             String registerInboundPortURI) {
-        super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-        this.nodesMap = new HashMap<>();
+        super(uri, nbThreads, nbSchedulableThreads);
+        this.nodeIDToNodeInfoMap = new HashMap<>();
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
             this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);
@@ -51,27 +51,40 @@ public class RegistryComponent extends AbstractComponent {
         this.logMessage("starting Registry component.");
     }
 
-    public void addNodeToMap(NodeInfoI nodeInfo) {
-        this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
-    }
-
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
-        return this.nodesMap.get(sensorNodeId);
+        try {
+            return this.nodeIDToNodeInfoMap.get(sensorNodeId);
+        } catch (Exception e) {
+            throw new Exception("No node with id " + sensorNodeId + " found.");
+        }
     }
 
     public Set<ConnectionInfoI> findByZone(GeographicalZoneI z) throws Exception {
-        assert z != null;
-        Set<ConnectionInfoI> result = new HashSet<>();
-        for (NodeInfoI nodeInfo : nodesMap.values()) {
-            if (z.in(nodeInfo.nodePosition())) {
-                result.add(nodeInfo);
+        try {
+            assert z != null;
+            Set<ConnectionInfoI> result = new HashSet<>();
+            for (NodeInfoI nodeInfo : nodeIDToNodeInfoMap.values()) {
+                if (z.in(nodeInfo.nodePosition())) {
+                    result.add(nodeInfo);
+                }
             }
+            return result;
+        } catch (Exception e) {
+            throw new Exception("No node found in zone " + z + ".");
         }
-        return result;
     }
 
     public boolean registered(String nodeIdentifier) throws Exception {
-        return this.nodesMap.containsKey(nodeIdentifier);
+        return this.nodeIDToNodeInfoMap.containsKey(nodeIdentifier);
+    }
+
+    private String printAllNodes() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Nodes " + nodeIDToNodeInfoMap.size() + ": ");
+        for (NodeInfoI n : nodeIDToNodeInfoMap.values()) {
+            sb.append(n.nodeIdentifier() + " ");
+        }
+        return sb.toString();
     }
 
     private boolean inRangeOfEachOther(NodeInfoI n, NodeInfoI nodeInfo) {
@@ -81,64 +94,74 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
-        // Init the result set
-        Set<NodeInfoI> result = new HashSet<>();
+        try { // Init the result set
+            Set<NodeInfoI> result = new HashSet<>();
 
-        // Find the neighbours of the new node in the 4 directions
-        Map<Direction, NodeInfoI> directionalNeighbours = new HashMap<>();
+            // Find the neighbours of the new node in the 4 directions
+            Map<Direction, NodeInfoI> directionalNeighbours = new HashMap<>();
 
-        // Look at the hashmap of all nodes and find the neighbours of the new node
-        for (NodeInfoI n : nodesMap.values()) {
-            if (inRangeOfEachOther(n, nodeInfo)) {
-                Direction nDir = nodeInfo.nodePosition().directionFrom(n.nodePosition());
-                if (directionalNeighbours.containsKey(nDir)) {
-                    Double currentDist = directionalNeighbours.get(nDir).nodePosition()
-                            .distance(nodeInfo.nodePosition());
-                    Double newDist = n.nodePosition().distance(nodeInfo.nodePosition());
-                    if (newDist < currentDist) {
+            // Look at the hashmap of all nodes and find the neighbours of the new node
+            for (NodeInfoI n : nodeIDToNodeInfoMap.values()) {
+                if (inRangeOfEachOther(n, nodeInfo)) {
+                    Direction nDir = nodeInfo.nodePosition().directionFrom(n.nodePosition());
+                    if (directionalNeighbours.containsKey(nDir)) {
+                        Double currentDist = directionalNeighbours.get(nDir).nodePosition()
+                                .distance(nodeInfo.nodePosition());
+                        Double newDist = n.nodePosition().distance(nodeInfo.nodePosition());
+                        if (newDist < currentDist) {
+                            directionalNeighbours.put(nDir, n);
+                        }
+                    } else {
                         directionalNeighbours.put(nDir, n);
                     }
-                } else {
-                    directionalNeighbours.put(nDir, n);
                 }
             }
+            for (NodeInfoI node : directionalNeighbours.values()) {
+                result.add(node);
+            }
+            this.nodeIDToNodeInfoMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
+            this.printAllNodes();
+            return result;
+        } catch (Exception e) {
+            throw new Exception("Error registering node " + nodeInfo.nodeIdentifier() + ".");
         }
-        for (NodeInfoI node : directionalNeighbours.values()) {
-            result.add(node);
-        }
-        this.nodesMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
-        return result;
     }
 
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
-        Double minDist = Double.POSITIVE_INFINITY;
-        NodeInfoI result = null;
+        try {
+            Double minDist = Double.POSITIVE_INFINITY;
+            NodeInfoI result = null;
 
-        for (NodeInfoI node : nodesMap.values()) {
-            PositionI nodePosition = node.nodePosition();
-            if (!node.nodeIdentifier().equals(nodeInfo.nodeIdentifier())
-                    && inRangeOfEachOther(node, nodeInfo)
-                    && nodeInfo.nodePosition().directionFrom(nodePosition) == d) {
-                Double dist = nodePosition.distance(nodeInfo.nodePosition());
-                if (dist <= minDist) {
-                    minDist = dist;
-                    result = node;
+            for (NodeInfoI node : nodeIDToNodeInfoMap.values()) {
+                PositionI nodePosition = node.nodePosition();
+                if (!node.nodeIdentifier().equals(nodeInfo.nodeIdentifier())
+                        && inRangeOfEachOther(node, nodeInfo)
+                        && nodeInfo.nodePosition().directionFrom(nodePosition) == d) {
+                    Double dist = nodePosition.distance(nodeInfo.nodePosition());
+                    if (dist <= minDist) {
+                        minDist = dist;
+                        result = node;
+                    }
                 }
             }
+            return result;
+        } catch (Exception e) {
+            throw new Exception("Error finding new neighbour for node " + nodeInfo.nodeIdentifier() + ".");
         }
-        return result;
     }
 
     public void unregister(String nodeIdentifier) throws Exception {
-        this.nodesMap.remove(nodeIdentifier);
+        try {
+            this.nodeIDToNodeInfoMap.remove(nodeIdentifier);
+            this.printAllNodes();
+        } catch (Exception e) {
+            throw new Exception("Error unregistering node " + nodeIdentifier + ".");
+        }
     }
 
     @Override
     public synchronized void finalise() throws Exception {
-        this.logMessage("stopping provider component.");
-        this.printExecutionLogOnFile("provider");
-        this.nodesMap.keySet().stream().forEach(x -> this.logMessage(x));
-
+        // this.nodeIDToNodeInfoMap.keySet().stream().forEach(x -> this.logMessage(x));
         super.finalise();
     }
 
