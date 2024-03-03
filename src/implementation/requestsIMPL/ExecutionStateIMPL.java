@@ -36,7 +36,6 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		this.positiveSNG = new HashSet<>();
 		this.queryResult = new QueryResultIMPL();
 		this.nodesVisited = new HashSet<>();
-		this.nodesVisited = new HashSet<>();
 	}
 
 	public Set<String> getNodesVisited() {
