@@ -2,7 +2,7 @@ package query.ast;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import implementation.requestsIMPL.ExecutionStateIMPL;
+import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractBooleanExpr;
 import query.interfaces.IParamContext;
 

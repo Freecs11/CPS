@@ -5,7 +5,7 @@ import java.util.Set;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import implementation.requestsIMPL.ExecutionStateIMPL;
+import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractDirections;
 import query.interfaces.IParamContext;
 

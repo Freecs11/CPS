@@ -1,10 +1,10 @@
 package bcm.components;
 
-import bcm.connector.LookUpRegistryConnector;
-import bcm.connector.NodeConnector;
-import bcm.interfaces.ports.ClientComponentOutboundPort;
-import bcm.interfaces.ports.Client2RegisterOutboundPort;
-import bcm.interfaces.ports.LookupInboundPort;
+import bcm.connectors.LookUpRegistryConnector;
+import bcm.connectors.NodeConnector;
+import bcm.ports.Client2RegisterOutboundPort;
+import bcm.ports.ClientComponentOutboundPort;
+import bcm.ports.LookupInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
@@ -20,7 +20,7 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import implementation.EndPointDescIMPL;
 import implementation.RequestContinuationIMPL;
 import implementation.RequestIMPL;
-import implementation.requestsIMPL.ExecutionStateIMPL;
+import implementation.request.ExecutionStateIMPL;
 import query.ast.AndBooleanExpr;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;

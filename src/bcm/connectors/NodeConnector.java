@@ -1,4 +1,4 @@
-package bcm.connector;
+package bcm.connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;

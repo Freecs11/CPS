@@ -1,4 +1,4 @@
-package bcm.connector;
+package bcm.connectors;
 
 import java.util.Set;
 

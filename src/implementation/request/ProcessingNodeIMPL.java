@@ -1,4 +1,4 @@
-package implementation.requestsIMPL;
+package implementation.request;
 
 import java.util.HashMap;
 import java.util.Map;

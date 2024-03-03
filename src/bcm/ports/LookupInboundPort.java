@@ -1,4 +1,4 @@
-package bcm.interfaces.ports;
+package bcm.ports;
 
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;

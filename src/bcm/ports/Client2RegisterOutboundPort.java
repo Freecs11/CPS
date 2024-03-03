@@ -1,9 +1,9 @@
-package bcm.interfaces.ports;
+package bcm.ports;
 
 import java.util.Set;
 
 import bcm.components.ClientComponent;
-import bcm.connector.LookUpRegistryConnector;
+import bcm.connectors.LookUpRegistryConnector;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;

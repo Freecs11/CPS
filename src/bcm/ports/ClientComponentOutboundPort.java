@@ -1,4 +1,4 @@
-package bcm.interfaces.ports;
+package bcm.ports;
 
 import bcm.components.ClientComponent;
 import fr.sorbonne_u.components.ComponentI;

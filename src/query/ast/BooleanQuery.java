@@ -5,7 +5,7 @@ import java.util.HashSet;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.QueryResultIMPL;
-import implementation.requestsIMPL.ExecutionStateIMPL;
+import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractBooleanExpr;
 import query.abstraction.AbstractContinuation;
 import query.abstraction.AbstractQuery;

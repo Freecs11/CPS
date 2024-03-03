@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import bcm.interfaces.ports.LookupInboundPort;
-import bcm.interfaces.ports.RegistryInboundPort;
+import bcm.ports.LookupInboundPort;
+import bcm.ports.RegistryInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;

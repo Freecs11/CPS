@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import bcm.connector.NodeConnector;
-import bcm.connector.RegistryConnector;
-import bcm.interfaces.ports.NodeComponentInboundPort;
-import bcm.interfaces.ports.NodeComponentOutboundPort;
-import bcm.interfaces.ports.NodeP2PInboundPort;
-import bcm.interfaces.ports.NodeP2POutboundPort;
+import bcm.connectors.NodeConnector;
+import bcm.connectors.RegistryConnector;
+import bcm.ports.NodeComponentInboundPort;
+import bcm.ports.NodeComponentOutboundPort;
+import bcm.ports.NodeP2PInboundPort;
+import bcm.ports.NodeP2POutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -44,8 +44,8 @@ import implementation.QueryResultIMPL;
 import implementation.RequestContinuationIMPL;
 import implementation.RequestIMPL;
 import implementation.SensorDataIMPL;
-import implementation.requestsIMPL.ExecutionStateIMPL;
-import implementation.requestsIMPL.ProcessingNodeIMPL;
+import implementation.request.ExecutionStateIMPL;
+import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
