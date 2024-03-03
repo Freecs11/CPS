@@ -122,18 +122,19 @@ public class NodeComponent extends AbstractComponent
             this.logMessage("Starting " + nodeInfo.nodeIdentifier());
             this.neighbours = node2RegistryOutboundPort.register(nodeInfo);
             ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
-
-            // ----------------Print neighbours----------------
-            StringBuilder sb = new StringBuilder(100);
-            sb.append("neighbours : ");
-            neighbours.stream().forEach(x -> {
-                sb.append(x.nodeIdentifier());
-                sb.append(" ");
-            });
-            this.logMessage(sb.toString());
-
+            this.logMessage(this.printNeighbours());
             this.logMessage("Registration Success: "
                     + node2RegistryOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
+            this.logMessage("Connecting to all the neighbours received from the registry........");
+            this.connect2Neighbours();
+        } catch (Exception e) {
+            throw new ComponentStartException(e);
+        }
+        this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
+    }
+
+    private void connect2Neighbours() throws ComponentStartException {
+        try {
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort p2poutboundP = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(),
                         this);
@@ -147,14 +148,73 @@ public class NodeComponent extends AbstractComponent
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
-        this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
+    }
+
+    private String printNeighbours() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Neighbours of " + this.nodeInfo.nodeIdentifier() + " : ");
+        for (NodeInfoI neighbour : neighbours) {
+            sb.append(neighbour.nodeIdentifier() + ", ");
+        }
+        return sb.toString();
+    }
+
+    public void ask4Connection(NodeInfoI newNeighbour)
+            throws Exception {
+        try {
+
+            Direction direction = this.nodeInfo.nodePosition().directionFrom(newNeighbour.nodePosition()); // direction
+            NodeInfoI neighbourInTheDirection = null;
+            for (NodeInfoI neighbour : this.neighbours) {
+                if (this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition()) == direction) {
+                    neighbourInTheDirection = neighbour;
+
+                }
+            }
+            if (neighbourInTheDirection == null) {
+                System.err.println("LINE 301");
+                this.neighbours.add(newNeighbour);
+                NodeP2POutboundPort nodePort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
+                nodePort.publishPort();
+                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, nodePort);
+                this.doPortConnection(
+                        nodePort.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        NodeConnector.class.getCanonicalName());
+                this.logMessage(newNeighbour.nodeIdentifier() + " connected");
+            } else {
+                System.err.println("LINE 314");
+                System.err.println("neighbourInTheDirection: " + neighbourInTheDirection);
+
+                this.neighbours.remove(neighbourInTheDirection);
+                this.neighbours.add(newNeighbour);
+                System.err.println("LINE 319");
+
+                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbourInTheDirection);
+                System.err.println("320 Just BEFORE ASK4DISCONNECTION");
+                nodePort.ask4Disconnection(this.nodeInfo);
+                System.err.println("322Just AFTER ASK4DISCONNECTION");
+                this.doPortDisconnection(nodePort.getPortURI());
+                nodePort.unpublishPort();
+                this.nodeInfoToP2POutboundPortMap.remove(neighbourInTheDirection);
+                System.err.println("LINE 325");
+                NodeP2POutboundPort newPort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
+                newPort.publishPort();
+                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                this.doPortConnection(
+                        newPort.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        NodeConnector.class.getCanonicalName());
+                this.logMessage(newNeighbour.nodeIdentifier() + " connected");
+            }
+            this.printNeighbours();
+        } catch (Exception e) {
+            throw new Exception("Error in ask4Connection" + e.getMessage());
+        }
     }
 
     public void ask4Disconnection(NodeInfoI neighbour) {
-        System.err.println("TRYING in ask4Disconnection ");
-
         try {
-            System.err.println("ask4Disconnection here l160");
             NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
             System.err.println("NodePort: " + nodePort);
             // TODO: is this really necessary?
@@ -171,21 +231,26 @@ public class NodeComponent extends AbstractComponent
             this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");
             this.logMessage(this.nodeInfo.nodeIdentifier() + " looking for new neighbour in direction "
                     + directionOfNeighbour);
-            if (this.node2RegistryOutboundPort.connected()) {
-                NodeInfoI newNeighbour = this.node2RegistryOutboundPort.findNewNeighbour(this.nodeInfo,
-                        directionOfNeighbour);
-                if (newNeighbour == null || newNeighbour == neighbour) {
-                    return;
-                } else if (newNeighbour != null) {
-                    this.logMessage("Found new neighbour in direction " + directionOfNeighbour +
-                            " : "
-                            + newNeighbour.nodeIdentifier());
-                    NodeP2POutboundPort newPort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
-                    newPort.publishPort();
-                    this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
-                    newPort.ask4Connection(this.nodeInfo);
-                }
+
+            NodeInfoI newNeighbour = this.node2RegistryOutboundPort.findNewNeighbour(this.nodeInfo,
+                    directionOfNeighbour);
+            if (newNeighbour != null
+                    && newNeighbour != neighbour) {
+                this.logMessage("Found new neighbour in direction " + directionOfNeighbour + " : "
+                        + newNeighbour.nodeIdentifier());
+                NodeP2POutboundPort newPort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
+                newPort.publishPort();
+                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                this.doPortConnection(newPort.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        NodeConnector.class.getCanonicalName());
+                System.err.println("JUST BEFORE ASK4CONNECTION");
+                newPort.ask4Connection(this.nodeInfo);
+                System.err.println("WERE HERE");
+            } else {
+                this.logMessage("No new neighbour found in direction " + directionOfNeighbour);
             }
+            this.printNeighbours();
         } catch (Exception e) {
             System.err.println("Error in ask4Disconnection " + e.getMessage());
             e.printStackTrace();
@@ -270,129 +335,6 @@ public class NodeComponent extends AbstractComponent
 
     public void executeAsync(RequestI request) throws Exception {
         // TODO Auto-generated method stub
-    }
-
-    public void ask4Connection(NodeInfoI newNeighbour)
-            throws Exception {
-        try {
-            // check the direction of the new neighbour and add it to the list of neighbours
-            // if it's the mininmum distance in that direction
-            Direction direction = this.nodeInfo.nodePosition().directionFrom(newNeighbour.nodePosition()); // direction
-            // // of the new neighbour
-            // Boolean isMin = true;
-            // NodeInfoI neighbourMinDist = null;
-            // for (NodeInfoI neighbour : this.neighbours) {
-            // if (neighbour.nodePosition().directionFrom(this.nodeInfo.nodePosition()) ==
-            // direction) {
-            // // keep track of the neighbour that is the closest in the same direction as
-            // this
-            // // one
-            // if (neighbour.nodePosition().distance(this.nodeInfo.nodePosition()) <
-            // newNeighbour.nodePosition()
-            // .distance(this.nodeInfo.nodePosition())) {
-            // isMin = false; // if there is a neighbour closer in the same direction
-            // neighbourMinDist = neighbour; // we don't check the distances between the
-            // neighbours already in
-            // // the list because we ensured that
-            // // there is only 1 neighbour in each direction and 4 total max (N, S, E, W)
-            // }
-            // }
-
-            // if (Boolean.TRUE.equals(isMin)) {
-            // this.neighbours.add(newNeighbour);
-            // this.neighbours.remove(neighbourMinDist); // remove the neighbour that is not
-            // the closest in the same
-            // // direction
-            // this.ask4Disconnection(neighbourMinDist); // disconnect it, so we can connect
-            // the new one
-            // NodeP2POutboundPort nodePort = this.p2poutboundPorts.get(newNeighbour);
-            // // if the port is not created yet
-            // // create a new port and connect this node to the neighbor
-            // if (nodePort == null) {
-            // nodePort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(),
-            // this);
-            // nodePort.publishPort();
-            // this.p2poutboundPorts.put(newNeighbour, nodePort);
-            // this.doPortConnection(nodePort.getPortURI(),
-            // ((BCM4JavaEndPointDescriptorI)
-            // newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-            // NodeConnector.class.getCanonicalName());
-            // this.logMessage("askForConnection: " + newNeighbour.nodeIdentifier() + "
-            // connected");
-            // nodePort.getOwner().logMessage(this.nodeInfo.nodeIdentifier() + " is the one
-            // asking");
-            // }
-            // // if the port is already created we connect
-            // // and ask the neighbor to connect back
-            // else {
-            // this.doPortConnection(nodePort.getPortURI(),
-            // ((BCM4JavaEndPointDescriptorI)
-            // newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-            // NodeConnector.class.getCanonicalName());
-            // this.logMessage("askForConnection: " + newNeighbour.nodeIdentifier() + "
-            // connected");
-            // nodePort.ask4Connection(this.nodeInfo);
-            // nodePort.getOwner().logMessage(this.nodeInfo.nodeIdentifier() + " is the one
-            // asking");
-            // }
-            // }
-
-            NodeInfoI neighbourInTheDirection = null;
-
-            for (NodeInfoI neighbour : this.neighbours) {
-                if (this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition()) == direction) {
-                    neighbourInTheDirection = neighbour;
-
-                }
-            }
-
-            if (neighbourInTheDirection == null) {
-                this.neighbours.add(newNeighbour);
-                NodeP2POutboundPort nodePort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
-                nodePort.publishPort();
-                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, nodePort);
-                this.doPortConnection(
-                        nodePort.getPortURI(),
-                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        NodeConnector.class.getCanonicalName());
-                this.logMessage(newNeighbour.nodeIdentifier() + " connected");
-            } else {
-                System.err.println("neighbourInTheDirection: " + neighbourInTheDirection);
-
-                this.neighbours.remove(neighbourInTheDirection);
-                this.neighbours.add(newNeighbour);
-
-                System.err.println("Ligne 360");
-                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbourInTheDirection);
-                System.err.println("Ligne 361: ");
-                for (NodeInfoI neighbour : this.neighbours) {
-                    System.err.print(neighbour.nodeIdentifier());
-                    System.err.print(", ");
-                }
-                System.err.println();
-                System.err.println("Current Node: " + newNeighbour.nodeIdentifier());
-                nodePort.ask4Disconnection(this.nodeInfo);
-                System.err.println("Ligne 362");
-                this.doPortDisconnection(nodePort.getPortURI());
-                System.err.println("removed : " + neighbourInTheDirection);
-                System.err.println("New Neighbor: " + newNeighbour);
-
-                nodePort.unpublishPort();
-                this.nodeInfoToP2POutboundPortMap.remove(neighbourInTheDirection);
-
-                NodeP2POutboundPort newPort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
-                newPort.publishPort();
-                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
-                this.doPortConnection(
-                        newPort.getPortURI(),
-                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        NodeConnector.class.getCanonicalName());
-                this.logMessage(newNeighbour.nodeIdentifier() + " connected");
-            }
-
-        } catch (Exception e) {
-            throw new Exception("Error in ask4Connection" + e.getMessage());
-        }
     }
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {

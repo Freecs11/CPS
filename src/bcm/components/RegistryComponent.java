@@ -116,7 +116,8 @@ public class RegistryComponent extends AbstractComponent {
 
         for (NodeInfoI node : nodesMap.values()) {
             PositionI nodePosition = node.nodePosition();
-            if (inRangeOfEachOther(node, nodeInfo)
+            if (!node.nodeIdentifier().equals(nodeInfo.nodeIdentifier())
+                    && inRangeOfEachOther(node, nodeInfo)
                     && nodeInfo.nodePosition().directionFrom(nodePosition) == d) {
                 Double dist = nodePosition.distance(nodeInfo.nodePosition());
                 if (dist <= minDist) {
