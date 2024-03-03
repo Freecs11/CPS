@@ -34,7 +34,7 @@ public class RegistryComponent extends AbstractComponent {
             String lookupInboundPortURI,
             String registerInboundPortURI) {
         super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-        this.nodesMap = new ConcurrentHashMap<>();
+        this.nodesMap = new HashMap<>();
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
             this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);

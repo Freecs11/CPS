@@ -1,8 +1,10 @@
 package bcm.components;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -172,7 +174,6 @@ public class NodeComponent extends AbstractComponent
                 }
             }
             if (neighbourInTheDirection == null) {
-                System.err.println("LINE 301");
                 this.neighbours.add(newNeighbour);
                 NodeP2POutboundPort nodePort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
                 nodePort.publishPort();
@@ -183,21 +184,16 @@ public class NodeComponent extends AbstractComponent
                         NodeConnector.class.getCanonicalName());
                 this.logMessage(newNeighbour.nodeIdentifier() + " connected");
             } else {
-                System.err.println("LINE 314");
-                System.err.println("neighbourInTheDirection: " + neighbourInTheDirection);
-
+                // ----------------- Disconnection -----------------
                 this.neighbours.remove(neighbourInTheDirection);
-                this.neighbours.add(newNeighbour);
-                System.err.println("LINE 319");
-
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbourInTheDirection);
-                System.err.println("320 Just BEFORE ASK4DISCONNECTION");
                 nodePort.ask4Disconnection(this.nodeInfo);
-                System.err.println("322Just AFTER ASK4DISCONNECTION");
                 this.doPortDisconnection(nodePort.getPortURI());
                 nodePort.unpublishPort();
                 this.nodeInfoToP2POutboundPortMap.remove(neighbourInTheDirection);
-                System.err.println("LINE 325");
+
+                // ----------------- New Neighbour -----------------
+                this.neighbours.add(newNeighbour);
                 NodeP2POutboundPort newPort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
                 newPort.publishPort();
                 this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
@@ -216,7 +212,6 @@ public class NodeComponent extends AbstractComponent
     public void ask4Disconnection(NodeInfoI neighbour) {
         try {
             NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-            System.err.println("NodePort: " + nodePort);
             // TODO: is this really necessary?
             if (nodePort == null) {
                 this.neighbours.remove(neighbour);
@@ -244,9 +239,7 @@ public class NodeComponent extends AbstractComponent
                 this.doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
                         NodeConnector.class.getCanonicalName());
-                System.err.println("JUST BEFORE ASK4CONNECTION");
                 newPort.ask4Connection(this.nodeInfo);
-                System.err.println("WERE HERE");
             } else {
                 this.logMessage("No new neighbour found in direction " + directionOfNeighbour);
             }
@@ -260,22 +253,32 @@ public class NodeComponent extends AbstractComponent
     @Override
     public synchronized void finalise() throws Exception {
         this.logMessage("stopping node component : " + this.nodeInfo.nodeIdentifier());
-        for (NodeInfoI neighbour : neighbours) {
-            // this.ask4Disconnection(neighbour);
-            // I think this is more correct
-            NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-            nodePort.ask4Disconnection(this.nodeInfo);
+        // ----- NO CALL TO SERVICES IN FINALISE -----
+        // this.node2RegistryOutboundPort.unregister(this.nodeInfo.nodeIdentifier());
+        // System.err.println("Unregistering " + this.nodeInfo.nodeIdentifier());
+
+        // List<NodeInfoI> listNeighbours = new ArrayList<>(this.neighbours);
+        // for (NodeInfoI neighbour : listNeighbours) {
+        // NodeP2POutboundPort nodePort =
+        // this.nodeInfoToP2POutboundPortMap.get(neighbour);
+        // if (nodePort != null) {
+        // nodePort.ask4Disconnection(this.nodeInfo);
+        // // System.err.println("FINALIZING: Asking for disconnection from " +
+        // // neighbour.nodeIdentifier());
+        // }
+        // }
+
+        if (this.node2RegistryOutboundPort.connected()) {
+            this.node2RegistryOutboundPort.unregister(this.nodeInfo.nodeIdentifier());
+            this.doPortDisconnection(this.node2RegistryOutboundPort.getPortURI());
+            this.node2RegistryOutboundPort.unpublishPort();
         }
+
         for (NodeP2POutboundPort p2poutboundPort : this.nodeInfoToP2POutboundPortMap.values()) {
             if (p2poutboundPort.connected()) {
                 this.doPortDisconnection(p2poutboundPort.getPortURI());
                 p2poutboundPort.unpublishPort();
             }
-        }
-        if (this.node2RegistryOutboundPort.connected()) {
-            this.node2RegistryOutboundPort.unregister(this.nodeInfo.nodeIdentifier());
-            this.doPortDisconnection(this.node2RegistryOutboundPort.getPortURI());
-            this.node2RegistryOutboundPort.unpublishPort();
         }
         super.finalise();
         // System.out.println("NodeComponent finalise");
@@ -285,17 +288,6 @@ public class NodeComponent extends AbstractComponent
     public synchronized void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
-            // TODO: I think this is redundant because it's already done in finalise
-            // if (this.outboundPort.connected()) {
-            // this.doPortDisconnection(this.outboundPort.getPortURI());
-            // this.outboundPort.unpublishPort();
-            // }
-            // for (NodeP2POutboundPort p2poutboundPort : this.p2poutboundPorts.values()) {
-            // if (p2poutboundPort.connected()) {
-            // this.doPortDisconnection(p2poutboundPort.getPortURI());
-            // p2poutboundPort.unpublishPort();
-            // }
-            // }
             if (this.clientInboundPort.isPublished())
                 this.clientInboundPort.unpublishPort();
             if (this.p2pInboundPort.isPublished())
@@ -312,16 +304,6 @@ public class NodeComponent extends AbstractComponent
     public synchronized void shutdownNow() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
-            // if (this.outboundPort.connected()) {
-            // this.doPortDisconnection(this.outboundPort.getPortURI());
-            // this.outboundPort.unpublishPort();
-            // }
-            // for (NodeP2POutboundPort p2poutboundPort : this.p2poutboundPorts.values()) {
-            // if (p2poutboundPort.connected()) {
-            // this.doPortDisconnection(p2poutboundPort.getPortURI());
-            // p2poutboundPort.unpublishPort();
-            // }
-            // }
             if (this.clientInboundPort.isPublished())
                 this.clientInboundPort.unpublishPort();
             if (this.p2pInboundPort.isPublished())
@@ -331,10 +313,6 @@ public class NodeComponent extends AbstractComponent
         }
         super.shutdownNow();
         // System.out.println("NodeComponent shutdownNow");
-    }
-
-    public void executeAsync(RequestI request) throws Exception {
-        // TODO Auto-generated method stub
     }
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
@@ -419,11 +397,6 @@ public class NodeComponent extends AbstractComponent
         return result;
     }
 
-    public void executeAsync(RequestContinuationI request) throws Exception {
-
-    }
-
-    @Override
     public QueryResultI execute(RequestI request) throws Exception {
         if (request == null) {
             throw new Exception("Request is null");
@@ -467,8 +440,15 @@ public class NodeComponent extends AbstractComponent
             // }
         }
 
-        // ((QueryResultIMPL) result).update(this.execute(continuation));
         return result;
+    }
+
+    public void executeAsync(RequestI request) throws Exception {
+        // TODO Auto-generated method stub
+    }
+
+    public void executeAsync(RequestContinuationI request) throws Exception {
+        // TODO Auto-generated method stub
     }
 
 }
