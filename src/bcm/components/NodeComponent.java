@@ -179,14 +179,16 @@ public class NodeComponent extends AbstractComponent
             if (this.outboundPort.connected()) {
                 NodeInfoI newNeighbour = this.outboundPort.findNewNeighbour(this.nodeInfo,
                         directionOfNeighbour);
-                if (newNeighbour != null) {
+                if (newNeighbour == null || newNeighbour == neighbour) {
+                    return;
+                } else if (newNeighbour != null) {
                     this.logMessage("Found new neighbour in direction " + directionOfNeighbour +
                             " : "
                             + newNeighbour.nodeIdentifier());
                     NodeP2POutboundPort newPort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
                     newPort.publishPort();
                     this.p2poutboundPorts.put(newNeighbour, newPort);
-                    this.ask4Connection(newNeighbour);
+                    newPort.ask4Connection(this.nodeInfo);
                 }
             }
         } catch (Exception e) {
@@ -349,8 +351,6 @@ public class NodeComponent extends AbstractComponent
                 }
             }
 
-            System.err.println("neighbourInTheDirection: " + neighbourInTheDirection);
-
             if (neighbourInTheDirection == null) {
                 this.neighbours.add(newNeighbour);
                 NodeP2POutboundPort nodePort = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(), this);
@@ -362,6 +362,8 @@ public class NodeComponent extends AbstractComponent
                         NodeConnector.class.getCanonicalName());
                 this.logMessage(newNeighbour.nodeIdentifier() + " connected");
             } else {
+                System.err.println("neighbourInTheDirection: " + neighbourInTheDirection);
+
                 this.neighbours.remove(neighbourInTheDirection);
                 this.neighbours.add(newNeighbour);
 

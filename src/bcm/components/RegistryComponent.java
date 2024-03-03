@@ -1,9 +1,12 @@
 package bcm.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import bcm.interfaces.ports.LookupInboundPort;
 import bcm.interfaces.ports.RegistryInboundPort;
@@ -31,7 +34,7 @@ public class RegistryComponent extends AbstractComponent {
             String lookupInboundPortURI,
             String registerInboundPortURI) {
         super(reflectionInboundPortURI, nbThreads, nbSchedulableThreads);
-        this.nodesMap = new HashMap<>();
+        this.nodesMap = new ConcurrentHashMap<>();
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
             this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);
@@ -109,20 +112,20 @@ public class RegistryComponent extends AbstractComponent {
 
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
         Double minDist = Double.POSITIVE_INFINITY;
-        NodeInfoI newNeighbor = null;
-        for (NodeInfoI node : this.nodesMap.values()) {
+        NodeInfoI result = null;
+
+        for (NodeInfoI node : nodesMap.values()) {
             PositionI nodePosition = node.nodePosition();
-            if (inRangeOfEachOther(node, nodeInfo)) {
-                if (nodeInfo.nodePosition().directionFrom(nodePosition).equals(d)) {
-                    Double dist = nodePosition.distance(nodeInfo.nodePosition());
-                    if (dist < minDist) {
-                        minDist = dist;
-                        newNeighbor = node;
-                    }
+            if (inRangeOfEachOther(node, nodeInfo)
+                    && nodeInfo.nodePosition().directionFrom(nodePosition) == d) {
+                Double dist = nodePosition.distance(nodeInfo.nodePosition());
+                if (dist <= minDist) {
+                    minDist = dist;
+                    result = node;
                 }
             }
         }
-        return newNeighbor;
+        return result;
     }
 
     public void unregister(String nodeIdentifier) throws Exception {

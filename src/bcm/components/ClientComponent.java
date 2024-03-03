@@ -52,10 +52,6 @@ public class ClientComponent extends AbstractComponent {
         this.registryInboundPortURI = registryInboundPortURI;
         this.getTracer().setTitle("Client Component");
         this.getTracer().setRelativePosition(1, 1);
-        // System.out.println("nodeInboundPortURI is set to : " +
-        // this.nodeComponentInboundPortURI);
-        // System.out.println("the OutboundPortURI is : " +
-        // this.outboundPort.getPortURI());
         AbstractComponent.checkImplementationInvariant(this);
         // TODO: recheck this check
         AbstractComponent.checkInvariant(this);
@@ -133,6 +129,7 @@ public class ClientComponent extends AbstractComponent {
                 try {
                     QueryResultI res = ClientComponent.this.outboundPort.execute(request);
                     ClientComponent.this.logMessage("Query result: " + res.toString());
+                    ClientComponent.this.doPortDisconnection(ClientComponent.this.outboundPort.getPortURI());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
