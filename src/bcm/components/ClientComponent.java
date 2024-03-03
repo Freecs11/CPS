@@ -78,8 +78,33 @@ public class ClientComponent extends AbstractComponent {
     }
 
     @Override
-    public void execute() throws Exception {
+    public synchronized void execute() throws Exception {
         super.execute();
+
+        // -------------------Gather Query Test-------------------
+        GatherQuery query = new GatherQuery(
+                new RecursiveGather("temperature",
+                        new FinalGather("humidity")),
+                // new FloodingContinuation(new RelativeBase(), 15.0));
+                // new DirectionContinuation(3, new FinalDirections(Direction.SE)));
+                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
+
+        // -------------Boolean Query Test---------------
+        OrBooleanExpr res = new OrBooleanExpr(
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("humidity"), new ConstantRand(20.0))),
+                new ConditionalExprBooleanExpr(
+                        new EqualConditionalExpr(new SensorRand("temperature"), new ConstantRand(20.0))));
+
+        BooleanQuery query2 = new BooleanQuery(res,
+                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
+
+        // ------Actual Request to look up-------
+        this.request = new RequestIMPL("req1",
+                query,
+                // query2,
+                false,
+                null); // change later
 
         // Finding node with identifier "node1"
         String nodeIdentifier = "node1";
@@ -94,42 +119,6 @@ public class ClientComponent extends AbstractComponent {
                             ClientComponent.this.client2NodeOutboundPort.getPortURI(),
                             ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
                             NodeConnector.class.getCanonicalName());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        // -------------------Gather Query Test-------------------
-        // GatherQuery query = new GatherQuery(
-        // new RecursiveGather("temperature",
-        // new FinalGather("humidity")),
-        // // new FloodingContinuation(new RelativeBase(), 15.0));
-        // // new DirectionContinuation(3, new FinalDirections(Direction.SE)));
-        // new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new
-        // FinalDirections(Direction.NE))));
-
-        // -------------Boolean Query Test---------------
-        OrBooleanExpr res = new OrBooleanExpr(
-                new ConditionalExprBooleanExpr(
-                        new EqualConditionalExpr(new SensorRand("humidity"), new ConstantRand(20.0))),
-                new ConditionalExprBooleanExpr(
-                        new EqualConditionalExpr(new SensorRand("temperature"), new ConstantRand(20.0))));
-
-        BooleanQuery query2 = new BooleanQuery(res,
-                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
-
-        // ------Actual Request to look up-------
-        this.request = new RequestIMPL("req1",
-                // query,
-                query2,
-                false,
-                null); // change later
-
-        this.runTask(new AbstractTask() {
-            @Override
-            public void run() {
-                try {
                     QueryResultI res = ClientComponent.this.client2NodeOutboundPort.execute(request);
                     ClientComponent.this.logMessage("Query result: " + res.toString());
                     ClientComponent.this.doPortDisconnection(ClientComponent.this.client2NodeOutboundPort.getPortURI());

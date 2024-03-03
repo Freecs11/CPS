@@ -269,7 +269,6 @@ public class NodeComponent extends AbstractComponent
         // }
 
         if (this.node2RegistryOutboundPort.connected()) {
-            this.node2RegistryOutboundPort.unregister(this.nodeInfo.nodeIdentifier());
             this.doPortDisconnection(this.node2RegistryOutboundPort.getPortURI());
             this.node2RegistryOutboundPort.unpublishPort();
         }
