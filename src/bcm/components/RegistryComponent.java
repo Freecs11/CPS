@@ -1,19 +1,21 @@
 package bcm.components;
 
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
+import bcm.CVM;
 import bcm.ports.LookupInboundPort;
 import bcm.ports.RegistryInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.GeographicalZoneI;
@@ -21,13 +23,22 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
+import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
+import fr.sorbonne_u.utils.aclocks.ClocksServer;
+import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
+import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
+import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 
 @OfferedInterfaces(offered = {
         LookupCI.class, RegistrationCI.class })
+@RequiredInterfaces(required = {
+        ClocksServerCI.class })
 public class RegistryComponent extends AbstractComponent {
     protected LookupInboundPort lookUpInboundPort;
     protected RegistryInboundPort registryInboundPort;
     protected Map<String, NodeInfoI> nodeIDToNodeInfoMap;
+    public static final Instant REG_START_INSTANT = CVM.CLOCK_START_INSTANT.plusSeconds(1);
+    private AcceleratedClock clock;
 
     protected RegistryComponent(String uri,
             int nbThreads, int nbSchedulableThreads,
@@ -48,7 +59,33 @@ public class RegistryComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
-        this.logMessage("starting Registry component.");
+        try {
+            ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
+                    AbstractOutboundPort.generatePortURI(), this);
+            clockPort.publishPort();
+            this.doPortConnection(
+                    clockPort.getPortURI(),
+                    ClocksServer.STANDARD_INBOUNDPORT_URI,
+                    ClocksServerConnector.class.getCanonicalName());
+            this.clock = clockPort.getClock(CVM.CLOCK_URI);
+            this.doPortDisconnection(clockPort.getPortURI());
+            clockPort.unpublishPort();
+            clockPort.destroyPort();
+            this.clock.waitUntilStart();
+            this.logMessage("Registry component waiting.......");
+            long delayTilStart = this.clock.nanoDelayUntilInstant(REG_START_INSTANT);
+            this.scheduleTask(
+                    nil -> {
+                        this.logMessage("Waiting " + delayTilStart + " ns before starting the registry component.");
+                    }, delayTilStart, TimeUnit.NANOSECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public synchronized void execute() throws Exception {
+
     }
 
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
@@ -120,7 +157,7 @@ public class RegistryComponent extends AbstractComponent {
                 result.add(node);
             }
             this.nodeIDToNodeInfoMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
-            this.printAllNodes();
+            this.logMessage("registered node " + nodeInfo.nodeIdentifier() + " and has neighbours: " + result.size());
             return result;
         } catch (Exception e) {
             throw new Exception("Error registering node " + nodeInfo.nodeIdentifier() + ".");
@@ -144,6 +181,7 @@ public class RegistryComponent extends AbstractComponent {
                     }
                 }
             }
+            this.logMessage("found new neighbour for node " + nodeInfo.nodeIdentifier() + " in direction " + d);
             return result;
         } catch (Exception e) {
             throw new Exception("Error finding new neighbour for node " + nodeInfo.nodeIdentifier() + ".");
@@ -153,7 +191,7 @@ public class RegistryComponent extends AbstractComponent {
     public void unregister(String nodeIdentifier) throws Exception {
         try {
             this.nodeIDToNodeInfoMap.remove(nodeIdentifier);
-            this.printAllNodes();
+            this.logMessage("unregistered node " + nodeIdentifier + ".");
         } catch (Exception e) {
             throw new Exception("Error unregistering node " + nodeIdentifier + ".");
         }
@@ -161,7 +199,8 @@ public class RegistryComponent extends AbstractComponent {
 
     @Override
     public synchronized void finalise() throws Exception {
-        // this.nodeIDToNodeInfoMap.keySet().stream().forEach(x -> this.logMessage(x));
+        this.logMessage("finalising Registry component.");
+        this.logMessage(printAllNodes());
         super.finalise();
     }
 

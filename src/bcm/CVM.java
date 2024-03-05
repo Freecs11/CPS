@@ -1,19 +1,23 @@
 package bcm;
 
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
+
 import bcm.components.ClientComponent;
 import bcm.components.NodeComponent;
 import bcm.components.RegistryComponent;
-import bcm.connectors.LookUpRegistryConnector;
-import bcm.connectors.NodeConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
-import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import implementation.NodeInfoIMPL;
-import implementation.PositionIMPL;
+import fr.sorbonne_u.utils.aclocks.ClocksServer;
 
 public class CVM extends AbstractCVM {
+        public static final String CLOCK_URI = "CLOCK-SERVER";
+        protected static final long TIME_TO_START = 3000L;
+        protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
+                        System.currentTimeMillis() + TIME_TO_START);
+        public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
+        protected static final double accelerationFactor = 60.0;
 
         /** URI of the provider component (convenience). */
         protected static final String NODE_COMPONENT_URI = "node-URI";
@@ -22,7 +26,6 @@ public class CVM extends AbstractCVM {
         /** URI of the consumer component (convenience). */
         protected static final String CLIENT_COMPONENT_URI = "client-URI";
         protected static final String REGISTER_COMPONENT_URI = "register-URI";
-
         // /** URI of the provider outbound port (simplifies the connection). */
         // protected static final String URIGetterOutboundPortURI = "oport";
         // /** URI of the consumer inbound port (simplifies the connection). */
@@ -43,6 +46,7 @@ public class CVM extends AbstractCVM {
                 super();
         }
 
+        protected String clockURI;
         /**
          * Reference to the provider component to share between deploy
          * and shutdown.
@@ -77,6 +81,13 @@ public class CVM extends AbstractCVM {
                 AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING);
                 AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CALLING);
                 AbstractCVM.DEBUG_MODE.add(CVMDebugModes.EXECUTOR_SERVICES);
+                this.clockURI = AbstractComponent.createComponent(ClocksServer.class.getCanonicalName(),
+                                new Object[] {
+                                                CLOCK_URI,
+                                                unixEpochStartTimeInNanos,
+                                                CLOCK_START_INSTANT,
+                                                accelerationFactor
+                                });
 
                 // ---------------------------------------------------------------------
                 // Creation phase
@@ -84,7 +95,7 @@ public class CVM extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                1, 0,
+                                                1, 1,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI });
                 // create the node component
@@ -140,14 +151,18 @@ public class CVM extends AbstractCVM {
 
                                                 "node2",
                                                 2.0, 4.0, 45.0,
-                                                REGISTER_IN_BOUND_PORT_URI });
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
+                                });
                 this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 NODE_COMPONENT_URI,
 
                                                 "node1",
                                                 1.0, 5.0, 45.0,
-                                                REGISTER_IN_BOUND_PORT_URI });
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
+                                });
 
                 this.uriNode3URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                                 new Object[] {
@@ -155,7 +170,10 @@ public class CVM extends AbstractCVM {
 
                                                 "node3",
                                                 3.0, 3.0, 40.0,
-                                                REGISTER_IN_BOUND_PORT_URI });
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
+
+                                });
 
                 this.uriNode4URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                                 new Object[] {
@@ -165,7 +183,8 @@ public class CVM extends AbstractCVM {
                                                 1.0,
                                                 3.0,
                                                 40.0,
-                                                REGISTER_IN_BOUND_PORT_URI
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
                                 });
 
                 this.uriNode5URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
@@ -176,7 +195,9 @@ public class CVM extends AbstractCVM {
                                                 1.0,
                                                 1.0,
                                                 40.0,
-                                                REGISTER_IN_BOUND_PORT_URI
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(20)
+
                                 });
 
                 this.uriNode6URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
@@ -187,14 +208,18 @@ public class CVM extends AbstractCVM {
                                                 4.0,
                                                 4.0,
                                                 40.0,
-                                                REGISTER_IN_BOUND_PORT_URI
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(30)
+
                                 });
 
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 CLIENT_COMPONENT_URI,
-                                                LOOKUP_IN_BOUND_PORT_URI
+                                                LOOKUP_IN_BOUND_PORT_URI,
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(100)
+
                                 }); // to be changed
                 assert this.isDeployedComponent(this.uriNodeURI);
                 this.toggleTracing(this.uriNodeURI);
@@ -207,6 +232,16 @@ public class CVM extends AbstractCVM {
                 assert this.isDeployedComponent(this.uriNode3URI);
                 this.toggleTracing(this.uriNode3URI);
                 this.toggleLogging(this.uriNode3URI);
+
+                assert this.isDeployedComponent(this.uriNode4URI);
+                this.toggleTracing(this.uriNode4URI);
+                this.toggleLogging(this.uriNode4URI);
+                assert this.isDeployedComponent(this.uriNode5URI);
+                this.toggleTracing(this.uriNode5URI);
+                this.toggleLogging(this.uriNode5URI);
+                assert this.isDeployedComponent(this.uriNode6URI);
+                this.toggleTracing(this.uriNode6URI);
+                this.toggleLogging(this.uriNode6URI);
 
                 assert this.isDeployedComponent(this.uriClientURI);
                 this.toggleTracing(this.uriClientURI);
@@ -239,8 +274,8 @@ public class CVM extends AbstractCVM {
         public static void main(String[] args) {
                 try {
                         CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(4000L);
-                        Thread.sleep(2000L);
+                        cvm.startStandardLifeCycle(1500000L);
+                        Thread.sleep(10000L);
                         System.exit(0);
                 } catch (Exception e) {
                         throw new RuntimeException(e);

@@ -190,6 +190,20 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		return this.isFlooding() || this.isDirectional();
 	}
 
+	// flush all the state
+	public void flush() {
+		this.positiveSNG = new HashSet<>();
+		this.queryResult = new QueryResultIMPL();
+		this.nodesVisited = new HashSet<>();
+		this.isDirectional = null;
+		this.directions = null;
+		this.maxHops = null;
+		this.hops = 0;
+		this.isFlooding = null;
+		this.maxDistance = null;
+		this.currentDirection = null;
+	}
+
 	@Override
 	public String toString() {
 		return "ExecutionStateIMPL{" +

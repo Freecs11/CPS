@@ -1,13 +1,13 @@
 package bcm.components;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+import bcm.CVM;
 import bcm.connectors.NodeConnector;
 import bcm.connectors.RegistryConnector;
 import bcm.ports.NodeComponentInboundPort;
@@ -37,19 +37,23 @@ import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingImplI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
+import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
+import fr.sorbonne_u.utils.aclocks.ClocksServer;
+import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
+import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
+import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import implementation.EndPointDescIMPL;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 import implementation.QueryResultIMPL;
 import implementation.RequestContinuationIMPL;
-import implementation.RequestIMPL;
 import implementation.SensorDataIMPL;
 import implementation.request.ExecutionStateIMPL;
 import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
-@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class })
+@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
     protected Set<NodeInfoI> neighbours;
@@ -63,6 +67,8 @@ public class NodeComponent extends AbstractComponent
     protected final String p2pInboundPortURI;
     protected final NodeComponentOutboundPort node2RegistryOutboundPort;
     protected final String registerInboundPortURI;
+    protected AcceleratedClock clock;
+    protected Instant startInstant;
 
     protected NodeComponent(String uri,
             String nodeId,
@@ -111,9 +117,57 @@ public class NodeComponent extends AbstractComponent
         AbstractComponent.checkInvariant(this);
     }
 
+    protected NodeComponent(String uri,
+            String nodeId,
+            Double x, Double y,
+            Double range,
+            String registryInboundPortURI,
+            Instant startInstant) throws Exception {
+        // only one thread to ensure the serialised execution of services
+        // inside the component.
+        super(uri, 1, 1);
+        this.startInstant = startInstant;
+        this.p2pInboundPortURI = AbstractInboundPort.generatePortURI();
+        this.neighbours = new HashSet<>();
+        this.clientInboundPort = new NodeComponentInboundPort(AbstractInboundPort.generatePortURI(),
+                this);
+        this.nodeInfoToP2POutboundPortMap = new HashMap<>();
+        this.p2pInboundPort = new NodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
+        this.p2pInboundPort.publishPort();
+        this.node2RegistryOutboundPort = new NodeComponentOutboundPort(AbstractOutboundPort.generatePortURI(), this);
+        this.clientInboundPort.publishPort();
+        this.node2RegistryOutboundPort.publishPort();
+        this.registerInboundPortURI = registryInboundPortURI;
+        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.clientInboundPort.getPortURI());
+        this.nodeInfo = new NodeInfoIMPL(nodeId,
+                new PositionIMPL(x, y), endpoint, this.p2pInboundPort, range);
+        this.getTracer().setTitle("Node Component: " + nodeId);
+        this.getTracer().setRelativePosition(1, 1);
+        this.sensors = new HashMap<>();
+
+        // TODO: Need to dynamically add sensors later
+        SensorDataIMPL sensor = new SensorDataIMPL(nodeInfo.nodeIdentifier(), "temperature",
+                20.0, Instant.now(), Double.class);
+        SensorDataIMPL sensor2 = new SensorDataIMPL(nodeInfo.nodeIdentifier(), "humidity", 50.0,
+                Instant.now(), Double.class);
+        SensorDataIMPL sensor3 = new SensorDataIMPL(nodeInfo.nodeIdentifier(), "light", 100.0,
+                Instant.now(), Double.class);
+        this.sensors.put("light", sensor3);
+        this.sensors.put("humidity", sensor2);
+        this.sensors.put("temperature", sensor);
+
+        this.processingNode = new ProcessingNodeIMPL(this.nodeInfo.nodePosition(), null,
+                this.nodeInfo.nodeIdentifier());
+        ((ProcessingNodeIMPL) this.processingNode).setSensorDataMap(this.sensors);
+        this.context = new ExecutionStateIMPL();
+        this.context.updateProcessingNode(this.processingNode);
+
+        AbstractComponent.checkImplementationInvariant(this);
+        AbstractComponent.checkInvariant(this);
+    }
+
     @Override
     public synchronized void start() throws ComponentStartException {
-        super.start();
 
         try {
             this.doPortConnection(
@@ -133,6 +187,40 @@ public class NodeComponent extends AbstractComponent
             throw new ComponentStartException(e);
         }
         this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
+        super.start();
+    }
+
+    @Override
+    public synchronized void execute() throws Exception {
+
+        ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
+                AbstractOutboundPort.generatePortURI(), this);
+        clockPort.publishPort();
+        this.doPortConnection(
+                clockPort.getPortURI(),
+                ClocksServer.STANDARD_INBOUNDPORT_URI,
+                ClocksServerConnector.class.getCanonicalName());
+        this.clock = clockPort.getClock(CVM.CLOCK_URI);
+        this.doPortDisconnection(clockPort.getPortURI());
+        clockPort.unpublishPort();
+        clockPort.destroyPort();
+        this.logMessage("Node component waiting.......");
+        long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
+        this.scheduleTask(
+                nil -> {
+                    this.logMessage("Waiting " + delayTilStart + " ns before starting the registry component.");
+                }, delayTilStart, TimeUnit.NANOSECONDS);
+
+        long delayTilChangeValues = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(2));
+        this.scheduleTask(
+                nil -> {
+                    this.logMessage(
+                            "Changing values " + delayTilChangeValues + " ns after starting the node component.");
+                    for (SensorDataI sensor : this.sensors.values()) {
+                        ((SensorDataIMPL) sensor).setValue(Math.random() * 100);
+                    }
+                }, delayTilChangeValues, TimeUnit.NANOSECONDS);
+
     }
 
     private void connect2Neighbours() throws ComponentStartException {
@@ -254,19 +342,6 @@ public class NodeComponent extends AbstractComponent
     public synchronized void finalise() throws Exception {
         this.logMessage("stopping node component : " + this.nodeInfo.nodeIdentifier());
         // ----- NO CALL TO SERVICES IN FINALISE -----
-        // this.node2RegistryOutboundPort.unregister(this.nodeInfo.nodeIdentifier());
-        // System.err.println("Unregistering " + this.nodeInfo.nodeIdentifier());
-
-        // List<NodeInfoI> listNeighbours = new ArrayList<>(this.neighbours);
-        // for (NodeInfoI neighbour : listNeighbours) {
-        // NodeP2POutboundPort nodePort =
-        // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-        // if (nodePort != null) {
-        // nodePort.ask4Disconnection(this.nodeInfo);
-        // // System.err.println("FINALIZING: Asking for disconnection from " +
-        // // neighbour.nodeIdentifier());
-        // }
-        // }
 
         if (this.node2RegistryOutboundPort.connected()) {
             this.doPortDisconnection(this.node2RegistryOutboundPort.getPortURI());
@@ -316,6 +391,7 @@ public class NodeComponent extends AbstractComponent
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         if (request == null) {
+            ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Request is null");
         }
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
@@ -325,37 +401,28 @@ public class NodeComponent extends AbstractComponent
         ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
         // Local execution
         if (request.getQueryCode() == null) {
+            ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Query is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-
         // we add the node to the visited nodes in the state to avoid loops
         ((ExecutionStateIMPL) state).addNodeVisited(this.nodeInfo.nodeIdentifier());
         // Directional
         if (state.isDirectional()) {
             state.incrementHops();
-            ((ExecutionStateIMPL) state).addNodeVisited(this.nodeInfo.nodeIdentifier());
             if (((ExecutionStateIMPL) state).noMoreHops()) {
+                ((ExecutionStateIMPL) this.context).flush();
                 return result;
             }
             // New continuation
             Direction direction = ((ExecutionStateIMPL) state).getCurrentDirection();
             NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
 
-            // explanation to thinh :
-            // if the neighbour is null, we remove the direction from the state and we get a
-            // new one if there is one
-            // if the neighbour is not null, we execute the continuation on the neighbour (
-            // same direction as the one we are coming from)
-            // direction is updated in the state only if ( no more neighbours in the current
-            // direction )
-            // we also keep track of the visited nodes to avoid loops
-            // code is ugly but it works
-
             if (neighbour == null) {
                 ((ExecutionStateIMPL) state).removeDirection(direction);
                 if (((ExecutionStateIMPL) state).getDirections().isEmpty()) {
+                    ((ExecutionStateIMPL) this.context).flush();
                     return result;
                 }
                 direction = ((ExecutionStateIMPL) state).getDirections().iterator().next();
@@ -370,12 +437,10 @@ public class NodeComponent extends AbstractComponent
                     ((QueryResultIMPL) result).update(nodePort.execute(continuation));
             }
         }
-
         // Flooding
-        else
-
-        {
+        else {
             if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
+                ((ExecutionStateIMPL) this.context).flush();
                 return result;
             }
             Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
@@ -391,17 +456,15 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-
+        ((ExecutionStateIMPL) this.context).flush();
         // Return final result
         return result;
     }
 
     public QueryResultI execute(RequestI request) throws Exception {
-        if (request == null) {
-            throw new Exception("Request is null");
-        }
-        if (request.getQueryCode() == null) {
-            throw new Exception("Query is null");
+        if (request == null || request.getQueryCode() == null) {
+            ((ExecutionStateIMPL) this.context).flush();
+            throw new Exception("Query is null or request is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
@@ -409,6 +472,7 @@ public class NodeComponent extends AbstractComponent
 
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
+            ((ExecutionStateIMPL) this.context).flush();
             return result;
         }
 
@@ -416,16 +480,16 @@ public class NodeComponent extends AbstractComponent
         // System.err.println("DIRECTIONS: " + directions.toString());
         // Flooding
         if (context.isFlooding()) {
+            System.err.println("FLOODING");
+            ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
             RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 ((QueryResultIMPL) result).update(nodePort.execute(continuation));
             }
         }
-
         // Directional if not flooding
         else {
-            // for (Direction direction : context.getDirections()) {
             Direction direction = ((ExecutionStateIMPL) this.context).getCurrentDirection();
             ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
             RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
@@ -435,11 +499,12 @@ public class NodeComponent extends AbstractComponent
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 ((QueryResultIMPL) result).update(nodePort.execute(continuation));
             }
-            // }
         }
-
+        ((ExecutionStateIMPL) this.context).flush();
         return result;
     }
+
+    // method that returns a big list of sensor data
 
     public void executeAsync(RequestI request) throws Exception {
         // TODO Auto-generated method stub

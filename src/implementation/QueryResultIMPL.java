@@ -6,9 +6,6 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 
 public class QueryResultIMPL implements QueryResultI {
-
-	private static final long serialVersionUID = 1L;
-	private Object result;
 	private boolean isBR;
 	private boolean isGR;
 	private ArrayList<String> positiveSN;
@@ -55,14 +52,6 @@ public class QueryResultIMPL implements QueryResultI {
 		return new ArrayList<>();
 	}
 
-	public Object getResult() {
-		return result;
-	}
-
-	public void setResult(Object result) {
-		this.result = result;
-	}
-
 	public void setBR(boolean isBR) {
 		this.isBR = isBR;
 	}
@@ -84,25 +73,39 @@ public class QueryResultIMPL implements QueryResultI {
 	}
 
 	public void setGatheredSensors(ArrayList<SensorDataI> gatheredSensors) {
-		if (this.gatheredSensors == null) {
-			this.gatheredSensors = new ArrayList<>();
-		} else {
-			this.gatheredSensors.addAll(gatheredSensors);
-		}
+		this.gatheredSensors = gatheredSensors;
 	}
 
 	public void addToGatheredSensors(SensorDataI sensorData) {
 		if (this.gatheredSensors == null) {
 			this.gatheredSensors = new ArrayList<>();
 		}
-		this.gatheredSensors.add(sensorData);
+		Boolean found = false;
+		for (SensorDataI sensor : this.gatheredSensors) {
+			if (sensor.getNodeIdentifier().equals(sensorData.getNodeIdentifier())
+					&& sensor.getSensorIdentifier().equals(sensorData.getSensorIdentifier())) {
+				found = true;
+				break;
+			}
+		}
+		if (Boolean.FALSE.equals(found)) {
+			this.gatheredSensors.add(sensorData);
+		}
 	}
 
 	public void update(QueryResultI query) {
 		if (!query.isBooleanRequest() && query.isGatherRequest()) {
-			gatheredSensors.addAll(query.gatheredSensorsValues());
+			ArrayList<SensorDataI> gathered = query.gatheredSensorsValues();
+			for (SensorDataI sensor : gathered) {
+				this.addToGatheredSensors(sensor);
+			}
 		} else if (query.isBooleanRequest() && !query.isGatherRequest()) {
-			positiveSN.addAll(query.positiveSensorNodes());
+			ArrayList<String> positive = query.positiveSensorNodes();
+			if (positive != null) {
+				for (String sn : positive) {
+					this.addPositiveSN(sn);
+				}
+			}
 		}
 	}
 
