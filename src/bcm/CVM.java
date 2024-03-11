@@ -1,6 +1,16 @@
 package bcm;
 
+import java.lang.reflect.Array;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import bcm.components.ClientComponent;
@@ -10,6 +20,8 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
 import fr.sorbonne_u.utils.aclocks.ClocksServer;
+import javafx.scene.Node;
+import utils.NodeComponentInfo;
 
 public class CVM extends AbstractCVM {
         public static final String CLOCK_URI = "CLOCK-SERVER";
@@ -51,12 +63,12 @@ public class CVM extends AbstractCVM {
          * Reference to the provider component to share between deploy
          * and shutdown.
          */
-        protected String uriNodeURI;
-        protected String uriNode2URI;
-        protected String uriNode3URI;
-        protected String uriNode4URI;
-        protected String uriNode5URI;
-        protected String uriNode6URI;
+        // protected String uriNodeURI;
+        // protected String uriNode2URI;
+        // protected String uriNode3URI;
+        // protected String uriNode4URI;
+        // protected String uriNode5URI;
+        // protected String uriNode6URI;
         /**
          * Reference to the consumer component to share between deploy
          * and shutdown.
@@ -64,6 +76,61 @@ public class CVM extends AbstractCVM {
         protected String uriClientURI;
 
         protected String uriRegisterURI;
+
+        public static Set<NodeComponentInfo> buildMap (int nbNode){
+                Set<NodeComponentInfo> result = new HashSet<NodeComponentInfo>();
+                Stack<NodeComponentInfo> stack = new Stack<NodeComponentInfo>();
+
+                double x = nbNode,y = nbNode;
+                int i = 0;
+                NodeComponentInfo firstNode = new NodeComponentInfo("node"+i, x, y, 40.0);
+                stack.add(firstNode);
+                result.add(firstNode);
+                nbNode --;
+                i++;
+
+                while ( nbNode > 0) {
+                        NodeComponentInfo nodeInit = stack.pop();
+                        NodeComponentInfo node =new  NodeComponentInfo("node"+i,nodeInit.getX()+1, nodeInit.getY()-1, 2.0);
+                        NodeComponentInfo node2 =new  NodeComponentInfo("node"+(i+1),nodeInit.getX()-1, nodeInit.getY()-1, 2.0);
+                        NodeComponentInfo node3 =new  NodeComponentInfo("node"+(i+2),nodeInit.getX()+1, nodeInit.getY()+1, 2.0);
+                        NodeComponentInfo node4 =new  NodeComponentInfo("node"+(i+3),nodeInit.getX()-1, nodeInit.getY()+1, 2.0);
+                        int nodeSuccess = 0;
+                        
+                        if (!result.contains(node)){
+                                nbNode --;
+                                node.setName("node"+(i+nodeSuccess));
+                                result.add(node);
+                                stack.add(node);
+                                nodeSuccess++;
+                        }
+                        if (!result.contains(node2)){
+                                nbNode --;  
+                                node2.setName("node"+(i+nodeSuccess));
+                                result.add(node2);
+                                stack.add(node2);
+                                nodeSuccess++;
+                        }
+                        if (!result.contains(node3)){
+                                nbNode --;   
+                                node3.setName("node"+(i+nodeSuccess));
+                                result.add(node3);
+                                stack.add(node3);
+                                nodeSuccess++;
+                        }
+                        if (!result.contains(node4)){
+                                nbNode --; 
+                                node4.setName("node"+(i+nodeSuccess));
+                                result.add(node4);
+                                stack.add(node4);
+                                nodeSuccess++;
+                        }
+                        i+=nodeSuccess;
+                }
+
+
+                return result;
+        }
 
         @Override
         public void deploy() throws Exception {
@@ -100,118 +167,41 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
                 // create the node component
 
-                // this.uriNode2URI =
-                // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                // new Object[] {
-                // NODE2_COMPONENT_URI,
-                // "node2",
-                // 10.0, 40.0, 20.0,
-                // REGISTER_IN_BOUND_PORT_URI });
-                // this.uriNodeURI =
-                // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                // new Object[] {
-                // NODE_COMPONENT_URI,
-                // "node1",
-                // 20.0, 50.0, 15.0,
-                // REGISTER_IN_BOUND_PORT_URI });
+               
 
-                // this.uriNode3URI =
-                // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                // new Object[] {
-                // NODE3_COMPONENT_URI,
-                // "node3",
-                // 20.5, 20.5, 10.0,
-                // REGISTER_IN_BOUND_PORT_URI });
+                
 
-                // this.uriNode4URI =
-                // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                // new Object[] {
-                // "URI-ajnode4",
-                // "node4",
-                // 21.0,
-                // 31.0,
-                // 15.0,
-                // REGISTER_IN_BOUND_PORT_URI
-                // });
+                Map<String,List<Double>> data = new HashMap<String , List<Double>>();
+                data.put("node1", new ArrayList<>(Arrays.asList(1.0, 5.0, 45.0)));
+                data.put("node2", new ArrayList<>(Arrays.asList(2.0, 4.0, 45.0)));
+                data.put("node3", new ArrayList<>(Arrays.asList(3.0, 3.0, 40.0)));
+                data.put("node4", new ArrayList<>(Arrays.asList(1.0, 3.0, 40.0)));
+                data.put("node5", new ArrayList<>(Arrays.asList(1.0, 1.0, 40.0)));
+                data.put("node6", new ArrayList<>(Arrays.asList(4.0, 4.0, 40.0)));
 
-                // this.uriNode5URI =
-                // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                // new Object[] {
-                // "URI-ajnode5",
-                // "node5",
-                // 31.0,
-                // 31.0,
-                // 45.0,
-                // REGISTER_IN_BOUND_PORT_URI
-                // });
 
-                this.uriNode2URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                new Object[] {
-                                                NODE2_COMPONENT_URI,
+                Random random = new Random();
+                        // Définir l'intervalle (par exemple, entre 1 et 10)
+                        int borneInferieure = 1;
+                        int borneSuperieure = 11; // Exclusif, donc la plage sera de 1 à 10 inclus
 
-                                                "node2",
-                                                2.0, 4.0, 45.0,
-                                                REGISTER_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
-                                });
-                this.uriNodeURI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                new Object[] {
-                                                NODE_COMPONENT_URI,
-
-                                                "node1",
-                                                1.0, 5.0, 45.0,
-                                                REGISTER_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
-                                });
-
-                this.uriNode3URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                new Object[] {
-                                                NODE3_COMPONENT_URI,
-
-                                                "node3",
-                                                3.0, 3.0, 40.0,
-                                                REGISTER_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
-
-                                });
-
-                this.uriNode4URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                new Object[] {
-                                                "URI-ajnode4",
-
-                                                "node4",
-                                                1.0,
-                                                3.0,
-                                                40.0,
-                                                REGISTER_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5)
-                                });
-
-                this.uriNode5URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                new Object[] {
-                                                "URI-ajnode5",
-
-                                                "node5",
-                                                1.0,
-                                                1.0,
-                                                40.0,
-                                                REGISTER_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(20)
-
-                                });
-
-                this.uriNode6URI = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                new Object[] {
-                                                "URI-ajnode6",
-
-                                                "node6",
-                                                4.0,
-                                                4.0,
-                                                40.0,
-                                                REGISTER_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(30)
-
-                                });
+                for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
+                        String key = entry.getKey();
+                        List<Double> value = entry.getValue();
+                        // Génération d'un entier aléatoire dans l'intervalle spécifié
+                        int nombreAleatoire = random.nextInt(borneSuperieure - borneInferieure) + borneInferieure;
+     
+                         String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                                        new Object[] { "uri"+key, key, value.get(0), value.get(1), value.get(2),
+                                                        REGISTER_IN_BOUND_PORT_URI,
+                                                        RegistryComponent.REG_START_INSTANT.plusSeconds(nombreAleatoire)});
+                        assert this.isDeployedComponent(uri);
+                        this.toggleTracing(uri);
+                        this.toggleLogging(uri);
+                        
+                }
+                
+              
 
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
@@ -221,28 +211,9 @@ public class CVM extends AbstractCVM {
                                                 RegistryComponent.REG_START_INSTANT.plusSeconds(10)
 
                                 }); // to be changed
-                assert this.isDeployedComponent(this.uriNodeURI);
-                this.toggleTracing(this.uriNodeURI);
-                this.toggleLogging(this.uriNodeURI);
-
-                assert this.isDeployedComponent(this.uriNode2URI);
-                this.toggleTracing(this.uriNode2URI);
-                this.toggleLogging(this.uriNode2URI);
-
-                assert this.isDeployedComponent(this.uriNode3URI);
-                this.toggleTracing(this.uriNode3URI);
-                this.toggleLogging(this.uriNode3URI);
-
-                assert this.isDeployedComponent(this.uriNode4URI);
-                this.toggleTracing(this.uriNode4URI);
-                this.toggleLogging(this.uriNode4URI);
-                assert this.isDeployedComponent(this.uriNode5URI);
-                this.toggleTracing(this.uriNode5URI);
-                this.toggleLogging(this.uriNode5URI);
-                assert this.isDeployedComponent(this.uriNode6URI);
-                this.toggleTracing(this.uriNode6URI);
-                this.toggleLogging(this.uriNode6URI);
-
+                // ---------------------------------------------------------------------
+                // Deployment phase
+                // ---------------------------------------------------------------------
                 assert this.isDeployedComponent(this.uriClientURI);
                 this.toggleTracing(this.uriClientURI);
                 this.toggleLogging(this.uriClientURI);
@@ -272,14 +243,17 @@ public class CVM extends AbstractCVM {
         }
 
         public static void main(String[] args) {
-                try {
-                        CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(1500000L);
-                        Thread.sleep(10000L);
-                        System.exit(0);
-                } catch (Exception e) {
-                        throw new RuntimeException(e);
-                }
+                // try {
+                //         CVM cvm = new CVM();
+                //         cvm.startStandardLifeCycle(1500000L);
+                //         Thread.sleep(10000L);
+                //         System.exit(0);
+                // } catch (Exception e) {
+                //         throw new RuntimeException(e);
+                // }
+                Set<NodeComponentInfo> result = CVM.buildMap(55);
+                System.out.println(result.size());
+                System.out.println(result);
         }
 
 }
