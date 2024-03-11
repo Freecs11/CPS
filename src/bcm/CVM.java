@@ -88,13 +88,28 @@ public class CVM extends AbstractCVM {
                 result.add(firstNode);
                 nbNode --;
                 i++;
-
+                List<List<Integer>> jumpLists = new ArrayList<>(Arrays.asList(
+                        Arrays.asList(1, 1),
+                        Arrays.asList(1, -1),
+                        Arrays.asList(-1, 1),
+                        Arrays.asList(-1, -1)
+                ));
                 while ( nbNode > 0) {
                         NodeComponentInfo nodeInit = stack.pop();
                         NodeComponentInfo node =new  NodeComponentInfo("node"+i,nodeInit.getX()+1, nodeInit.getY()-1, 2.0);
                         NodeComponentInfo node2 =new  NodeComponentInfo("node"+(i+1),nodeInit.getX()-1, nodeInit.getY()-1, 2.0);
                         NodeComponentInfo node3 =new  NodeComponentInfo("node"+(i+2),nodeInit.getX()+1, nodeInit.getY()+1, 2.0);
                         NodeComponentInfo node4 =new  NodeComponentInfo("node"+(i+3),nodeInit.getX()-1, nodeInit.getY()+1, 2.0);
+                        // for (List<Integer> jumpList : jumpLists) {
+                        //         NodeComponentInfo nodeJump = new NodeComponentInfo("node"+(i+4),nodeInit.getX()+jumpList.get(0), nodeInit.getY()+jumpList.get(1), 2.0);
+                        //         if (!result.contains(node)){
+                        //                 nbNode --;
+                        //                 node.setName("node"+(i+nodeSuccess));
+                        //                 result.add(node);
+                        //                 stack.add(node);
+                        //                 nodeSuccess++;
+                        //         }
+                        // }
                         int nodeSuccess = 0;
                         
                         if (!result.contains(node)){
@@ -166,8 +181,6 @@ public class CVM extends AbstractCVM {
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI });
                 // create the node component
-
-
                 
                 Set<NodeComponentInfo> nodes = buildMap(7);
                 
@@ -180,41 +193,6 @@ public class CVM extends AbstractCVM {
                         this.toggleTracing(uri);
                         this.toggleLogging(uri);
                 }
-
-                               
-
-                
-
-                // Map<String,List<Double>> data = new HashMap<String , List<Double>>();
-                // data.put("node1", new ArrayList<>(Arrays.asList(1.0, 5.0, 45.0)));
-                // data.put("node2", new ArrayList<>(Arrays.asList(2.0, 4.0, 45.0)));
-                // data.put("node3", new ArrayList<>(Arrays.asList(3.0, 3.0, 40.0)));
-                // data.put("node4", new ArrayList<>(Arrays.asList(1.0, 3.0, 40.0)));
-                // data.put("node5", new ArrayList<>(Arrays.asList(1.0, 1.0, 40.0)));
-                // data.put("node6", new ArrayList<>(Arrays.asList(4.0, 4.0, 40.0)));
-
-                // Random random = new Random();
-                //         // Définir l'intervalle (par exemple, entre 1 et 10)
-                //         int borneInferieure = 1;
-                //         int borneSuperieure = 11; // Exclusif, donc la plage sera de 1 à 10 inclus
-
-                // for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
-                //         String key = entry.getKey();
-                //         List<Double> value = entry.getValue();
-                //         // Génération d'un entier aléatoire dans l'intervalle spécifié
-                //         int nombreAleatoire = random.nextInt(borneSuperieure - borneInferieure) + borneInferieure;
-     
-                //          String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                //                         new Object[] { "uri"+key, key, value.get(0), value.get(1), value.get(2),
-                //                                         REGISTER_IN_BOUND_PORT_URI,
-                //                                         RegistryComponent.REG_START_INSTANT.plusSeconds(nombreAleatoire)});
-                //         assert this.isDeployedComponent(uri);
-                //         this.toggleTracing(uri);
-                //         this.toggleLogging(uri);
-                        
-                // }
-                
-              
 
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
