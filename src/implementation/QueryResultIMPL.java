@@ -138,6 +138,6 @@ public class QueryResultIMPL implements QueryResultI {
 			}
 			return bld.toString();
 		}
-		return "No result";
+		return "No result" + "isGR: " + this.isGR + " isBR: " + this.isBR;
 	}
 }

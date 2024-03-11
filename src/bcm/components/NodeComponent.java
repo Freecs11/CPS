@@ -69,6 +69,7 @@ public class NodeComponent extends AbstractComponent
     protected final String registerInboundPortURI;
     protected AcceleratedClock clock;
     protected Instant startInstant;
+    protected final Set<String> requestURIs;
 
     protected NodeComponent(String uri,
             String nodeId,
@@ -80,6 +81,7 @@ public class NodeComponent extends AbstractComponent
         super(uri, 1, 0);
         this.p2pInboundPortURI = AbstractInboundPort.generatePortURI();
         this.neighbours = new HashSet<>();
+        this.requestURIs = new HashSet<>();
         this.clientInboundPort = new NodeComponentInboundPort(AbstractInboundPort.generatePortURI(),
                 this);
         this.nodeInfoToP2POutboundPortMap = new HashMap<>();
@@ -129,6 +131,7 @@ public class NodeComponent extends AbstractComponent
         this.startInstant = startInstant;
         this.p2pInboundPortURI = AbstractInboundPort.generatePortURI();
         this.neighbours = new HashSet<>();
+        this.requestURIs = new HashSet<>();
         this.clientInboundPort = new NodeComponentInboundPort(AbstractInboundPort.generatePortURI(),
                 this);
         this.nodeInfoToP2POutboundPortMap = new HashMap<>();
@@ -406,6 +409,12 @@ public class NodeComponent extends AbstractComponent
             ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Request is null");
         }
+        if (this.requestURIs.contains(request.requestURI())) {
+            ((ExecutionStateIMPL) this.context).flush();
+            QueryResultI result = new QueryResultIMPL();
+            System.err.println("REQUEST URI: " + request.requestURI() + " already executed");
+            return result;
+        }
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
         ProcessingNodeI lastNode = state.getProcessingNode();
         PositionI lastPosition = lastNode.getPosition();
@@ -428,25 +437,15 @@ public class NodeComponent extends AbstractComponent
                 return result;
             }
             // New continuation
-            Direction direction = ((ExecutionStateIMPL) state).getCurrentDirection();
-            NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
-
-            if (neighbour == null) {
-                ((ExecutionStateIMPL) state).removeDirection(direction);
-                if (((ExecutionStateIMPL) state).getDirections().isEmpty()) {
-                    ((ExecutionStateIMPL) this.context).flush();
-                    return result;
-                }
-                direction = ((ExecutionStateIMPL) state).getDirections().iterator().next();
-                ((ExecutionStateIMPL) state).setCurrentDirection(direction);
-                neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
-            }
+            Set<Direction> directions = this.context.getDirections();
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
-            if (neighbour != null
-                    && !((ExecutionStateIMPL) state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
-                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                if (nodePort != null)
-                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+            for (Direction direction : directions) {
+                NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
+                if (neighbour != null) {
+                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                    if (nodePort != null)
+                        ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                }
             }
         }
         // Flooding
@@ -470,10 +469,15 @@ public class NodeComponent extends AbstractComponent
         }
         ((ExecutionStateIMPL) this.context).flush();
         // Return final result
+        this.requestURIs.add(request.requestURI());
         return result;
     }
 
     public QueryResultI execute(RequestI request) throws Exception {
+        if (requestURIs.contains(request.requestURI())) {
+            ((ExecutionStateIMPL) this.context).flush();
+            return new QueryResultIMPL();
+        }
         if (request == null || request.getQueryCode() == null) {
             ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Query is null or request is null");
@@ -485,6 +489,7 @@ public class NodeComponent extends AbstractComponent
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
             ((ExecutionStateIMPL) this.context).flush();
+            this.requestURIs.add(request.requestURI());
             return result;
         }
 
@@ -502,14 +507,19 @@ public class NodeComponent extends AbstractComponent
         }
         // Directional if not flooding
         else {
-            Direction direction = ((ExecutionStateIMPL) this.context).getCurrentDirection();
-            ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
+            Set<Direction> directions = this.context.getDirections();
+            System.err.println("DIRECTIONS: " + directions.toString());
             RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
-            NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
-            if (neighbour != null) {
-                System.err.println("NEIGHBOUR: " + neighbour.nodeIdentifier());
-                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+            for (Direction direction : directions) {
+                NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
+                if (neighbour != null) {
+                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                    if (nodePort != null) {
+                        QueryResultI ress = nodePort.execute(continuation);
+                        System.err.println("RESS: " + ress.toString());
+                        ((QueryResultIMPL) result).update(ress);
+                    }
+                }
             }
         }
         ((ExecutionStateIMPL) this.context).flush();
