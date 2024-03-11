@@ -176,13 +176,7 @@ public class NodeComponent extends AbstractComponent
                     RegistryConnector.class.getCanonicalName());
 
             this.logMessage("Starting " + nodeInfo.nodeIdentifier());
-            this.neighbours = node2RegistryOutboundPort.register(nodeInfo);
-            ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
-            this.logMessage(this.printNeighbours());
-            this.logMessage("Registration Success: "
-                    + node2RegistryOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
-            this.logMessage("Connecting to all the neighbours received from the registry........");
-            this.connect2Neighbours();
+
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
@@ -192,6 +186,7 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public synchronized void execute() throws Exception {
+        // ------CONNECTION TO THE CLOCK SERVER------
 
         ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
                 AbstractOutboundPort.generatePortURI(), this);
@@ -204,14 +199,31 @@ public class NodeComponent extends AbstractComponent
         this.doPortDisconnection(clockPort.getPortURI());
         clockPort.unpublishPort();
         clockPort.destroyPort();
+
+        // ----------------- DELAYED STARTUP -----------------
         this.logMessage("Node component waiting.......");
         long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
+        this.logMessage("Waiting " + delayTilStart + " ns before executing the node component.");
         this.scheduleTask(
                 nil -> {
-                    this.logMessage("Waiting " + delayTilStart + " ns before starting the registry component.");
+                    try {
+                        // ----------------- REGISTRATION -----------------
+                        this.neighbours = node2RegistryOutboundPort.register(nodeInfo);
+                        ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
+                        this.logMessage(this.printNeighbours());
+                        this.logMessage("Registration Success: "
+                                + node2RegistryOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
+                        this.logMessage("Connecting to all the neighbours received from the registry........");
+                        this.connect2Neighbours();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    this.logMessage("Node Component successfully executed: " + this.nodeInfo.nodeIdentifier());
+
                 }, delayTilStart, TimeUnit.NANOSECONDS);
 
-        long delayTilChangeValues = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(2));
+        // ----------------- CHANGING VALUES -----------------
+        long delayTilChangeValues = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(12));
         this.scheduleTask(
                 nil -> {
                     this.logMessage(

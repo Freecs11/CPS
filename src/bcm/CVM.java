@@ -17,7 +17,7 @@ public class CVM extends AbstractCVM {
         protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
-        protected static final double accelerationFactor = 60.0;
+        protected static final double accelerationFactor = 1.0;
 
         /** URI of the provider component (convenience). */
         protected static final String NODE_COMPONENT_URI = "node-URI";
@@ -218,7 +218,7 @@ public class CVM extends AbstractCVM {
                                 new Object[] {
                                                 CLIENT_COMPONENT_URI,
                                                 LOOKUP_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(100)
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(10)
 
                                 }); // to be changed
                 assert this.isDeployedComponent(this.uriNodeURI);

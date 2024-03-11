@@ -119,9 +119,10 @@ public class ClientComponent extends AbstractComponent {
 
         this.logMessage("Client component waiting.......");
         long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
+        this.logMessage("Waiting " + delayTilStart + " ns before starting the client component.");
         this.scheduleTask(
                 nil -> {
-                    this.logMessage("Waiting " + delayTilStart + " ns before starting the client component.");
+                    this.logMessage("Client " + " component starting...");
                 }, delayTilStart, TimeUnit.NANOSECONDS);
 
         // -------------------Gather Query Test-------------------

@@ -37,7 +37,7 @@ public class RegistryComponent extends AbstractComponent {
     protected LookupInboundPort lookUpInboundPort;
     protected RegistryInboundPort registryInboundPort;
     protected Map<String, NodeInfoI> nodeIDToNodeInfoMap;
-    public static final Instant REG_START_INSTANT = CVM.CLOCK_START_INSTANT.plusSeconds(1);
+    public static final Instant REG_START_INSTANT = CVM.CLOCK_START_INSTANT;
     private AcceleratedClock clock;
 
     protected RegistryComponent(String uri,
@@ -73,19 +73,9 @@ public class RegistryComponent extends AbstractComponent {
             clockPort.destroyPort();
             this.clock.waitUntilStart();
             this.logMessage("Registry component waiting.......");
-            long delayTilStart = this.clock.nanoDelayUntilInstant(REG_START_INSTANT);
-            this.scheduleTask(
-                    nil -> {
-                        this.logMessage("Waiting " + delayTilStart + " ns before starting the registry component.");
-                    }, delayTilStart, TimeUnit.NANOSECONDS);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new ComponentStartException(e);
         }
-    }
-
-    @Override
-    public synchronized void execute() throws Exception {
-
     }
 
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
@@ -158,6 +148,7 @@ public class RegistryComponent extends AbstractComponent {
             }
             this.nodeIDToNodeInfoMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
             this.logMessage("registered node " + nodeInfo.nodeIdentifier() + " and has neighbours: " + result.size());
+            this.logMessage(this.printAllNodes());
             return result;
         } catch (Exception e) {
             throw new Exception("Error registering node " + nodeInfo.nodeIdentifier() + ".");
