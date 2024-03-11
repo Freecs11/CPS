@@ -167,39 +167,52 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
                 // create the node component
 
-               
 
                 
-
-                Map<String,List<Double>> data = new HashMap<String , List<Double>>();
-                data.put("node1", new ArrayList<>(Arrays.asList(1.0, 5.0, 45.0)));
-                data.put("node2", new ArrayList<>(Arrays.asList(2.0, 4.0, 45.0)));
-                data.put("node3", new ArrayList<>(Arrays.asList(3.0, 3.0, 40.0)));
-                data.put("node4", new ArrayList<>(Arrays.asList(1.0, 3.0, 40.0)));
-                data.put("node5", new ArrayList<>(Arrays.asList(1.0, 1.0, 40.0)));
-                data.put("node6", new ArrayList<>(Arrays.asList(4.0, 4.0, 40.0)));
-
-
-                Random random = new Random();
-                        // Définir l'intervalle (par exemple, entre 1 et 10)
-                        int borneInferieure = 1;
-                        int borneSuperieure = 11; // Exclusif, donc la plage sera de 1 à 10 inclus
-
-                for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
-                        String key = entry.getKey();
-                        List<Double> value = entry.getValue();
-                        // Génération d'un entier aléatoire dans l'intervalle spécifié
-                        int nombreAleatoire = random.nextInt(borneSuperieure - borneInferieure) + borneInferieure;
-     
-                         String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                        new Object[] { "uri"+key, key, value.get(0), value.get(1), value.get(2),
+                Set<NodeComponentInfo> nodes = buildMap(7);
+                
+                for (NodeComponentInfo node : nodes) {
+                        String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                                        new Object[] { "uri"+node.getName(), node.getName(), node.getX(), node.getY(), node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
-                                                        RegistryComponent.REG_START_INSTANT.plusSeconds(nombreAleatoire)});
+                                                        RegistryComponent.REG_START_INSTANT.plusSeconds(5)});
                         assert this.isDeployedComponent(uri);
                         this.toggleTracing(uri);
                         this.toggleLogging(uri);
-                        
                 }
+
+                               
+
+                
+
+                // Map<String,List<Double>> data = new HashMap<String , List<Double>>();
+                // data.put("node1", new ArrayList<>(Arrays.asList(1.0, 5.0, 45.0)));
+                // data.put("node2", new ArrayList<>(Arrays.asList(2.0, 4.0, 45.0)));
+                // data.put("node3", new ArrayList<>(Arrays.asList(3.0, 3.0, 40.0)));
+                // data.put("node4", new ArrayList<>(Arrays.asList(1.0, 3.0, 40.0)));
+                // data.put("node5", new ArrayList<>(Arrays.asList(1.0, 1.0, 40.0)));
+                // data.put("node6", new ArrayList<>(Arrays.asList(4.0, 4.0, 40.0)));
+
+                // Random random = new Random();
+                //         // Définir l'intervalle (par exemple, entre 1 et 10)
+                //         int borneInferieure = 1;
+                //         int borneSuperieure = 11; // Exclusif, donc la plage sera de 1 à 10 inclus
+
+                // for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
+                //         String key = entry.getKey();
+                //         List<Double> value = entry.getValue();
+                //         // Génération d'un entier aléatoire dans l'intervalle spécifié
+                //         int nombreAleatoire = random.nextInt(borneSuperieure - borneInferieure) + borneInferieure;
+     
+                //          String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                //                         new Object[] { "uri"+key, key, value.get(0), value.get(1), value.get(2),
+                //                                         REGISTER_IN_BOUND_PORT_URI,
+                //                                         RegistryComponent.REG_START_INSTANT.plusSeconds(nombreAleatoire)});
+                //         assert this.isDeployedComponent(uri);
+                //         this.toggleTracing(uri);
+                //         this.toggleLogging(uri);
+                        
+                // }
                 
               
 
@@ -243,17 +256,17 @@ public class CVM extends AbstractCVM {
         }
 
         public static void main(String[] args) {
-                // try {
-                //         CVM cvm = new CVM();
-                //         cvm.startStandardLifeCycle(1500000L);
-                //         Thread.sleep(10000L);
-                //         System.exit(0);
-                // } catch (Exception e) {
-                //         throw new RuntimeException(e);
-                // }
-                Set<NodeComponentInfo> result = CVM.buildMap(55);
-                System.out.println(result.size());
-                System.out.println(result);
+                try {
+                        CVM cvm = new CVM();
+                        cvm.startStandardLifeCycle(1500000L);
+                        Thread.sleep(10000L);
+                        System.exit(0);
+                } catch (Exception e) {
+                        throw new RuntimeException(e);
+                }
+                // Set<NodeComponentInfo> result = CVM.buildMap(55);
+                // System.out.println(result.size());
+                // System.out.println(result);
         }
 
 }
