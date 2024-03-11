@@ -198,6 +198,17 @@ public class ClientComponent extends AbstractComponent {
         }, delayTilRequest2, TimeUnit.NANOSECONDS);
         long delayTilRequest3 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
 
+        GatherQuery query3 = new GatherQuery(
+                new RecursiveGather("temperature",
+                        new FinalGather("humidity")),
+                // new FloodingContinuation(new RelativeBase(), 15.0));
+//                 new DirectionContinuation(3, new FinalDirections(Direction.NE)));
+                new DirectionContinuation(3, new RecursiveDirections(Direction.SE, new FinalDirections(Direction.NE))));
+
+        RequestI request3 = new RequestIMPL("req3",
+                query3,
+                false,
+                null);
         this.scheduleTask(new AbstractTask() {
             @Override
             public void run() {
@@ -209,7 +220,7 @@ public class ClientComponent extends AbstractComponent {
                             ClientComponent.this.client2NodeOutboundPort.getPortURI(),
                             ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
                             NodeConnector.class.getCanonicalName());
-                    QueryResultI res = ClientComponent.this.client2NodeOutboundPort.execute(request);
+                    QueryResultI res = ClientComponent.this.client2NodeOutboundPort.execute(request3);
                     ClientComponent.this.logMessage("Query result: " + res.toString());
                     ClientComponent.this.doPortDisconnection(ClientComponent.this.client2NodeOutboundPort.getPortURI());
                 } catch (Exception e) {
