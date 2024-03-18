@@ -78,7 +78,7 @@ public class NodeComponent extends AbstractComponent
             String registryInboundPortURI) throws Exception {
         // only one thread to ensure the serialised execution of services
         // inside the component.
-        super(uri, 1, 0);
+        super(uri, 1, 1);
         this.p2pInboundPortURI = AbstractInboundPort.generatePortURI();
         this.neighbours = new HashSet<>();
         this.requestURIs = new HashSet<>();
@@ -217,6 +217,7 @@ public class NodeComponent extends AbstractComponent
                         this.logMessage("Registration Success: "
                                 + node2RegistryOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
                         this.logMessage("Connecting to all the neighbours received from the registry........");
+
                         this.connect2Neighbours();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -241,13 +242,15 @@ public class NodeComponent extends AbstractComponent
     private void connect2Neighbours() throws ComponentStartException {
         try {
             for (NodeInfoI neighbour : neighbours) {
-                NodeP2POutboundPort p2poutboundP = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(),
+                NodeP2POutboundPort p2poutboundP = new NodeP2POutboundPort(
+                        AbstractOutboundPort.generatePortURI(),
                         this);
                 p2poutboundP.publishPort();
                 this.doPortConnection(p2poutboundP.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) neighbour.p2pEndPointInfo()).getInboundPortURI(),
                         NodeConnector.class.getCanonicalName());
                 this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
+                System.err.println("node Info sent is :: " + this.nodeInfo.nodeIdentifier());
                 p2poutboundP.ask4Connection(this.nodeInfo);
             }
         } catch (Exception e) {
@@ -292,7 +295,7 @@ public class NodeComponent extends AbstractComponent
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbourInTheDirection);
                 nodePort.ask4Disconnection(this.nodeInfo);
                 this.doPortDisconnection(nodePort.getPortURI());
-                nodePort.unpublishPort();
+                // nodePort.unpublishPort();
                 this.nodeInfoToP2POutboundPortMap.remove(neighbourInTheDirection);
 
                 // ----------------- New Neighbour -----------------
@@ -315,6 +318,7 @@ public class NodeComponent extends AbstractComponent
     public void ask4Disconnection(NodeInfoI neighbour) {
         try {
             NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+            System.err.println("NodePort is :: " + nodePort);
             // TODO: is this really necessary?
             if (nodePort == null) {
                 this.neighbours.remove(neighbour);

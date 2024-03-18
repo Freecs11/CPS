@@ -151,7 +151,7 @@ public class ClientComponent extends AbstractComponent {
                 null); // change later
 
         // Finding node with identifier "node1"
-        String nodeIdentifier = "node1";
+        String nodeIdentifier = "node3";
         long delayTilStart1 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(1));
         this.scheduleTask(new AbstractTask() {
             @Override
