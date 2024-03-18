@@ -138,7 +138,7 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
                 // create the node component
 
-                Set<NodeComponentInfo> nodes = buildMap(7);
+                Set<NodeComponentInfo> nodes = buildMap(30);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
                         if (i > 3) {
@@ -155,11 +155,12 @@ public class CVM extends AbstractCVM {
                                                                 node.getRange(),
                                                                 REGISTER_IN_BOUND_PORT_URI,
                                                                 RegistryComponent.REG_START_INSTANT.plusSeconds(5) });
-                                // if (i < 4) {
-                                assert this.isDeployedComponent(uri);
-                                this.toggleTracing(uri);
-                                this.toggleLogging(uri);
-                                // i++;
+                                 if (i < 7) {
+                                	 assert this.isDeployedComponent(uri);
+                                	this.toggleTracing(uri);
+                                	this.toggleLogging(uri);
+                                	i++;
+                                 }
                         }
                 }
 
