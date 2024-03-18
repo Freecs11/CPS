@@ -3,6 +3,7 @@ package bcm.components;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +30,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PImplI;
@@ -53,7 +55,8 @@ import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
-@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class })
+@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class,
+        RequestResultCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
     protected Set<NodeInfoI> neighbours;
@@ -217,7 +220,6 @@ public class NodeComponent extends AbstractComponent
                         this.logMessage("Registration Success: "
                                 + node2RegistryOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
                         this.logMessage("Connecting to all the neighbours received from the registry........");
-
                         this.connect2Neighbours();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -241,20 +243,36 @@ public class NodeComponent extends AbstractComponent
 
     private void connect2Neighbours() throws ComponentStartException {
         try {
+
             for (NodeInfoI neighbour : neighbours) {
-                NodeP2POutboundPort p2poutboundP = new NodeP2POutboundPort(
-                        AbstractOutboundPort.generatePortURI(),
+                NodeP2POutboundPort p2poutboundP = new NodeP2POutboundPort(AbstractOutboundPort.generatePortURI(),
                         this);
                 p2poutboundP.publishPort();
                 this.doPortConnection(p2poutboundP.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) neighbour.p2pEndPointInfo()).getInboundPortURI(),
                         NodeConnector.class.getCanonicalName());
                 this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
-                System.err.println("node Info sent is :: " + this.nodeInfo.nodeIdentifier());
-                p2poutboundP.ask4Connection(this.nodeInfo);
+            }
+            // p2poutboundP.ask4Connection(this.nodeInfo);
+            for (NodeP2POutboundPort p2poutboundPort : this.nodeInfoToP2POutboundPortMap.values()) {
+                p2poutboundPort.ask4Connection(this.nodeInfo);
             }
         } catch (Exception e) {
             throw new ComponentStartException(e);
+        }
+    }
+
+    public void connect() {
+        try {
+            this.neighbours = node2RegistryOutboundPort.register(nodeInfo);
+            ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
+            this.logMessage(this.printNeighbours());
+            this.logMessage("Registration Success: "
+                    + node2RegistryOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
+            this.logMessage("Connecting to all the neighbours received from the registry........");
+            this.connect2Neighbours();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -295,7 +313,7 @@ public class NodeComponent extends AbstractComponent
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbourInTheDirection);
                 nodePort.ask4Disconnection(this.nodeInfo);
                 this.doPortDisconnection(nodePort.getPortURI());
-                // nodePort.unpublishPort();
+                nodePort.unpublishPort();
                 this.nodeInfoToP2POutboundPortMap.remove(neighbourInTheDirection);
 
                 // ----------------- New Neighbour -----------------
@@ -318,7 +336,6 @@ public class NodeComponent extends AbstractComponent
     public void ask4Disconnection(NodeInfoI neighbour) {
         try {
             NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-            System.err.println("NodePort is :: " + nodePort);
             // TODO: is this really necessary?
             if (nodePort == null) {
                 this.neighbours.remove(neighbour);
@@ -529,8 +546,6 @@ public class NodeComponent extends AbstractComponent
         ((ExecutionStateIMPL) this.context).flush();
         return result;
     }
-
-    // method that returns a big list of sensor data
 
     public void executeAsync(RequestI request) throws Exception {
         // TODO Auto-generated method stub

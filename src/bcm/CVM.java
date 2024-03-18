@@ -78,61 +78,29 @@ public class CVM extends AbstractCVM {
         protected String uriRegisterURI;
 
         public static Set<NodeComponentInfo> buildMap(int nbNode) {
-                Set<NodeComponentInfo> result = new HashSet<NodeComponentInfo>();
-                Stack<NodeComponentInfo> stack = new Stack<NodeComponentInfo>();
-
-                double x = nbNode, y = nbNode;
-                int i = 0;
-                NodeComponentInfo firstNode = new NodeComponentInfo("node" + i, x, y, 100.0);
-                stack.add(firstNode);
-                result.add(firstNode);
-                nbNode--;
-                i++;
-
-                while (nbNode > 0) {
-                        NodeComponentInfo nodeInit = stack.pop();
-                        NodeComponentInfo node = new NodeComponentInfo("node" + i, nodeInit.getX() + 1,
-                                        nodeInit.getY() - 1, 45.0);
-                        NodeComponentInfo node2 = new NodeComponentInfo("node" + (i + 1), nodeInit.getX() - 1,
-                                        nodeInit.getY() - 1, 45.0);
-                        NodeComponentInfo node3 = new NodeComponentInfo("node" + (i + 2), nodeInit.getX() + 1,
-                                        nodeInit.getY() + 1, 45.0);
-                        NodeComponentInfo node4 = new NodeComponentInfo("node" + (i + 3), nodeInit.getX() - 1,
-                                        nodeInit.getY() + 1, 45.0);
-                        int nodeSuccess = 0;
-
-                        if (!result.contains(node)) {
-                                nbNode--;
-                                node.setName("node" + (i + nodeSuccess));
-                                result.add(node);
-                                stack.add(node);
-                                nodeSuccess++;
+                // build map of nbNodes , map goes +5 in and -5 in positions to expand
+                double initialRange = 100.0;
+                double x = 50.0;
+                double y = 50.0;
+                Set<NodeComponentInfo> nodes = new HashSet<>();
+                Stack<Double> stack = new Stack<>();
+                stack.push(initialRange);
+                // no equals postions allowed
+                for (int i = 0; i < nbNode; i++) {
+                        double range = stack.pop();
+                        if (i % 2 == 0) {
+                                x += range;
+                                y += range;
+                        } else {
+                                x -= range;
+                                y -= range;
                         }
-                        if (!result.contains(node2)) {
-                                nbNode--;
-                                node2.setName("node" + (i + nodeSuccess));
-                                result.add(node2);
-                                stack.add(node2);
-                                nodeSuccess++;
-                        }
-                        if (!result.contains(node3)) {
-                                nbNode--;
-                                node3.setName("node" + (i + nodeSuccess));
-                                result.add(node3);
-                                stack.add(node3);
-                                nodeSuccess++;
-                        }
-                        if (!result.contains(node4)) {
-                                nbNode--;
-                                node4.setName("node" + (i + nodeSuccess));
-                                result.add(node4);
-                                stack.add(node4);
-                                nodeSuccess++;
-                        }
-                        i += nodeSuccess;
+                        nodes.add(new NodeComponentInfo("node" + i, x, y, range));
+                        stack.push(range + 5);
+                        stack.push(range - 5);
                 }
 
-                return result;
+                return nodes;
         }
 
         @Override
@@ -262,17 +230,17 @@ public class CVM extends AbstractCVM {
         }
 
         public static void main(String[] args) {
-                try {
-                        CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(1500000L);
-                        Thread.sleep(10000L);
-                        System.exit(0);
-                } catch (Exception e) {
-                        throw new RuntimeException(e);
-                }
-                // Set<NodeComponentInfo> result = CVM.buildMap(55);
-                // System.out.println(result.size());
-                // System.out.println(result);
+                 try {
+                 CVM cvm = new CVM();
+                 cvm.startStandardLifeCycle(1500000L);
+                 Thread.sleep(10000L);
+                 System.exit(0);
+                 } catch (Exception e) {
+                 throw new RuntimeException(e);
+                 }
+//                Set<NodeComponentInfo> result = CVM.buildMap(10);
+//                System.out.println(result.size());
+//                System.out.println(result);
         }
 
 }

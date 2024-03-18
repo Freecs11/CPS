@@ -43,13 +43,15 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        this.owner.handleRequest(
-                new AbstractComponent.AbstractService<Void>() {
+        this.owner.runTask(
+                new AbstractComponent.AbstractTask() {
                     @Override
-                    public Void call() throws Exception {
-                        System.out.println("NodeComponentInboundPort.execute");
-                        ((NodeComponent) this.getServiceOwner()).executeAsync(request);
-                        return null;
+                    public void run() {
+                        try {
+                            ((NodeComponent) this.getTaskOwner()).executeAsync(request);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
     }
@@ -104,13 +106,15 @@ public class NodeComponentInboundPort extends AbstractInboundPort implements Req
 
     @Override
     public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
-        this.owner.handleRequest(
-                new AbstractComponent.AbstractService<Void>() {
+        this.owner.runTask(
+                new AbstractComponent.AbstractTask() {
                     @Override
-                    public Void call() throws Exception {
-                        System.out.println("NodeComponentInboundPort.execute");
-                        ((NodeComponent) this.getServiceOwner()).executeAsync(requestContinuation);
-                        return null;
+                    public void run() {
+                        try {
+                            ((NodeComponent) this.getTaskOwner()).executeAsync(requestContinuation);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
     }
