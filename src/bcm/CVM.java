@@ -155,12 +155,12 @@ public class CVM extends AbstractCVM {
                                                                 node.getRange(),
                                                                 REGISTER_IN_BOUND_PORT_URI,
                                                                 RegistryComponent.REG_START_INSTANT.plusSeconds(5) });
-                                 if (i < 7) {
-                                	 assert this.isDeployedComponent(uri);
-                                	this.toggleTracing(uri);
-                                	this.toggleLogging(uri);
-                                	i++;
-                                 }
+                                if (i < 7) {
+                                        assert this.isDeployedComponent(uri);
+                                        this.toggleTracing(uri);
+                                        this.toggleLogging(uri);
+                                        i++;
+                                }
                         }
                 }
 
@@ -231,17 +231,17 @@ public class CVM extends AbstractCVM {
         }
 
         public static void main(String[] args) {
-                 try {
-                 CVM cvm = new CVM();
-                 cvm.startStandardLifeCycle(1500000L);
-                 Thread.sleep(10000L);
-                 System.exit(0);
-                 } catch (Exception e) {
-                 throw new RuntimeException(e);
-                 }
-//                Set<NodeComponentInfo> result = CVM.buildMap(10);
-//                System.out.println(result.size());
-//                System.out.println(result);
+                try {
+                        CVM cvm = new CVM();
+                        cvm.startStandardLifeCycle(1500000L);
+                        Thread.sleep(10000L);
+                        System.exit(0);
+                } catch (Exception e) {
+                        throw new RuntimeException(e);
+                }
+                // Set<NodeComponentInfo> result = CVM.buildMap(10);
+                // System.out.println(result.size());
+                // System.out.println(result);
         }
 
 }
