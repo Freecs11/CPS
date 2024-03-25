@@ -1,28 +1,31 @@
 package utils;
 
+import java.util.Objects;
+
 public class NodeComponentInfo {
     private Double x, y, range;
     private String name;
 
-    public NodeComponentInfo (String name, Double x, Double y, Double range) {
+    public NodeComponentInfo(String name, Double x, Double y, Double range) {
         this.name = name;
         this.x = x;
         this.y = y;
         this.range = range;
     }
 
-
-    // redefinition du equals
+    @Override
     public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (!(o instanceof NodeComponentInfo)) {
-            return false;
-        }
-        NodeComponentInfo n = (NodeComponentInfo) o;
-        return n.getX() == x && n.getY() == y;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NodeComponentInfo that = (NodeComponentInfo) o;
+        return (Objects.equals(x, that.x) && Objects.equals(y, that.y)) || Objects.equals(name, that.name);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, name); // Incorpore les coordonnées et le nom pour la cohérence
+    }
+    
 
     public Double getX() {
         return x;
@@ -56,6 +59,7 @@ public class NodeComponentInfo {
         this.name = name;
     }
 
+    @Override
     public String toString() {
         return "\nNodeComponentInfo [name=" + name + ", x=" + x + ", y=" + y + ", range=" + range + "]";
     }

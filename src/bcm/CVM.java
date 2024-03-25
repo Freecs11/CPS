@@ -107,6 +107,8 @@ public class CVM extends AbstractCVM {
                                 result.add(node);
                                 stack.add(node);
                                 nodeSuccess++;
+                        }else{
+                                System.out.println("Probleme condition 1");
                         }
                         if (!result.contains(node2)) {
                                 nbNode--;
@@ -114,13 +116,18 @@ public class CVM extends AbstractCVM {
                                 result.add(node2);
                                 stack.add(node2);
                                 nodeSuccess++;
+                        }else{
+                                System.out.println("Probleme condition 2");
                         }
+
                         if (!result.contains(node3)) {
                                 nbNode--;
                                 node3.setName("node" + (i + nodeSuccess));
                                 result.add(node3);
                                 stack.add(node3);
                                 nodeSuccess++;
+                        }else{
+                                System.out.println("Probleme condition 3");
                         }
                         if (!result.contains(node4)) {
                                 nbNode--;
@@ -128,6 +135,8 @@ public class CVM extends AbstractCVM {
                                 result.add(node4);
                                 stack.add(node4);
                                 nodeSuccess++;
+                        }else{
+                                System.out.println("Probleme condition 4");
                         }
                         i += nodeSuccess;
                 }
@@ -262,17 +271,28 @@ public class CVM extends AbstractCVM {
         }
 
         public static void main(String[] args) {
-                try {
-                        CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(1500000L);
-                        Thread.sleep(10000L);
-                        System.exit(0);
-                } catch (Exception e) {
-                        throw new RuntimeException(e);
+                // try {
+                //         CVM cvm = new CVM();
+                //         cvm.startStandardLifeCycle(1500000L);
+                //         Thread.sleep(10000L);
+                //         System.exit(0);
+                // } catch (Exception e) {
+                //         throw new RuntimeException(e);
+                // }
+                Set<NodeComponentInfo> result = CVM.buildMap(10);
+
+                for (NodeComponentInfo node : result) {
+                        for (NodeComponentInfo node2 : result) {
+                                if (node.equals(node2) && !node.getName().equals(node2.getName())) {
+                                        System.err.println("node1: " + node.getName() + " node2: " + node2.getName());
+                                        if(node == node2){
+                                                System.out.println("Pouta");
+                                        }
+                                }
+                        }
                 }
-                // Set<NodeComponentInfo> result = CVM.buildMap(55);
-                // System.out.println(result.size());
-                // System.out.println(result);
+                System.out.println(result.size());
+                System.out.println(result);
         }
 
 }

@@ -1,6 +1,7 @@
 package bcm.components;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
@@ -9,6 +10,7 @@ import bcm.connectors.NodeConnector;
 import bcm.ports.Client2RegisterOutboundPort;
 import bcm.ports.ClientComponentOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
@@ -16,6 +18,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
@@ -41,7 +44,8 @@ import query.ast.RelativeBase;
 import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class, ClocksServerCI.class })
-public class ClientComponent extends AbstractComponent {
+@OfferedInterfaces(offered = { RequestResultCI.class })
+public class ClientComponent extends AbstractComponent implements RequestResultCI{
     protected ClientComponentOutboundPort client2NodeOutboundPort;
     protected Client2RegisterOutboundPort client2RegistryOutboundPort;
     protected long startAfter;
@@ -49,6 +53,7 @@ public class ClientComponent extends AbstractComponent {
     protected RequestI request;
     protected AcceleratedClock clock;
     protected Instant startInstant;
+    protected Map<String,QueryResultI> resultsResult;
 
     protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
         super(uri, 1, 0);
@@ -245,4 +250,11 @@ public class ClientComponent extends AbstractComponent {
         super.finalise();
         // System.out.println("finalise ClientComponent");
     }
+    @Override
+    public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
+        if (this.resultsResult.containsKey(requestURI)) {
+                throw new Exception("Request result already exists");
+                }
+        this.resultsResult.put(requestURI, result);
+        }
 }
