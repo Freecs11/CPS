@@ -138,7 +138,7 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
                 // create the node component
 
-                Set<NodeComponentInfo> nodes = buildMap(30);
+                Set<NodeComponentInfo> nodes = buildMap(7);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
                         if (i > 3) {

@@ -9,8 +9,10 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
+import bcm.connectors.ClientRequestResult;
 import bcm.connectors.NodeConnector;
 import bcm.connectors.RegistryConnector;
+import bcm.ports.ClientRequestResultOutboundPort;
 import bcm.ports.NodeComponentInboundPort;
 import bcm.ports.NodeComponentOutboundPort;
 import bcm.ports.NodeP2PInboundPort;
@@ -23,6 +25,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
@@ -30,6 +33,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PImplI;
@@ -43,6 +47,7 @@ import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
+import implementation.ConnectionInfoImpl;
 import implementation.EndPointDescIMPL;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
@@ -53,8 +58,9 @@ import implementation.request.ExecutionStateIMPL;
 import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
 
-@OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
-@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class })
+@OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class, RequestResultCI.class })
+@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class,
+        RequestResultCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
     protected Set<NodeInfoI> neighbours;
@@ -71,6 +77,8 @@ public class NodeComponent extends AbstractComponent
     protected AcceleratedClock clock;
     protected Instant startInstant;
     protected final Set<String> requestURIs;
+
+    private ClientRequestResultOutboundPort clientRequestResultOutboundPort;
 
     protected NodeComponent(String uri,
             String nodeId,
@@ -92,6 +100,12 @@ public class NodeComponent extends AbstractComponent
         this.clientInboundPort.publishPort();
         this.node2RegistryOutboundPort.publishPort();
         this.registerInboundPortURI = registryInboundPortURI;
+
+        this.clientRequestResultOutboundPort = new ClientRequestResultOutboundPort(
+                AbstractOutboundPort.generatePortURI(),
+                this);
+        this.clientRequestResultOutboundPort.publishPort();
+
         EndPointDescriptorI endpoint = new EndPointDescIMPL(this.clientInboundPort.getPortURI());
         this.nodeInfo = new NodeInfoIMPL(nodeId,
                 new PositionIMPL(x, y), endpoint, this.p2pInboundPort, range);
@@ -142,6 +156,12 @@ public class NodeComponent extends AbstractComponent
         this.clientInboundPort.publishPort();
         this.node2RegistryOutboundPort.publishPort();
         this.registerInboundPortURI = registryInboundPortURI;
+
+        this.clientRequestResultOutboundPort = new ClientRequestResultOutboundPort(
+                AbstractOutboundPort.generatePortURI(),
+                this);
+        this.clientRequestResultOutboundPort.publishPort();
+
         EndPointDescriptorI endpoint = new EndPointDescIMPL(this.clientInboundPort.getPortURI());
         this.nodeInfo = new NodeInfoIMPL(nodeId,
                 new PositionIMPL(x, y), endpoint, this.p2pInboundPort, range);
@@ -567,14 +587,147 @@ public class NodeComponent extends AbstractComponent
         return result;
     }
 
-    // method that returns a big list of sensor data
-
     public void executeAsync(RequestI request) throws Exception {
-        // TODO Auto-generated method stub
+        // local
+        ConnectionInfoImpl clientInfo = (ConnectionInfoImpl) request.clientConnectionInfo();
+        if (clientInfo != null) {
+            System.err.println("CLIENT INFO: " + clientInfo.toString());
+        }
+
+        if (request == null || request.getQueryCode() == null) {
+            ((ExecutionStateIMPL) this.context).flush();
+            throw new Exception("Query is null or request is null");
+        }
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
+        QueryResultI result = (QueryResultIMPL) query.eval(this.context);
+        System.err.println("STATE: " + this.context.toString());
+
+        // Check if not continuation
+        if (!this.context.isContinuationSet()) {
+            ((ExecutionStateIMPL) this.context).flush();
+            this.requestURIs.add(request.requestURI());
+            this.doPortConnection(this.clientRequestResultOutboundPort.getPortURI(),
+                    ((EndPointDescIMPL) clientInfo.endPointInfo()).getURI(),
+                    ClientRequestResult.class.getCanonicalName());
+            this.clientRequestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
+            this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
+            ((ExecutionStateIMPL) this.context).flush();
+            return;
+        }
+        this.context.addToCurrentResult(result);
+        if (context.isFlooding()) {
+            System.err.println("FLOODING");
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
+            for (NodeInfoI neighbour : neighbours) {
+                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                nodePort.executeAsync(continuation);
+            }
+
+            ((ExecutionStateIMPL) this.context).flush();
+            return;
+        }
+        // Directional if not flooding
+        else {
+            Set<Direction> directions = this.context.getDirections();
+            System.err.println("DIRECTIONS: " + directions.toString());
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
+            for (Direction direction : directions) {
+                NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
+                if (neighbour != null) {
+                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                    if (nodePort != null) {
+                        nodePort.executeAsync(continuation);
+                    }
+                }
+            }
+            ((ExecutionStateIMPL) this.context).flush();
+            return;
+        }
+
     }
 
     public void executeAsync(RequestContinuationI request) throws Exception {
-        // TODO Auto-generated method stub
+        if (request == null) {
+            ((ExecutionStateIMPL) this.context).flush();
+            throw new Exception("Request is null");
+        }
+        if (this.requestURIs.contains(request.requestURI())) {
+            ((ExecutionStateIMPL) this.context).flush();
+            QueryResultI result = new QueryResultIMPL();
+            System.err.println("REQUEST URI: " + request.requestURI() + " already executed");
+            return;
+        }
+        ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
+        ProcessingNodeI lastNode = state.getProcessingNode();
+        PositionI lastPosition = lastNode.getPosition();
+
+        ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
+        // Local execution
+        if (request.getQueryCode() == null) {
+            ((ExecutionStateIMPL) this.context).flush();
+            throw new Exception("Query is null");
+        }
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
+        QueryResultI result = (QueryResultIMPL) query.eval(this.context);
+        // we add the node to the visited nodes in the state to avoid loops
+        // Directional
+        if (state.isDirectional()) {
+            state.incrementHops();
+            if (((ExecutionStateIMPL) state).noMoreHops()) {
+                this.context.addToCurrentResult(result);
+                this.doPortConnection(this.clientRequestResultOutboundPort.getPortURI(),
+                        ((EndPointDescIMPL) request.clientConnectionInfo().endPointInfo()).getURI(),
+                        ClientRequestResult.class.getCanonicalName());
+                this.clientRequestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
+                this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
+                ((ExecutionStateIMPL) this.context).flush();
+                return;
+            }
+            // New continuation
+            Set<Direction> directions = this.context.getDirections();
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
+            for (Direction direction : directions) {
+                NodeInfoI neighbour = this.node2RegistryOutboundPort.findNewNeighbour(nodeInfo, direction);
+                if (neighbour != null) {
+                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                    if (nodePort != null) {
+                        nodePort.executeAsync(continuation);
+                    }
+                }
+            }
+
+            ((ExecutionStateIMPL) this.context).flush();
+            return;
+        }
+        // Flooding
+        else {
+            if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
+                this.context.addToCurrentResult(result);
+                this.doPortConnection(this.clientRequestResultOutboundPort.getPortURI(),
+                        ((EndPointDescIMPL) request.clientConnectionInfo().endPointInfo()).getURI(),
+                        ClientRequestResult.class.getCanonicalName());
+                this.clientRequestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
+                this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
+                ((ExecutionStateIMPL) this.context).flush();
+                return;
+            }
+            Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
+            Double distanceTraveled = this.processingNode.getPosition().distance(lastPosition);
+            ((ExecutionStateIMPL) state).updateMaxDistance(currentMaxDist - distanceTraveled);
+            // New continuation
+            RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
+            for (NodeInfoI neighbour : neighbours) {
+                if (!((ExecutionStateIMPL) state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
+                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                    if (nodePort != null)
+                        nodePort.executeAsync(continuation);
+                }
+            }
+
+            ((ExecutionStateIMPL) this.context).flush();
+            return;
+        }
+
     }
 
 }

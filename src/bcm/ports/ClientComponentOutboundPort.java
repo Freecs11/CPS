@@ -29,8 +29,7 @@ public class ClientComponentOutboundPort extends AbstractOutboundPort
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'executeAsync'");
+        ((RequestingCI) this.getConnector()).executeAsync(request);
     }
 
 }

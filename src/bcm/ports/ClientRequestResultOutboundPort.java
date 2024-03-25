@@ -5,19 +5,22 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 
-public class ClientRequestResultOutboundPort extends AbstractOutboundPort implements RequestResultCI
-         {
-    
+public class ClientRequestResultOutboundPort extends AbstractOutboundPort implements RequestResultCI {
 
     public ClientRequestResultOutboundPort(ComponentI owner)
             throws Exception {
         super(RequestResultCI.class, owner);
     }
-
     
+    
+
+    public ClientRequestResultOutboundPort(String uri, ComponentI owner)
+            throws Exception {
+        super(uri, RequestResultCI.class, owner);
+    }
+
     @Override
     public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
         ((RequestResultCI) this.getConnector()).acceptRequestResult(requestURI, result);
     }
 }
-

@@ -7,16 +7,19 @@ import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import bcm.components.ClientComponent;
-public class ClientRequestResultInboundPort extends AbstractInboundPort implements RequestResultCI
-         {
-    
 
-    public ClientRequestResultInboundPort(ComponentI owner)
+public class ClientRequestResultInboundPort extends AbstractInboundPort implements RequestResultCI {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public ClientRequestResultInboundPort(ComponentI owner)
             throws Exception {
         super(RequestResultCI.class, owner);
     }
-    
-    
+
     @Override
     public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
         this.owner.handleRequest(
@@ -30,4 +33,3 @@ public class ClientRequestResultInboundPort extends AbstractInboundPort implemen
     }
 
 }
-
