@@ -91,6 +91,8 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		if (getCurrentResult().isBooleanRequest() == result.isBooleanRequest()
 				&& getCurrentResult().isGatherRequest() == result.isGatherRequest()) {
 			((QueryResultIMPL) queryResult).update(result);
+		} else {
+			throw new IllegalStateException("Cannot add result of different type");
 		}
 	}
 

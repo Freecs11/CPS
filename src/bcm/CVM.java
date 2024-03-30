@@ -25,11 +25,11 @@ import utils.NodeComponentInfo;
 
 public class CVM extends AbstractCVM {
         public static final String CLOCK_URI = "CLOCK-SERVER";
-        protected static final long TIME_TO_START = 3000L;
+        protected static final long TIME_TO_START = 6000L;
         protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
-        protected static final double accelerationFactor = 1.0;
+        protected static final double accelerationFactor = 60.0;
 
         /** URI of the provider component (convenience). */
         protected static final String NODE_COMPONENT_URI = "node-URI";

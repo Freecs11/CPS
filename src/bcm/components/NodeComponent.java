@@ -468,10 +468,17 @@ public class NodeComponent extends AbstractComponent
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         if (request == null) {
             // ((ExecutionStateIMPL) this.context).flush();
+            this.context = new ExecutionStateIMPL();
+            this.context.updateProcessingNode(this.processingNode);
             throw new Exception("Request is null");
         }
+        System.err.println("REQUEST URI: " + request.requestURI());
+        System.err.println("REQUEST MAP URIS: " + this.requestURIs.toString());
+
         if (this.requestURIs.contains(request.requestURI())) {
             // ((ExecutionStateIMPL) this.context).flush();
+            this.context = new ExecutionStateIMPL();
+            this.context.updateProcessingNode(this.processingNode);
             QueryResultI result = new QueryResultIMPL();
             System.err.println("REQUEST URI: " + request.requestURI() + " already executed");
             return result;
@@ -484,16 +491,24 @@ public class NodeComponent extends AbstractComponent
         // Local execution
         if (request.getQueryCode() == null) {
             // ((ExecutionStateIMPL) this.context).flush();
+            this.context = new ExecutionStateIMPL();
+            this.context.updateProcessingNode(this.processingNode);
             throw new Exception("Query is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
         // we add the node to the visited nodes in the state to avoid loops
         // Directional
+        System.err.println("STATE: " + this.context.toString());
+
+        this.requestURIs.add(request.requestURI());
+
         if (state.isDirectional()) {
             state.incrementHops();
             if (((ExecutionStateIMPL) state).noMoreHops()) {
                 // ((ExecutionStateIMPL) this.context).flush();
+                this.context = new ExecutionStateIMPL();
+                this.context.updateProcessingNode(this.processingNode);
                 return result;
             }
             // New continuation
@@ -510,7 +525,10 @@ public class NodeComponent extends AbstractComponent
         }
         // Flooding
         else {
+            System.err.println("FLOODING in continuation");
             if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
+                this.context = new ExecutionStateIMPL();
+                this.context.updateProcessingNode(this.processingNode);
                 // ((ExecutionStateIMPL) this.context).flush();
                 return result;
             }
@@ -521,34 +539,46 @@ public class NodeComponent extends AbstractComponent
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                if (nodePort != null)
-                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                if (nodePort != null) {
+                    System.err.println("FLOODING in continuation: " + neighbour.nodeIdentifier());
 
+                    QueryResultI execInNeighhbour = nodePort.execute(continuation);
+
+                    ((QueryResultIMPL) result).update(execInNeighhbour);
+                }
             }
         }
         // ((ExecutionStateIMPL) this.context).flush();
         // Return final result
-        this.requestURIs.add(request.requestURI());
+        this.context = new ExecutionStateIMPL();
+        this.context.updateProcessingNode(this.processingNode);
         return result;
     }
 
     public QueryResultI execute(RequestI request) throws Exception {
         if (requestURIs.contains(request.requestURI())) {
             // ((ExecutionStateIMPL) this.context).flush();
+            this.context = new ExecutionStateIMPL();
+            this.context.updateProcessingNode(this.processingNode);
             return new QueryResultIMPL();
         }
         if (request == null || request.getQueryCode() == null) {
             // ((ExecutionStateIMPL) this.context).flush();
+            this.context = new ExecutionStateIMPL();
+            this.context.updateProcessingNode(this.processingNode);
             throw new Exception("Query is null or request is null");
         }
+        this.requestURIs.add(request.requestURI());
+
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
         System.err.println("STATE: " + this.context.toString());
 
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
-
-            this.requestURIs.add(request.requestURI());
+            // nouvelle facon de faire le flush
+            this.context = new ExecutionStateIMPL();
+            this.context.updateProcessingNode(this.processingNode);
             return result;
         }
 
@@ -560,7 +590,9 @@ public class NodeComponent extends AbstractComponent
             RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+                System.err.println("was here ");
+                QueryResultI res = nodePort.execute(continuation);
+                ((QueryResultIMPL) result).update(res);
             }
         }
         // Directional if not flooding
@@ -580,7 +612,8 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-        // ((ExecutionStateIMPL) this.context).flush();
+        this.context = new ExecutionStateIMPL();
+        this.context.updateProcessingNode(this.processingNode);
         return result;
     }
 

@@ -40,6 +40,7 @@ import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
 import query.ast.DirectionContinuation;
+import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
 import query.ast.FinalDirections;
 import query.ast.FinalGather;
@@ -149,13 +150,14 @@ public class ClientComponent extends AbstractComponent {
                                 new EndPointDescIMPL(this.clientRequestResultInboundPort.getPortURI()));
 
                 // -------------------Gather Query Test-------------------
-                GatherQuery query = new GatherQuery(
+                GatherQuery query = new GatherQuery( 
                                 new RecursiveGather("temperature",
                                                 new FinalGather("humidity")),
-                                // new FloodingContinuation(new RelativeBase(), 15.0));
-                                // new DirectionContinuation(3, new FinalDirections(Direction.SE)));
-                                new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                                                new FinalDirections(Direction.NE))));
+                                // new EmptyContinuation());
+                                // new FloodingContinuation(new RelativeBase(), 455.0));
+                                new DirectionContinuation(5, new FinalDirections(Direction.NE)));
+                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
+                // new FinalDirections(Direction.NE))));
 
                 // -------------Boolean Query Test---------------
                 OrBooleanExpr res = new OrBooleanExpr(
@@ -167,13 +169,14 @@ public class ClientComponent extends AbstractComponent {
                                                                 new ConstantRand(20.0))));
 
                 BooleanQuery query2 = new BooleanQuery(res,
-                                new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                                                new FinalDirections(Direction.NE))));
+                                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
+                                // new FinalDirections(Direction.NE))));
+                                new EmptyContinuation());
                 // ------Actual Request to look up-------
                 this.request = new RequestIMPL("req1",
                                 query,
                                 // query2,
-                                true,
+                                false,
                                 clientInfo); // change later
 
                 // Finding node with identifier "node1"
@@ -238,10 +241,10 @@ public class ClientComponent extends AbstractComponent {
                 // }, waitForResponse, TimeUnit.NANOSECONDS);
 
                 RequestI request2 = new RequestIMPL("req2",
-                                query2,
+                                query,
                                 false,
                                 null);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(15));
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(10));
                 this.scheduleTask(new AbstractTask() {
                         @Override
                         public void run() {
@@ -267,42 +270,42 @@ public class ClientComponent extends AbstractComponent {
                 }, delayTilRequest2, TimeUnit.NANOSECONDS);
                 long delayTilRequest3 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
 
-                GatherQuery query3 = new GatherQuery(
-                                new RecursiveGather("temperature",
-                                                new FinalGather("humidity")),
-                                // new FloodingContinuation(new RelativeBase(), 15.0));
-                                // new DirectionContinuation(3, new FinalDirections(Direction.NE)));
-                                new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                                                new FinalDirections(Direction.NE))));
+                // GatherQuery query3 = new GatherQuery(
+                // new RecursiveGather("temperature",
+                // new FinalGather("humidity")),
+                // // new FloodingContinuation(new RelativeBase(), 15.0));
+                // // new DirectionContinuation(3, new FinalDirections(Direction.NE)));
+                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
+                // new FinalDirections(Direction.NE))));
 
-                RequestI request3 = new RequestIMPL("req3",
-                                query3,
-                                false,
-                                null);
-                this.scheduleTask(new AbstractTask() {
-                        @Override
-                        public void run() {
-                                try {
-                                        ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
-                                                        .findByIdentifier(nodeIdentifier); // modify to return an
-                                        // implementation of
-                                        // connectionInfo
-                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
-                                        ClientComponent.this.doPortConnection(
-                                                        ClientComponent.this.client2NodeOutboundPort.getPortURI(),
-                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
-                                                        NodeConnector.class.getCanonicalName());
-                                        QueryResultI res = ClientComponent.this.client2NodeOutboundPort
-                                                        .execute(request3);
-                                        ClientComponent.this.logMessage("Query result: " + res.toString());
-                                        ClientComponent.this.doPortDisconnection(
-                                                        ClientComponent.this.client2NodeOutboundPort.getPortURI());
-                                } catch (Exception e) {
-                                        e.printStackTrace();
-                                }
-                        }
-                }, delayTilRequest3, TimeUnit.NANOSECONDS);
-                super.execute();
+                // RequestI request3 = new RequestIMPL("req3",
+                // query3,
+                // false,
+                // null);
+                // this.scheduleTask(new AbstractTask() {
+                // @Override
+                // public void run() {
+                // try {
+                // ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
+                // .findByIdentifier(nodeIdentifier); // modify to return an
+                // // implementation of
+                // // connectionInfo
+                // // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                // ClientComponent.this.doPortConnection(
+                // ClientComponent.this.client2NodeOutboundPort.getPortURI(),
+                // ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
+                // NodeConnector.class.getCanonicalName());
+                // QueryResultI res = ClientComponent.this.client2NodeOutboundPort
+                // .execute(request3);
+                // ClientComponent.this.logMessage("Query result: " + res.toString());
+                // ClientComponent.this.doPortDisconnection(
+                // ClientComponent.this.client2NodeOutboundPort.getPortURI());
+                // } catch (Exception e) {
+                // e.printStackTrace();
+                // }
+                // }
+                // }, delayTilRequest3, TimeUnit.NANOSECONDS);
+                // super.execute();
 
         }
 

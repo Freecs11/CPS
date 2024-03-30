@@ -41,6 +41,8 @@ public class BooleanQuery extends AbstractQuery {
 		}
 		QueryResultI res = new QueryResultIMPL(true, false, nodesEvaluated, null);
 		continuation.eval(contextIMP);
+		((QueryResultIMPL) contextIMP.getCurrentResult()).setBR(true);
+		System.err.println("BooleanQuery: " + res.toString());
 		contextIMP.addToCurrentResult(res);
 		return contextIMP.getCurrentResult();
 	}

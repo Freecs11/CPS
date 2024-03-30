@@ -22,7 +22,7 @@ public class OrBooleanExpr extends AbstractBooleanExpr {
 
 	@Override
 	public Boolean eval(ExecutionStateI context) {
-		return (boolean) expr1.eval(context) || (boolean) expr2.eval(context);
+		return expr1.eval(context) || expr2.eval(context);
 	}
 
 }

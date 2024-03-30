@@ -17,7 +17,7 @@ public class ConditionalExprBooleanExpr extends AbstractBooleanExpr {
 
 	@Override
 	public Boolean eval(ExecutionStateI context) {
-		return (Boolean) cexpr.eval(context);
+		return cexpr.eval(context);
 	}
 
 }

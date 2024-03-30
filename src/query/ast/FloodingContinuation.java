@@ -29,14 +29,11 @@ public class FloodingContinuation extends AbstractContinuation {
 	public Object eval(ExecutionStateI context) {
 		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context;
 		PositionI pos = this.base.eval(contextCC);
-		ProcessingNodeIMPL procNode = (ProcessingNodeIMPL) contextCC.getProcessingNode();
-		procNode.setPostion(pos);
-
+		((ProcessingNodeIMPL) contextCC.getProcessingNode()).setPostion(pos);
 		if (distance > 0) {
 			contextCC.setMaxDistance(distance);
 		}
 		contextCC.setIsFlooding(true);
-		contextCC.updateProcessingNode(procNode);
 		return null;
 	}
 

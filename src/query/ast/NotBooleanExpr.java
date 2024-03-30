@@ -17,7 +17,7 @@ public class NotBooleanExpr extends AbstractBooleanExpr {
 
 	@Override
 	public Boolean eval(ExecutionStateI context) {
-		return !(boolean) expr.eval(context);
+		return !expr.eval(context);
 	}
 
 }

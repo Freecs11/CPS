@@ -5,6 +5,6 @@ import query.interfaces.IEval;
 
 public abstract class AbstractConditionalExpr implements IEval {
     @Override
-    public abstract Object eval(ExecutionStateI context);
+    public abstract Boolean eval(ExecutionStateI context);
 
 }
