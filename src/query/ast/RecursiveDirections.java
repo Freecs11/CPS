@@ -1,13 +1,10 @@
 package query.ast;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractDirections;
-import query.interfaces.IParamContext;
 
 public class RecursiveDirections extends AbstractDirections {
 	private Direction direction;
@@ -35,22 +32,10 @@ public class RecursiveDirections extends AbstractDirections {
 		this.directions = directions;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Direction> eval(ExecutionStateI context) {
 		Direction dirEval = this.direction;
-		HashSet<Direction> listDirs = (HashSet<Direction>) this.directions.eval(context);
-		listDirs.add(dirEval);
-		((ExecutionStateIMPL) context).setCurrentDirection(dirEval);
-		return listDirs;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Set<Direction> eval(IParamContext context) {
-		Direction dirEval = this.direction;
-
-		HashSet<Direction> listDirs = (HashSet<Direction>) this.directions.eval(context);
+		Set<Direction> listDirs = this.directions.eval(context);
 		listDirs.add(dirEval);
 		return listDirs;
 	}

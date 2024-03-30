@@ -467,11 +467,11 @@ public class NodeComponent extends AbstractComponent
 
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         if (request == null) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Request is null");
         }
         if (this.requestURIs.contains(request.requestURI())) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             QueryResultI result = new QueryResultIMPL();
             System.err.println("REQUEST URI: " + request.requestURI() + " already executed");
             return result;
@@ -483,18 +483,17 @@ public class NodeComponent extends AbstractComponent
         ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
         // Local execution
         if (request.getQueryCode() == null) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Query is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = (QueryResultIMPL) query.eval(this.context);
         // we add the node to the visited nodes in the state to avoid loops
-        ((ExecutionStateIMPL) state).addNodeVisited(this.nodeInfo.nodeIdentifier());
         // Directional
         if (state.isDirectional()) {
             state.incrementHops();
             if (((ExecutionStateIMPL) state).noMoreHops()) {
-                ((ExecutionStateIMPL) this.context).flush();
+                // ((ExecutionStateIMPL) this.context).flush();
                 return result;
             }
             // New continuation
@@ -512,7 +511,7 @@ public class NodeComponent extends AbstractComponent
         // Flooding
         else {
             if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
-                ((ExecutionStateIMPL) this.context).flush();
+                // ((ExecutionStateIMPL) this.context).flush();
                 return result;
             }
             Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
@@ -521,14 +520,13 @@ public class NodeComponent extends AbstractComponent
             // New continuation
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
             for (NodeInfoI neighbour : neighbours) {
-                if (!((ExecutionStateIMPL) state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
-                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                    if (nodePort != null)
-                        ((QueryResultIMPL) result).update(nodePort.execute(continuation));
-                }
+                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                if (nodePort != null)
+                    ((QueryResultIMPL) result).update(nodePort.execute(continuation));
+
             }
         }
-        ((ExecutionStateIMPL) this.context).flush();
+        // ((ExecutionStateIMPL) this.context).flush();
         // Return final result
         this.requestURIs.add(request.requestURI());
         return result;
@@ -536,11 +534,11 @@ public class NodeComponent extends AbstractComponent
 
     public QueryResultI execute(RequestI request) throws Exception {
         if (requestURIs.contains(request.requestURI())) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             return new QueryResultIMPL();
         }
         if (request == null || request.getQueryCode() == null) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Query is null or request is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
@@ -549,7 +547,7 @@ public class NodeComponent extends AbstractComponent
 
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
-            ((ExecutionStateIMPL) this.context).flush();
+
             this.requestURIs.add(request.requestURI());
             return result;
         }
@@ -559,7 +557,6 @@ public class NodeComponent extends AbstractComponent
         // Flooding
         if (context.isFlooding()) {
             System.err.println("FLOODING");
-            ((ExecutionStateIMPL) this.context).addNodeVisited(this.nodeInfo.nodeIdentifier());
             RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
             for (NodeInfoI neighbour : neighbours) {
                 NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
@@ -583,7 +580,7 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-        ((ExecutionStateIMPL) this.context).flush();
+        // ((ExecutionStateIMPL) this.context).flush();
         return result;
     }
 
@@ -594,8 +591,13 @@ public class NodeComponent extends AbstractComponent
             System.err.println("CLIENT INFO: " + clientInfo.toString());
         }
 
+        if (requestURIs.contains(request.requestURI())) {
+            // ((ExecutionStateIMPL) this.context).flush();
+            return;
+        }
+
         if (request == null || request.getQueryCode() == null) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Query is null or request is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
@@ -604,17 +606,18 @@ public class NodeComponent extends AbstractComponent
 
         // Check if not continuation
         if (!this.context.isContinuationSet()) {
-            ((ExecutionStateIMPL) this.context).flush();
+            System.err.println("NOT CONTINUATION");
+            // ((ExecutionStateIMPL) this.context).flush();
             this.requestURIs.add(request.requestURI());
             this.doPortConnection(this.clientRequestResultOutboundPort.getPortURI(),
                     ((EndPointDescIMPL) clientInfo.endPointInfo()).getURI(),
                     ClientRequestResult.class.getCanonicalName());
             this.clientRequestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
-            this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
-            ((ExecutionStateIMPL) this.context).flush();
+            // this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
+            // ((ExecutionStateIMPL) this.context).flush();
             return;
         }
-        this.context.addToCurrentResult(result);
+        // this.context.addToCurrentResult(result);
         if (context.isFlooding()) {
             System.err.println("FLOODING");
             RequestContinuationI continuation = new RequestContinuationIMPL(request, this.context);
@@ -623,7 +626,7 @@ public class NodeComponent extends AbstractComponent
                 nodePort.executeAsync(continuation);
             }
 
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             return;
         }
         // Directional if not flooding
@@ -636,11 +639,12 @@ public class NodeComponent extends AbstractComponent
                 if (neighbour != null) {
                     NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                     if (nodePort != null) {
+                        System.err.println("EXECUTING ASYNC");
                         nodePort.executeAsync(continuation);
                     }
                 }
             }
-            ((ExecutionStateIMPL) this.context).flush();
+
             return;
         }
 
@@ -648,13 +652,10 @@ public class NodeComponent extends AbstractComponent
 
     public void executeAsync(RequestContinuationI request) throws Exception {
         if (request == null) {
-            ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Request is null");
         }
         if (this.requestURIs.contains(request.requestURI())) {
-            ((ExecutionStateIMPL) this.context).flush();
-            QueryResultI result = new QueryResultIMPL();
-            System.err.println("REQUEST URI: " + request.requestURI() + " already executed");
+            // this.context = new
             return;
         }
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
@@ -664,7 +665,7 @@ public class NodeComponent extends AbstractComponent
         ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
         // Local execution
         if (request.getQueryCode() == null) {
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             throw new Exception("Query is null");
         }
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
@@ -674,13 +675,14 @@ public class NodeComponent extends AbstractComponent
         if (state.isDirectional()) {
             state.incrementHops();
             if (((ExecutionStateIMPL) state).noMoreHops()) {
+                System.err.println("NO MORE HOPS");
                 this.context.addToCurrentResult(result);
                 this.doPortConnection(this.clientRequestResultOutboundPort.getPortURI(),
                         ((EndPointDescIMPL) request.clientConnectionInfo().endPointInfo()).getURI(),
                         ClientRequestResult.class.getCanonicalName());
                 this.clientRequestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
                 this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
-                ((ExecutionStateIMPL) this.context).flush();
+                // ((ExecutionStateIMPL) this.context).flush();
                 return;
             }
             // New continuation
@@ -696,7 +698,7 @@ public class NodeComponent extends AbstractComponent
                 }
             }
 
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             return;
         }
         // Flooding
@@ -708,7 +710,7 @@ public class NodeComponent extends AbstractComponent
                         ClientRequestResult.class.getCanonicalName());
                 this.clientRequestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
                 this.doPortDisconnection(this.clientRequestResultOutboundPort.getPortURI());
-                ((ExecutionStateIMPL) this.context).flush();
+                // ((ExecutionStateIMPL) this.context).flush();
                 return;
             }
             Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
@@ -717,14 +719,14 @@ public class NodeComponent extends AbstractComponent
             // New continuation
             RequestContinuationI continuation = new RequestContinuationIMPL(request, state);
             for (NodeInfoI neighbour : neighbours) {
-                if (!((ExecutionStateIMPL) state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
-                    NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                    if (nodePort != null)
-                        nodePort.executeAsync(continuation);
-                }
+                // if (!((ExecutionStateIMPL)
+                // state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
+                NodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                if (nodePort != null)
+                    nodePort.executeAsync(continuation);
             }
 
-            ((ExecutionStateIMPL) this.context).flush();
+            // ((ExecutionStateIMPL) this.context).flush();
             return;
         }
 

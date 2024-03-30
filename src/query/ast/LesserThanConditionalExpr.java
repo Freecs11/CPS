@@ -4,7 +4,6 @@ import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractConditionalExpr;
 import query.abstraction.AbstractRand;
-import query.interfaces.IParamContext;
 
 public class LesserThanConditionalExpr extends AbstractConditionalExpr {
 
@@ -27,21 +26,7 @@ public class LesserThanConditionalExpr extends AbstractConditionalExpr {
 
 	@Override
 	public Boolean eval(ExecutionStateI context) {
-		ExecutionStateIMPL contextIMP = (ExecutionStateIMPL) context;
-		Double rand1Eval = (Double) this.rand1.eval(contextIMP);
-		Double rand2Eval = (Double) this.rand2.eval(contextIMP);
-		Boolean resB = Double.compare(rand1Eval, rand2Eval) < 0;
-		String nodeInfo = contextIMP.getProcessingNode().getNodeIdentifier();
-		if (Boolean.TRUE.equals(resB)) {
-			contextIMP.addPositiveSN(nodeInfo);
-		}
-		return resB;
+		return ((Double) this.rand1.eval(context)) < ((Double) this.rand2.eval(context));
 	}
 
-	@Override
-	public Object eval(IParamContext context) {
-		Double rand1Eval = (Double) this.rand1.eval(context);
-		Double rand2Eval = (Double) this.rand2.eval(context);
-		return Double.compare(rand1Eval, rand2Eval) < 0;
-	}
 }

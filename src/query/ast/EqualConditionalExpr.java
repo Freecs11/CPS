@@ -1,10 +1,8 @@
 package query.ast;
 
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractConditionalExpr;
 import query.abstraction.AbstractRand;
-import query.interfaces.IParamContext;
 
 public class EqualConditionalExpr extends AbstractConditionalExpr {
 	private AbstractRand rand1;
@@ -34,26 +32,7 @@ public class EqualConditionalExpr extends AbstractConditionalExpr {
 
 	@Override
 	public Boolean eval(ExecutionStateI context) {
-		ExecutionStateIMPL contextIMP = (ExecutionStateIMPL) context;
-		Double rand1Eval = (Double) this.rand1.eval(contextIMP);
-		Double rand2Eval = (Double) this.rand2.eval(contextIMP);
-
-		Boolean resB = Double.compare(rand1Eval, rand2Eval) == 0;
-
-		String nodeInfo = contextIMP.getProcessingNode().getNodeIdentifier();
-		if (Boolean.TRUE.equals(resB)) {
-			contextIMP.addPositiveSN(nodeInfo);
-		}
-
-		return resB;
-	}
-
-	@Override
-	public Boolean eval(IParamContext context) {
-		Double rand1Eval = (Double) this.rand1.eval(context);
-		Double rand2Eval = (Double) this.rand2.eval(context);
-
-		return Double.compare(rand1Eval, rand2Eval) == 0;
+		return this.rand1.eval(context).equals(this.rand2.eval(context));
 	}
 
 }

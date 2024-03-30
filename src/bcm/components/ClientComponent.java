@@ -1,7 +1,9 @@
 package bcm.components;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +62,7 @@ public class ClientComponent extends AbstractComponent {
         protected RequestI request;
         protected AcceleratedClock clock;
         protected Instant startInstant;
-        private Map<String, QueryResultI> resultsMap;
+        private Map<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
         protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
@@ -177,6 +179,69 @@ public class ClientComponent extends AbstractComponent {
                 // Finding node with identifier "node1"
                 String nodeIdentifier = "node3";
                 long delayTilStart1 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(1));
+                long waitForResponse = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20));
+                // this.scheduleTask(
+                // new AbstractTask() {
+                // @Override
+                // public void run() {
+                // try {
+                // ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
+                // .findByIdentifier(nodeIdentifier); // modify to
+                // // return an
+                // // implementation of
+                // // connectionInfo
+                // // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                // ClientComponent.this.doPortConnection(
+                // ClientComponent.this.client2NodeOutboundPort
+                // .getPortURI(),
+                // ((EndPointDescIMPL) nodeInfo.endPointInfo())
+                // .getURI(),
+                // NodeConnector.class.getCanonicalName());
+                // ClientComponent.this.client2NodeOutboundPort
+                // .executeAsync(request);
+                // // ClientComponent.this.logMessage("Query result: " +
+                // // res.toString());
+                // ClientComponent.this.doPortDisconnection(
+                // ClientComponent.this.client2NodeOutboundPort
+                // .getPortURI());
+                // ClientComponent.this.resultsMap.put("req1", new ArrayList<>());
+                // } catch (Exception e) {
+                // e.printStackTrace();
+                // }
+                // }
+                // }, delayTilStart1, TimeUnit.NANOSECONDS);
+
+                // this.scheduleTask(
+                // new AbstractTask() {
+                // @Override
+                // public void run() {
+                // try {
+                // List<QueryResultI> results = ClientComponent.this.resultsMap
+                // .get("req1");
+                // if (results.isEmpty()) {
+                // return;
+                // }
+                // QueryResultIMPL result = (QueryResultIMPL) results.get(0);
+                // results.remove(0);
+                // if (results != null) {
+                // for (QueryResultI res : results) {
+                // result.update(res);
+                // }
+                // ClientComponent.this.logMessage(
+                // "Final Query result: "
+                // + result.toString());
+                // }
+                // } catch (Exception e) {
+                // e.printStackTrace();
+                // }
+                // }
+                // }, waitForResponse, TimeUnit.NANOSECONDS);
+
+                RequestI request2 = new RequestIMPL("req2",
+                                query2,
+                                false,
+                                null);
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(15));
                 this.scheduleTask(new AbstractTask() {
                         @Override
                         public void run() {
@@ -190,83 +255,53 @@ public class ClientComponent extends AbstractComponent {
                                                         ClientComponent.this.client2NodeOutboundPort.getPortURI(),
                                                         ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
                                                         NodeConnector.class.getCanonicalName());
-                                        ClientComponent.this.client2NodeOutboundPort
-                                                        .executeAsync(request);
-                                        // ClientComponent.this.logMessage("Query result: " + res.toString());
+                                        QueryResultI res = ClientComponent.this.client2NodeOutboundPort
+                                                        .execute(request2);
+                                        ClientComponent.this.logMessage("Query result: " + res.toString());
                                         ClientComponent.this.doPortDisconnection(
                                                         ClientComponent.this.client2NodeOutboundPort.getPortURI());
                                 } catch (Exception e) {
                                         e.printStackTrace();
                                 }
                         }
-                }, delayTilStart1, TimeUnit.NANOSECONDS);
-                // RequestI request2 = new RequestIMPL("req2",
-                // query2,
-                // false,
-                // null);
-                // long delayTilRequest2 =
-                // this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(15));
-                // this.scheduleTask(new AbstractTask() {
-                // @Override
-                // public void run() {
-                // try {
-                // ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
-                // .findByIdentifier(nodeIdentifier); // modify to return an
-                // // implementation of
-                // // connectionInfo
-                // // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
-                // ClientComponent.this.doPortConnection(
-                // ClientComponent.this.client2NodeOutboundPort.getPortURI(),
-                // ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
-                // NodeConnector.class.getCanonicalName());
-                // QueryResultI res = ClientComponent.this.client2NodeOutboundPort
-                // .execute(request2);
-                // ClientComponent.this.logMessage("Query result: " + res.toString());
-                // ClientComponent.this.doPortDisconnection(
-                // ClientComponent.this.client2NodeOutboundPort.getPortURI());
-                // } catch (Exception e) {
-                // e.printStackTrace();
-                // }
-                // }
-                // }, delayTilRequest2, TimeUnit.NANOSECONDS);
-                // long delayTilRequest3 =
-                // this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
+                }, delayTilRequest2, TimeUnit.NANOSECONDS);
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
 
-                // GatherQuery query3 = new GatherQuery(
-                // new RecursiveGather("temperature",
-                // new FinalGather("humidity")),
-                // // new FloodingContinuation(new RelativeBase(), 15.0));
-                // // new DirectionContinuation(3, new FinalDirections(Direction.NE)));
-                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                // new FinalDirections(Direction.NE))));
+                GatherQuery query3 = new GatherQuery(
+                                new RecursiveGather("temperature",
+                                                new FinalGather("humidity")),
+                                // new FloodingContinuation(new RelativeBase(), 15.0));
+                                // new DirectionContinuation(3, new FinalDirections(Direction.NE)));
+                                new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
+                                                new FinalDirections(Direction.NE))));
 
-                // RequestI request3 = new RequestIMPL("req3",
-                // query3,
-                // false,
-                // null);
-                // this.scheduleTask(new AbstractTask() {
-                // @Override
-                // public void run() {
-                // try {
-                // ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
-                // .findByIdentifier(nodeIdentifier); // modify to return an
-                // // implementation of
-                // // connectionInfo
-                // // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
-                // ClientComponent.this.doPortConnection(
-                // ClientComponent.this.client2NodeOutboundPort.getPortURI(),
-                // ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
-                // NodeConnector.class.getCanonicalName());
-                // QueryResultI res = ClientComponent.this.client2NodeOutboundPort
-                // .execute(request3);
-                // ClientComponent.this.logMessage("Query result: " + res.toString());
-                // ClientComponent.this.doPortDisconnection(
-                // ClientComponent.this.client2NodeOutboundPort.getPortURI());
-                // } catch (Exception e) {
-                // e.printStackTrace();
-                // }
-                // }
-                // }, delayTilRequest3, TimeUnit.NANOSECONDS);
+                RequestI request3 = new RequestIMPL("req3",
+                                query3,
+                                false,
+                                null);
+                this.scheduleTask(new AbstractTask() {
+                        @Override
+                        public void run() {
+                                try {
+                                        ConnectionInfoI nodeInfo = ClientComponent.this.client2RegistryOutboundPort
+                                                        .findByIdentifier(nodeIdentifier); // modify to return an
+                                        // implementation of
+                                        // connectionInfo
+                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                                        ClientComponent.this.doPortConnection(
+                                                        ClientComponent.this.client2NodeOutboundPort.getPortURI(),
+                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo()).getURI(),
+                                                        NodeConnector.class.getCanonicalName());
+                                        QueryResultI res = ClientComponent.this.client2NodeOutboundPort
+                                                        .execute(request3);
+                                        ClientComponent.this.logMessage("Query result: " + res.toString());
+                                        ClientComponent.this.doPortDisconnection(
+                                                        ClientComponent.this.client2NodeOutboundPort.getPortURI());
+                                } catch (Exception e) {
+                                        e.printStackTrace();
+                                }
+                        }
+                }, delayTilRequest3, TimeUnit.NANOSECONDS);
                 super.execute();
 
         }
@@ -287,10 +322,17 @@ public class ClientComponent extends AbstractComponent {
 
         public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
                 if (this.resultsMap.containsKey(requestURI)) {
-                        throw new Exception("Request URI already exists in the results map.");
+                        List<QueryResultI> results = this.resultsMap.get(requestURI);
+                        results.add(result);
+                        this.resultsMap.put(requestURI, results);
+                        // this.logMessage("Request result received: " + ((QueryResultIMPL)
+                        // result).toString());
                 } else {
-                        this.resultsMap.put(requestURI, result);
-                        this.logMessage("Request result received: " + ((QueryResultIMPL) result).toString());
+                        ArrayList<QueryResultI> results = new ArrayList<>();
+                        results.add(result);
+                        this.resultsMap.put(requestURI, results);
+                        // this.logMessage("Request result received: " + ((QueryResultIMPL)
+                        // result).toString());
                 }
         }
 }

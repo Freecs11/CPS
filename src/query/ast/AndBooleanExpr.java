@@ -2,7 +2,6 @@ package query.ast;
 
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import query.abstraction.AbstractBooleanExpr;
-import query.interfaces.IParamContext;
 
 public class AndBooleanExpr extends AbstractBooleanExpr {
 	private final AbstractBooleanExpr expr1;
@@ -24,11 +23,7 @@ public class AndBooleanExpr extends AbstractBooleanExpr {
 
 	@Override
 	public Boolean eval(ExecutionStateI context) {
-		return (Boolean) expr1.eval(context) && (Boolean) expr2.eval(context);
+		return expr1.eval(context) && expr2.eval(context);
 	}
 
-	@Override
-	public Object eval(IParamContext context) {
-		return (Boolean) expr1.eval(context) && (Boolean) expr2.eval(context);
-	}
 }

@@ -1,11 +1,11 @@
 package query.ast;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import query.abstraction.AbstractGather;
-import query.interfaces.IParamContext;
 
 public class RecursiveGather extends AbstractGather {
 	private final String sensorId;
@@ -25,21 +25,11 @@ public class RecursiveGather extends AbstractGather {
 	}
 
 	@Override
-	public Map<String, Object> eval(ExecutionStateI context) {
-		@SuppressWarnings("unchecked")
-		Map<String, Object> identsCont = (Map<String, Object>) gather.eval(context);
+	public ArrayList<SensorDataI> eval(ExecutionStateI context) {
+		ArrayList<SensorDataI> identsCont = gather.eval(context);
 		SensorDataI sensorData = context.getProcessingNode().getSensorData(sensorId);
-		Object value = sensorData.getValue();
-		identsCont.put(sensorId, value);
+		identsCont.add(sensorData);
 		return identsCont;
 	}
 
-	@Override
-	public Map<String, Double> eval(IParamContext context) {
-		@SuppressWarnings("unchecked")
-		Map<String, Double> identsCont = (Map<String, Double>) gather.eval(context);
-		Double value = context.get(sensorId);
-		identsCont.put(sensorId, value);
-		return identsCont;
-	}
 }

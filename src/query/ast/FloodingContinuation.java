@@ -6,7 +6,6 @@ import implementation.request.ExecutionStateIMPL;
 import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractBase;
 import query.abstraction.AbstractContinuation;
-import query.interfaces.IParamContext;
 
 public class FloodingContinuation extends AbstractContinuation {
 	private final AbstractBase base;
@@ -28,22 +27,16 @@ public class FloodingContinuation extends AbstractContinuation {
 
 	@Override
 	public Object eval(ExecutionStateI context) {
-		// context.getNeighbours()
-		// context.propagateRequest(null, null)
-		PositionI pos = (PositionI) this.base.eval(context);
-		ProcessingNodeIMPL procNode = (ProcessingNodeIMPL) context.getProcessingNode();
-		procNode.setPostion(pos);
 		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context;
-		contextCC.setIsFlooding(true);
-		contextCC.setDirectional(false);
-		contextCC.setMaxDistance(this.distance);
-		contextCC.updateProcessingNode(procNode);
-		return null;
-	}
+		PositionI pos = this.base.eval(contextCC);
+		ProcessingNodeIMPL procNode = (ProcessingNodeIMPL) contextCC.getProcessingNode();
+		procNode.setPostion(pos);
 
-	@Override
-	public Object eval(IParamContext context) {
-		// TODO Auto-generated method stub
+		if (distance > 0) {
+			contextCC.setMaxDistance(distance);
+		}
+		contextCC.setIsFlooding(true);
+		contextCC.updateProcessingNode(procNode);
 		return null;
 	}
 

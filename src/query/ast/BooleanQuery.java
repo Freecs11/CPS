@@ -1,15 +1,16 @@
 package query.ast;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
+import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
 import implementation.QueryResultIMPL;
 import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractBooleanExpr;
 import query.abstraction.AbstractContinuation;
 import query.abstraction.AbstractQuery;
-import query.interfaces.IParamContext;
 
 public class BooleanQuery extends AbstractQuery {
 	private final AbstractBooleanExpr expr;
@@ -32,32 +33,16 @@ public class BooleanQuery extends AbstractQuery {
 	@Override
 	public QueryResultI eval(ExecutionStateI context) {
 		ExecutionStateIMPL contextIMP = (ExecutionStateIMPL) context;
-		expr.eval(contextIMP); // we need to evaluate the expression to get the positive sensors
-		continuation.eval(context);
-		QueryResultIMPL currRes = (QueryResultIMPL) contextIMP.getCurrentResult();
-		HashSet<String> sensors = (HashSet<String>) contextIMP.getPositiveSNG();
-		currRes.setBR(true);
-		for (String sensor : sensors) {
-			currRes.addPositiveSN(sensor);
+		ProcessingNodeI node = contextIMP.getProcessingNode();
+		ArrayList<String> nodesEvaluated = new ArrayList<String>();
+		boolean b = expr.eval(contextIMP); // we need to evaluate the expression to get the positive sensors
+		if (b) {
+			nodesEvaluated.add(node.getNodeIdentifier());
 		}
-
-		return currRes;
-	}
-
-	@Override
-	public Object eval(IParamContext context) {
-		Object res = expr.eval(context);
-		Object cont = continuation.eval(context);
-		System.out.println(res);
-		System.out.println(cont);
-		if (cont != null) {
-			// toDo
-			return res;
-		} else {
-			Boolean b = (Boolean) res;
-			System.out.println(b);
-			return res;
-		}
+		QueryResultI res = new QueryResultIMPL(true, false, nodesEvaluated, null);
+		continuation.eval(contextIMP);
+		contextIMP.addToCurrentResult(res);
+		return contextIMP.getCurrentResult();
 	}
 
 }

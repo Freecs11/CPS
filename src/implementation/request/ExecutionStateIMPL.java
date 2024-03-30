@@ -1,6 +1,5 @@
 package implementation.request;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
@@ -14,89 +13,54 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 
 	private ProcessingNodeI processingNode;
 	private QueryResultI queryResult;
-	private Boolean isDirectional = null;
+	private boolean isDirectional;
 	private Set<Direction> directions;
-	private Integer maxHops = null;
+	private int maxHops = -1;
 	private int hops = 0;
-	private Boolean isFlooding = null;
-	private Double maxDistance = null;
-	private Set<String> positiveSNG;
-	private Set<String> nodesVisited;
-	private Direction currentDirection;
+	private boolean isFlooding;
+	private double maxDistance = -1;
 
 	public ExecutionStateIMPL(ProcessingNodeI processingNode) {
-		this.positiveSNG = new HashSet<>();
 		this.queryResult = new QueryResultIMPL();
-		this.nodesVisited = new HashSet<>();
 		this.processingNode = processingNode;
 	}
 
 	public ExecutionStateIMPL() {
-		this.positiveSNG = new HashSet<>();
 		this.queryResult = new QueryResultIMPL();
-		this.nodesVisited = new HashSet<>();
-	}
-
-	public Set<String> getNodesVisited() {
-		return nodesVisited;
-	}
-
-	public void setNodesVisited(Set<String> nodesVisited) {
-		this.nodesVisited = nodesVisited;
-	}
-
-	public void addNodeVisited(String node) {
-		this.nodesVisited.add(node);
-	}
-
-	public void setCurrentDirection(Direction currentDirection) {
-		this.currentDirection = currentDirection;
-	}
-
-	public Direction getCurrentDirection() {
-		return currentDirection;
-	}
-
-	public Set<String> getPositiveSNG() {
-		return positiveSNG;
-	}
-
-	public void setPositiveSNG(Set<String> positiveSNG) {
-		this.positiveSNG = positiveSNG;
 	}
 
 	public void setMaxHops(int hops) {
-		if (this.maxHops == null) {
+		if (this.maxHops == -1) {
 			this.maxHops = hops;
 		}
 	}
 
 	public void setDirectional(boolean isDirectional) {
-		if (this.isDirectional == null) {
+		if (isContinuationSet() == false) {
 			this.isDirectional = isDirectional;
 		}
 	}
 
 	public void setIsFlooding(boolean isFlooding) {
-		if (this.isFlooding == null) {
+		if (isContinuationSet() == false) {
 			this.isFlooding = isFlooding;
+		} else {
+			throw new IllegalStateException("Cannot set flooding or directional if continuation is set");
 		}
 	}
 
 	public void setMaxDistance(Double maxDistance) {
-		if (this.maxDistance == null) {
+		if (this.maxDistance == -1) {
 			this.maxDistance = maxDistance;
 		}
 	}
 
-	public Double getMaxDistance() {
+	public double getMaxDistance() {
 		return this.maxDistance;
 	}
 
 	public void updateMaxDistance(Double maxDistance) {
-		if (this.maxDistance != null) {
-			this.maxDistance = maxDistance;
-		}
+		this.maxDistance = maxDistance;
 	}
 
 	public void setDirections(Set<Direction> directions) {
@@ -104,12 +68,6 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 			this.directions = directions;
 		} else {
 			this.directions.addAll(directions);
-		}
-	}
-
-	public void removeDirection(Direction direction) {
-		if (this.directions != null) {
-			this.directions.remove(direction);
 		}
 	}
 
@@ -145,22 +103,26 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	public Set<Direction> getDirections() {
 		if (this.isDirectional()) {
 			return this.directions;
+		} else {
+			throw new IllegalStateException("Cannot get directions if not directional");
 		}
-		return null;
 	}
 
 	@Override
 	public boolean noMoreHops() {
 		if (this.isDirectional()) {
 			return hops >= maxHops;
+		} else {
+			throw new IllegalStateException("Cannot check for hops if not directional");
 		}
-		return false;
 	}
 
 	@Override
 	public void incrementHops() {
 		if (this.isDirectional()) {
 			this.hops++;
+		} else {
+			throw new IllegalStateException("Cannot increment hops if not directional");
 		}
 	}
 
@@ -174,34 +136,14 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		if (this.isFlooding() && p != null) {
 			PositionI currentPos = processingNode.getPosition();
 			return maxDistance >= p.distance(currentPos);
+		} else {
+			throw new IllegalStateException("Cannot check for distance if not flooding");
 		}
-		return false;
 	}
 
-	public void addPositiveSN(String sn) {
-		if (this.positiveSNG == null) {
-			this.positiveSNG = new HashSet<>();
-		}
-		if (!this.positiveSNG.contains(sn))
-			this.positiveSNG.add(sn);
-	}
-
+	@Override
 	public boolean isContinuationSet() {
 		return this.isFlooding() || this.isDirectional();
-	}
-
-	// flush all the state
-	public void flush() {
-		this.positiveSNG = new HashSet<>();
-		this.queryResult = new QueryResultIMPL();
-		this.nodesVisited = new HashSet<>();
-		this.isDirectional = null;
-		this.directions = null;
-		this.maxHops = null;
-		this.hops = 0;
-		this.isFlooding = null;
-		this.maxDistance = null;
-		this.currentDirection = null;
 	}
 
 	@Override
@@ -215,7 +157,6 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 				", hops=" + hops +
 				", isFlooding=" + isFlooding +
 				", maxDistance=" + maxDistance +
-				", positiveSNG=" + positiveSNG +
 				'}';
 	}
 

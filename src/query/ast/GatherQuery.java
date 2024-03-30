@@ -2,16 +2,17 @@ package query.ast;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Map;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.QueryResultIMPL;
 import implementation.SensorDataIMPL;
 import query.abstraction.AbstractContinuation;
 import query.abstraction.AbstractGather;
 import query.abstraction.AbstractQuery;
-import query.interfaces.IParamContext;
 
 public class GatherQuery extends AbstractQuery {
 	private final AbstractGather gather;
@@ -31,42 +32,13 @@ public class GatherQuery extends AbstractQuery {
 		return continuation;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public QueryResultI eval(ExecutionStateI context) {
-		Map<String, Object> res = (Map<String, Object>) gather.eval(context);
+		ArrayList<SensorDataI> GatheredSensorDataList = gather.eval(context);
 		continuation.eval(context);
-		QueryResultIMPL currRes = (QueryResultIMPL) context.getCurrentResult();
-		currRes.setGR(true);
-		for (Map.Entry<String, Object> entry : res.entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
-			Class<? extends Serializable> type = null;
-			if (value instanceof Double) {
-				type = Double.class;
-			} else if (value instanceof Boolean) {
-				type = Boolean.class;
-			}
-			SensorDataIMPL sensorData = new SensorDataIMPL(context.getProcessingNode().getNodeIdentifier(),
-					key, (Serializable) value, Instant.now(), type); // to modify to get the type and the time from the
-																		// sensor
-			currRes.addToGatheredSensors(sensorData);
-		}
-		return currRes;
+		QueryResultIMPL newRes = new QueryResultIMPL(false, true, null, GatheredSensorDataList);
+		context.addToCurrentResult(newRes);
+		return context.getCurrentResult();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Map<String, Double> eval(IParamContext context) {
-
-		Map<String, Double> res = (Map<String, Double>) gather.eval(context);
-		Object cont = continuation.eval(context);
-		if (cont != null) {
-			// toDo
-			return res;
-		} else {
-			System.out.println(res);
-			return res;
-		}
-	}
 }

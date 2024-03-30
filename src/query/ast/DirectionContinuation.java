@@ -7,7 +7,6 @@ import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractContinuation;
 import query.abstraction.AbstractDirections;
-import query.interfaces.IParamContext;
 
 public class DirectionContinuation extends AbstractContinuation {
 	private int jumps;
@@ -35,21 +34,16 @@ public class DirectionContinuation extends AbstractContinuation {
 		this.direction = direction;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object eval(ExecutionStateI context) {
-		Set<Direction> directions = (Set<Direction>) direction.eval(context);
+		Set<Direction> directions = direction.eval(context);
 		ExecutionStateIMPL contextCC = (ExecutionStateIMPL) context;
-		contextCC.setMaxHops(jumps);
+		if (jumps > 0) {
+			contextCC.setMaxHops(jumps);
+		}
 		contextCC.setDirectional(true);
-		contextCC.setIsFlooding(false);
 		contextCC.setDirections(directions);
 		return null;
 	}
 
-	@Override
-	public Object eval(IParamContext context) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
