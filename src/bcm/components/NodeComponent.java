@@ -442,6 +442,137 @@ public class NodeComponent extends AbstractComponent
         // System.out.println("NodeComponent shutdownNow");
     }
 
+    @Override
+    public QueryResultI execute(RequestContinuationI request) throws Exception {
+        if (request == null) {
+            throw new Exception("request is null");
+        }
+        if (this.requestURIs.contains(request.requestURI())) {
+            this.logMessage("Request URI: " + request.requestURI() + " already executed");
+            return new QueryResultIMPL();
+        }
+        if (request.getQueryCode() == null) {
+            throw new Exception("Query is null");
+        }
+        this.requestURIs.add(request.requestURI());
+        ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
+        if (state == null) {
+            throw new Exception("State is null");
+        }
+
+        state.updateProcessingNode(this.processingNode);
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
+        QueryResultI result = query.eval(state);
+        if (state.isFlooding()) {
+            // Propagate the request to neighbours and update the result
+            this.floodingPropagation(state, request, result);
+        } else if (state.isDirectional()) {
+            // Can't propagate if no more hops
+            // Return local result
+            if (((ExecutionStateIMPL) state).noMoreHops()) {
+                return result;
+            }
+            // Propagate the request to neighbours and update the result
+            this.directionalPropagation(state, request, result);
+        }
+
+        // Return the final result
+        return result;
+    }
+
+    @Override
+    public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'executeAsync'");
+    }
+
+    @Override
+    public QueryResultI execute(RequestI request) throws Exception {
+        if (request == null) {
+            throw new Exception("request is null");
+        }
+        if (this.requestURIs.contains(request.requestURI())) {
+            this.logMessage("Request URI: " + request.requestURI() + " already executed");
+            return new QueryResultIMPL();
+        }
+        if (request.getQueryCode() == null) {
+            throw new Exception("Query is null");
+        }
+        this.requestURIs.add(request.requestURI());
+
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
+        ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
+        QueryResultI result = query.eval(state);
+        if (!state.isContinuationSet()) {
+            return result;
+        } else if (state.isFlooding()) {
+            // Propagate the request to neighbours and update the result
+            this.floodingPropagation(state, request, result);
+        } else if (state.isDirectional()) {
+            // Can't propagate if no more hops
+            // Return local result
+            if (((ExecutionStateIMPL) state).noMoreHops()) {
+                return result;
+            }
+            // Propagate the request to neighbours and update the result
+            this.directionalPropagation(state, request, result);
+        }
+
+        // Return the final result
+        return result;
+    }
+
+    private void directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
+            throws Exception {
+        for (NodeInfoI neighbour : neighbours) {
+            if (state.getDirections()
+                    .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
+                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                if (nodePort != null) {
+                    ExecutionStateI newState = new ExecutionStateIMPL();
+                    ((ExecutionStateIMPL) newState).incrementHops();
+                    RequestContinuationI continuation = new RequestContinuationIMPL(
+                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
+                            request.clientConnectionInfo(), newState);
+                    QueryResultI res = nodePort.execute(continuation);
+                    ((QueryResultIMPL) result).update(res);
+                }
+            }
+        }
+    }
+
+    private void floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
+            throws Exception {
+        for (NodeInfoI neighbour : neighbours) {
+            if (state.withinMaximalDistance(neighbour.nodePosition())) {
+                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                if (nodePort != null) {
+                    // Init new state with updated maximal distance
+                    // because we are propagating the request
+                    ExecutionStateI newState = new ExecutionStateIMPL();
+                    double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
+                            - processingNode.getPosition().distance(neighbour.nodePosition());
+                    ((ExecutionStateIMPL) newState).updateMaxDistance(newMaximalDistance);
+
+                    // Create new continuation
+                    RequestContinuationI continuation = new RequestContinuationIMPL(
+                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
+                            request.clientConnectionInfo(), newState);
+                    // Execute the continuation
+                    QueryResultI res = nodePort.execute(continuation);
+                    // Update the result
+                    ((QueryResultIMPL) result).update(res);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void executeAsync(RequestI request) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'executeAsync'");
+    }
+
     // public QueryResultI execute(RequestContinuationI request) throws Exception {
     // if (request == null) {
     // // ((ExecutionStateIMPL) this.context).flush();
