@@ -13,10 +13,10 @@ import bcm.CVM;
 import bcm.connectors.ClientRequestResult;
 import bcm.connectors.RegistryConnector;
 import bcm.connectors.SensorNodeConnector;
-import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.RequestingInboundPort;
 import bcm.ports.RegistrationOutboundPort;
 import bcm.ports.RequestResultInboundPort;
+import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.SensorNodeP2PInboundPort;
 import bcm.ports.SensorNodeP2POutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -93,6 +93,7 @@ public class NodeComponent extends AbstractComponent
 
     // -------------------- URI du registre -------------------------
     protected String registerInboundPortURI;
+    protected String nodeURI;
 
     protected NodeComponent(String uri,
             String nodeId,
@@ -116,7 +117,7 @@ public class NodeComponent extends AbstractComponent
 
         // port URI for the registry
         this.registerInboundPortURI = registryInboundPortURI;
-
+        this.nodeURI = uri;
         // initialisation des listes
         this.requestURIs = new HashSet<>();
         this.neighbours = new HashSet<>();
@@ -139,18 +140,20 @@ public class NodeComponent extends AbstractComponent
         this.requestResultOutboundPort.publishPort();
 
         // initialisation d'endpoint et p2pendpoint
-        EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(uri, SensorNodeP2PCI.class);
-        EndPointDescriptorI endpoint = new EndPointDescIMPL(uri, RequestingCI.class);
+        EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(this.sensorNodeP2PInboundPort.getPortURI(),
+                SensorNodeP2PCI.class);
+        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.requestingInboundPort.getPortURI(),
+                RequestingCI.class);
 
         // initialisation de l'objet nodeInfo
         this.nodeInfo = new NodeInfoIMPL(nodeId, new PositionIMPL(x, y), endpoint, p2pendpoint, range);
 
         // initialisation de l'objet processingNode
         this.processingNode = new ProcessingNodeIMPL(this.nodeInfo.nodePosition(), null,
-                this.nodeInfo.nodeIdentifier());
+                nodeId);
 
         // ajout des sensorData
-        ((ProcessingNodeIMPL) this.processingNode).addAllSensorData(sensorData);
+        ((ProcessingNodeIMPL) this.processingNode).addAllSensorData(this.sensorData);
 
         // initialisation de l'horloge
         this.startInstant = startInstant;
@@ -203,8 +206,10 @@ public class NodeComponent extends AbstractComponent
         this.requestResultOutboundPort.publishPort();
 
         // initialisation d'endpoint et p2pendpoint
-        EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(this.reflectionInboundPortURI, SensorNodeP2PCI.class);
-        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.reflectionInboundPortURI, RequestingCI.class);
+        EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(this.sensorNodeP2PInboundPort.getPortURI(),
+                SensorNodeP2PCI.class);
+        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.requestingInboundPort.getPortURI(),
+                RequestingCI.class);
 
         // initialisation de l'objet nodeInfo
         this.nodeInfo = new NodeInfoIMPL(nodeId, new PositionIMPL(x, y), endpoint, p2pendpoint, range);
@@ -238,6 +243,10 @@ public class NodeComponent extends AbstractComponent
             throw new ComponentStartException(e);
         }
         this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
+
+        System.err
+                .println(" Sensor Nodes : " + ((ProcessingNodeIMPL) this.processingNode).getSensorDataMap().toString());
+
         super.start();
     }
 
@@ -303,6 +312,7 @@ public class NodeComponent extends AbstractComponent
                         ((BCM4JavaEndPointDescriptorI) neighbour.p2pEndPointInfo()).getInboundPortURI(),
                         SensorNodeConnector.class.getCanonicalName());
                 this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
+                System.err.println("Connecting to neighbour: " + neighbour.nodeIdentifier());
                 p2poutboundP.ask4Connection(this.nodeInfo);
             }
         } catch (
@@ -331,6 +341,9 @@ public class NodeComponent extends AbstractComponent
                     neighbourInTheDirection = neighbour;
                 }
             }
+
+            System.err.println("Neighbour in the direction: " + neighbourInTheDirection);
+
             if (neighbourInTheDirection == null) {
                 SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
                         AbstractOutboundPort.generatePortURI(), this);
@@ -507,7 +520,7 @@ public class NodeComponent extends AbstractComponent
             return result;
         } else if (state.isFlooding()) {
             // Propagate the request to neighbours and update the result
-            this.floodingPropagation(state, request, result);
+            return this.floodingPropagation(state, request, result);
         } else if (state.isDirectional()) {
             // Can't propagate if no more hops
             // Return local result
@@ -541,7 +554,7 @@ public class NodeComponent extends AbstractComponent
         }
     }
 
-    private void floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
+    private QueryResultI floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
         for (NodeInfoI neighbour : neighbours) {
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
@@ -565,6 +578,7 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
+        return result;
     }
 
     @Override

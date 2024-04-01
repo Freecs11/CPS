@@ -20,7 +20,9 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.AbstractPort;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
+import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.utils.aclocks.ClocksServer;
+import implementation.SensorDataIMPL;
 import utils.NodeComponentInfo;
 
 public class CVM extends AbstractCVM {
@@ -136,67 +138,37 @@ public class CVM extends AbstractCVM {
                                                 1, 1,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI });
-                // create the node component
-
-                Set<NodeComponentInfo> nodes = buildMap(17);
+                
+                // create the node components
+                Set<NodeComponentInfo> nodes = buildMap(9);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
-                        if (i > 3) {
-                                String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                                new Object[] { AbstractPort.generatePortURI(), node.getName(),
-                                                                node.getX(), node.getY(),
-                                                                node.getRange(),
-                                                                REGISTER_IN_BOUND_PORT_URI,
-                                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5) });
-                        } else {
-                                String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                                                new Object[] { "uri" + node.getName(), node.getName(), node.getX(),
-                                                                node.getY(),
-                                                                node.getRange(),
-                                                                REGISTER_IN_BOUND_PORT_URI,
-                                                                RegistryComponent.REG_START_INSTANT.plusSeconds(5) });
-                                if (i < 7) {
-                                        assert this.isDeployedComponent(uri);
-                                        this.toggleTracing(uri);
-                                        this.toggleLogging(uri);
-                                        i++;
-                                }
+                        ArrayList<SensorDataI> data = new ArrayList<>();
+                        String uriNode = "uri" + node.getName();
+                        data.add(new SensorDataIMPL(uriNode, "temperature", 20.0));
+                        data.add(new SensorDataIMPL(uriNode, "humidity", 50.0));
+                        data.add(new SensorDataIMPL(uriNode, "pressure", 1013.0));
+                        data.add(new SensorDataIMPL(uriNode, "wind", 10.0));
+
+                        String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
+                                        new Object[] { uriNode, node.getName(), node.getX(),
+                                                        node.getY(),
+                                                        node.getRange(),
+                                                        REGISTER_IN_BOUND_PORT_URI,
+                                                        data,
+                                                        RegistryComponent.REG_START_INSTANT.plusSeconds(5) });
+                        if (i < 7) {
+                                assert this.isDeployedComponent(uri);
+                                this.toggleTracing(uri);
+                                this.toggleLogging(uri);
+                                i++;
                         }
                 }
-
-                // Map<String,List<Double>> data = new HashMap<String , List<Double>>();
-                // data.put("node1", new ArrayList<>(Arrays.asList(1.0, 5.0, 45.0)));
-                // data.put("node2", new ArrayList<>(Arrays.asList(2.0, 4.0, 45.0)));
-                // data.put("node3", new ArrayList<>(Arrays.asList(3.0, 3.0, 40.0)));
-                // data.put("node4", new ArrayList<>(Arrays.asList(1.0, 3.0, 40.0)));
-                // data.put("node5", new ArrayList<>(Arrays.asList(1.0, 1.0, 40.0)));
-                // data.put("node6", new ArrayList<>(Arrays.asList(4.0, 4.0, 40.0)));
-
-                // Random random = new Random();
-                // // Définir l'intervalle (par exemple, entre 1 et 10)
-                // int borneInferieure = 1;
-                // int borneSuperieure = 11; // Exclusif, donc la plage sera de 1 à 10 inclus
-
-                // for (Map.Entry<String, List<Double>> entry : data.entrySet()) {
-                // String key = entry.getKey();
-                // List<Double> value = entry.getValue();
-                // // Génération d'un entier aléatoire dans l'intervalle spécifié
-                // int nombreAleatoire = random.nextInt(borneSuperieure - borneInferieure) +
-                // borneInferieure;
-
-                // String uri =
-                // AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                // new Object[] { "uri"+key, key, value.get(0), value.get(1), value.get(2),
-                // REGISTER_IN_BOUND_PORT_URI,
-                // RegistryComponent.REG_START_INSTANT.plusSeconds(nombreAleatoire)});
-                // assert this.isDeployedComponent(uri);
-                // this.toggleTracing(uri);
-                // this.toggleLogging(uri);
-                // }
+                
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(10)
+                                                RegistryComponent.REG_START_INSTANT.plusSeconds(35+nodes.size())
                                 }); // to be changed
                                     // ---------------------------------------------------------------------
                                     // Deployment phase

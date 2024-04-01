@@ -81,6 +81,7 @@ public class QueryResultIMPL implements QueryResultI {
 			this.gatheredSensors = new ArrayList<>();
 		}
 		Boolean found = false;
+		System.err.println(this.gatheredSensors.toString());
 		for (SensorDataI sensor : this.gatheredSensors) {
 			if (sensor.getNodeIdentifier().equals(sensorData.getNodeIdentifier())
 					&& sensor.getSensorIdentifier().equals(sensorData.getSensorIdentifier())) {
@@ -94,6 +95,7 @@ public class QueryResultIMPL implements QueryResultI {
 	}
 
 	public void update(QueryResultI query) {
+		System.err.println("query we got " + query.toString());
 		if (!query.isBooleanRequest() && query.isGatherRequest()) {
 			ArrayList<SensorDataI> gathered = query.gatheredSensorsValues();
 			for (SensorDataI sensor : gathered) {

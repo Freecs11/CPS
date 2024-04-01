@@ -36,8 +36,10 @@ public class GatherQuery extends AbstractQuery {
 	public QueryResultI eval(ExecutionStateI context) {
 		ArrayList<SensorDataI> GatheredSensorDataList = gather.eval(context);
 		continuation.eval(context);
-		QueryResultIMPL newRes = new QueryResultIMPL(false, true, null, GatheredSensorDataList);
+		QueryResultIMPL newRes = new QueryResultIMPL(false, true, new ArrayList<>(), GatheredSensorDataList);
 		((QueryResultIMPL) context.getCurrentResult()).setGR(true);
+		System.err.println("Gathered Sensor Data: " + GatheredSensorDataList.toString());
+		System.err.println("GatherQuery: " + newRes.toString());
 		context.addToCurrentResult(newRes);
 		return context.getCurrentResult();
 	}

@@ -5,16 +5,14 @@ import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 
-public class ClientRequestResultOutboundPort extends AbstractOutboundPort implements RequestResultCI {
+public class RequestResultOutboundPort extends AbstractOutboundPort implements RequestResultCI {
 
-    public ClientRequestResultOutboundPort(ComponentI owner)
+    public RequestResultOutboundPort(ComponentI owner)
             throws Exception {
         super(RequestResultCI.class, owner);
     }
-    
-    
 
-    public ClientRequestResultOutboundPort(String uri, ComponentI owner)
+    public RequestResultOutboundPort(String uri, ComponentI owner)
             throws Exception {
         super(uri, RequestResultCI.class, owner);
     }

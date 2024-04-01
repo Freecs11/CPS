@@ -12,9 +12,8 @@ import bcm.CVM;
 import bcm.connectors.LookUpRegistryConnector;
 import bcm.connectors.RequestingConnector;
 import bcm.ports.RequestingOutboundPort;
-import bcm.ports.ClientRequestResultInboundPort;
-import bcm.ports.ClientRequestResultOutboundPort;
 import bcm.ports.LookupOutboundPort;
+import bcm.ports.RequestResultInboundPort;
 import bcm.ports.RequestingInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
@@ -60,7 +59,7 @@ public class ClientComponent extends AbstractComponent {
         protected RequestingOutboundPort RequestingOutboundPort;
         protected LookupOutboundPort LookupOutboundPort;
 
-        protected ClientRequestResultInboundPort clientRequestResultInboundPort;
+        protected RequestResultInboundPort clientRequestResultInboundPort;
 
         protected long startAfter;
         protected String registryInboundPortURI;
@@ -85,7 +84,7 @@ public class ClientComponent extends AbstractComponent {
                                 this);
                 this.RequestingOutboundPort.publishPort();
                 this.resultsMap = new HashMap<>();
-                this.clientRequestResultInboundPort = new ClientRequestResultInboundPort(this);
+                this.clientRequestResultInboundPort = new RequestResultInboundPort(this);
                 this.clientRequestResultInboundPort.publishPort();
                 this.getTracer().setTitle("Client Component");
                 this.getTracer().setRelativePosition(1, 1);
@@ -106,7 +105,7 @@ public class ClientComponent extends AbstractComponent {
                                 this);
                 this.RequestingOutboundPort.publishPort();
                 this.startInstant = startInstant;
-                this.clientRequestResultInboundPort = new ClientRequestResultInboundPort(this);
+                this.clientRequestResultInboundPort = new RequestResultInboundPort(this);
                 this.resultsMap = new HashMap<>();
 
                 this.clientRequestResultInboundPort.publishPort();
@@ -160,10 +159,10 @@ public class ClientComponent extends AbstractComponent {
                                 new RecursiveGather("temperature",
                                                 new FinalGather("humidity")),
                                 // new EmptyContinuation());
-                                // new FloodingContinuation(new RelativeBase(), 455.0));
-                                new DirectionContinuation(15, new FinalDirections(Direction.SE)));
-                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                // new FinalDirections(Direction.NE))));
+                                 new FloodingContinuation(new RelativeBase(), 455.0));
+//                                new DirectionContinuation(15, new FinalDirections(Direction.SE)));
+//                 new DirectionContinuation(8, new RecursiveDirections(Direction.NW,
+//                 new FinalDirections(Direction.NE))));
 
                 // -------------Boolean Query Test---------------
                 OrBooleanExpr res = new OrBooleanExpr(
@@ -186,7 +185,7 @@ public class ClientComponent extends AbstractComponent {
                                 clientInfo); // change later
 
                 // Finding node with identifier "node1"
-                String nodeIdentifier = "node3";
+                String nodeIdentifier = "node0";
                 long delayTilStart1 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(1));
                 long waitForResponse = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20));
                 // this.scheduleTask(

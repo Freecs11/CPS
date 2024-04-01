@@ -95,7 +95,7 @@ public class ProcessingNodeIMPL implements ProcessingNodeI {
 
 	public void addAllSensorData(ArrayList<SensorDataI> sensorDataMap) {
 		for (SensorDataI sensorData : sensorDataMap) {
-			this.sensorDataMap.put(this.nodeId, sensorData);
+			this.sensorDataMap.put(sensorData.getSensorIdentifier(), sensorData);
 		}
 	}
 }
