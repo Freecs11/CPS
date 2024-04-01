@@ -1,5 +1,8 @@
 package implementation.request;
 
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -8,6 +11,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
+import implementation.SensorDataIMPL;
 
 public class ProcessingNodeIMPL implements ProcessingNodeI {
 
@@ -77,5 +81,21 @@ public class ProcessingNodeIMPL implements ProcessingNodeI {
 
 	public void setSensorDataMap(Map<String, SensorDataI> sensorDataMap) {
 		this.sensorDataMap = sensorDataMap;
+	}
+
+	public void addSensorData(String sensorIdentifier, Serializable value) {
+		SensorDataI sensorData = new SensorDataIMPL(this.nodeId, sensorIdentifier, value);
+		this.sensorDataMap.put(sensorIdentifier, sensorData);
+	}
+
+	public void addSensorData(String sensorIdentifier, Serializable value, Instant timestamp) {
+		SensorDataI sensorData = new SensorDataIMPL(this.nodeId, sensorIdentifier, value, timestamp);
+		this.sensorDataMap.put(sensorIdentifier, sensorData);
+	}
+
+	public void addAllSensorData(ArrayList<SensorDataI> sensorDataMap) {
+		for (SensorDataI sensorData : sensorDataMap) {
+			this.sensorDataMap.put(this.nodeId, sensorData);
+		}
 	}
 }

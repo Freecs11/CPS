@@ -13,14 +13,14 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 
-public class RegistryInboundPort extends AbstractInboundPort
-        implements RegistrationCI, BCM4JavaEndPointDescriptorI {
+public class RegistrationInboundPort extends AbstractInboundPort
+        implements RegistrationCI {
     /**
      * 
      */
     private static final long serialVersionUID = 2017915843726837790L;
 
-    public RegistryInboundPort(
+    public RegistrationInboundPort(
             String uri,
             ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);
@@ -28,19 +28,8 @@ public class RegistryInboundPort extends AbstractInboundPort
 
     }
 
-    public RegistryInboundPort(ComponentI owner) throws Exception {
+    public RegistrationInboundPort(ComponentI owner) throws Exception {
         super(RegistrationCI.class, owner);
-    }
-
-    @Override
-    public String getInboundPortURI() {
-        return this.uri;
-
-    }
-
-    @Override
-    public boolean isOfferedInterface(Class<? extends OfferedCI> inter) {
-        return inter.equals(LookupCI.class);
     }
 
     @Override

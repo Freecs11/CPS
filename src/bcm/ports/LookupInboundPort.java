@@ -13,7 +13,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.GeographicalZoneI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 
 public class LookupInboundPort extends AbstractInboundPort
-        implements LookupCI, BCM4JavaEndPointDescriptorI {
+        implements LookupCI {
 
     public LookupInboundPort(
             String uri,
@@ -24,16 +24,6 @@ public class LookupInboundPort extends AbstractInboundPort
 
     public LookupInboundPort(ComponentI owner) throws Exception {
         super(LookupCI.class, owner);
-    }
-
-    @Override
-    public String getInboundPortURI() {
-        return this.uri;
-    }
-
-    @Override
-    public boolean isOfferedInterface(Class<? extends OfferedCI> inter) {
-        return inter.equals(LookupCI.class);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package query.ast;
 
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import implementation.request.ExecutionStateIMPL;
 import query.abstraction.AbstractContinuation;
 
 public class EmptyContinuation extends AbstractContinuation {

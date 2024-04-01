@@ -7,17 +7,17 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 
-public class ClientComponentOutboundPort extends AbstractOutboundPort
+public class RequestingOutboundPort extends AbstractOutboundPort
         implements RequestingCI {
     private static final long serialVersionUID = 1L;
 
-    public ClientComponentOutboundPort(String uri, ComponentI owner) throws Exception {
+    public RequestingOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, RequestingCI.class, owner);
         assert uri != null;
         assert owner instanceof ClientComponent;
     }
 
-    public ClientComponentOutboundPort(ComponentI owner) throws Exception {
+    public RequestingOutboundPort(ComponentI owner) throws Exception {
         super(RequestingCI.class, owner);
         assert owner instanceof ClientComponent;
     }

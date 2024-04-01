@@ -28,7 +28,9 @@ public class PositionIMPL implements PositionI {
         double y1 = this.y;
         double x2 = p1.getX();
         double y2 = p1.getY();
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        double powerx = (x2 - x1) * (x2 - x1);
+        double powery = (y2 - y1) * (y2 - y1);
+        return Math.sqrt(powerx + powery);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class PositionIMPL implements PositionI {
         double y1 = this.y;
         double x2 = p1.getX();
         double y2 = p1.getY();
-        return y1 > y2 && (x2 == x1 || x1 > x2);
+        return y1 > y2 && (x1 >= x2);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class PositionIMPL implements PositionI {
         double y1 = this.y;
         double x2 = p1.getX();
         double y2 = p1.getY();
-        return y1 < y2 && (x2 == x1 || x1 > x2);
+        return y1 < y2 && (x1 >= x2);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class PositionIMPL implements PositionI {
         double y1 = this.y;
         double x2 = p1.getX();
         double y2 = p1.getY();
-        return x1 > x2 && (y2 == y1 || y1 > y2);
+        return x1 > x2 && (y1 >= y2);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class PositionIMPL implements PositionI {
         double y1 = this.y;
         double x2 = p1.getX();
         double y2 = p1.getY();
-        return x1 < x2 && (y2 == y1 || y1 > y2);
+        return x1 < x2 && (y1 >= y2);
     }
 
 }

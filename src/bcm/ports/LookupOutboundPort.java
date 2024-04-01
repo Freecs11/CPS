@@ -8,7 +8,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.GeographicalZoneI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 
-public class Client2RegisterOutboundPort extends AbstractOutboundPort
+public class LookupOutboundPort extends AbstractOutboundPort
         implements LookupCI {
 
     /**
@@ -16,13 +16,13 @@ public class Client2RegisterOutboundPort extends AbstractOutboundPort
      */
     private static final long serialVersionUID = -3133551134835072507L;
 
-    public Client2RegisterOutboundPort(String uri, ComponentI owner) throws Exception {
+    public LookupOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, LookupCI.class, owner);
         assert uri != null;
         // assert owner instanceof ClientComponent;
     }
 
-    public Client2RegisterOutboundPort(ComponentI owner) throws Exception {
+    public LookupOutboundPort(ComponentI owner) throws Exception {
         super(LookupCI.class, owner);
         // assert owner instanceof ClientComponent;
     }

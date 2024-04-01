@@ -8,12 +8,8 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 
-public class NodeConnector extends AbstractConnector
-        implements RequestingCI, SensorNodeP2PCI {
-
-    /**
-     * 
-     */
+public class RequestingConnector extends AbstractConnector
+        implements RequestingCI {
     private static final long serialVersionUID = 5097548577299456605L;
 
     @Override
@@ -25,25 +21,4 @@ public class NodeConnector extends AbstractConnector
     public void executeAsync(RequestI request) throws Exception {
         ((RequestingCI) this.offering).executeAsync(request);
     }
-
-    @Override
-    public void ask4Disconnection(NodeInfoI neighbour) throws Exception {
-        ((SensorNodeP2PCI) this.offering).ask4Disconnection(neighbour);
-    }
-
-    @Override
-    public void ask4Connection(NodeInfoI newNeighbour) throws Exception {
-        ((SensorNodeP2PCI) this.offering).ask4Connection(newNeighbour);
-    }
-
-    @Override
-    public QueryResultI execute(RequestContinuationI request) throws Exception {
-        return ((SensorNodeP2PCI) this.offering).execute(request);
-    }
-
-    @Override
-    public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
-        ((SensorNodeP2PCI) this.offering).executeAsync(requestContinuation);
-    }
-
 }

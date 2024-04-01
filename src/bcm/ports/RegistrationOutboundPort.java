@@ -8,16 +8,16 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 
-public class NodeComponentOutboundPort extends AbstractOutboundPort
+public class RegistrationOutboundPort extends AbstractOutboundPort
         implements RegistrationCI {
 
-    public NodeComponentOutboundPort(String uri, ComponentI owner) throws Exception {
+    public RegistrationOutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, RegistrationCI.class, owner);
         assert uri != null;
 
     }
 
-    public NodeComponentOutboundPort(ComponentI owner) throws Exception {
+    public RegistrationOutboundPort(ComponentI owner) throws Exception {
         super(RegistrationCI.class, owner);
         // assert owner instanceof RegistryComponent;
     }

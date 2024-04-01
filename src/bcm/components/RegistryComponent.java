@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
 import bcm.ports.LookupInboundPort;
-import bcm.ports.RegistryInboundPort;
+import bcm.ports.RegistrationInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -28,16 +28,19 @@ import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
+import implementation.ConnectionInfoImpl;
+import implementation.NodeInfoIMPL;
 
-@OfferedInterfaces(offered = {
-        LookupCI.class, RegistrationCI.class })
-@RequiredInterfaces(required = {
-        ClocksServerCI.class })
+@OfferedInterfaces(offered = { LookupCI.class, RegistrationCI.class })
+@RequiredInterfaces(required = { ClocksServerCI.class })
 public class RegistryComponent extends AbstractComponent {
     protected LookupInboundPort lookUpInboundPort;
-    protected RegistryInboundPort registryInboundPort;
+    protected RegistrationInboundPort registryInboundPort;
+
     protected Map<String, NodeInfoI> nodeIDToNodeInfoMap;
+
     public static final Instant REG_START_INSTANT = CVM.CLOCK_START_INSTANT;
+
     private AcceleratedClock clock;
 
     protected RegistryComponent(String uri,
@@ -48,7 +51,7 @@ public class RegistryComponent extends AbstractComponent {
         this.nodeIDToNodeInfoMap = new HashMap<>();
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
-            this.registryInboundPort = new RegistryInboundPort(registerInboundPortURI, this);
+            this.registryInboundPort = new RegistrationInboundPort(registerInboundPortURI, this);
             this.lookUpInboundPort.publishPort();
             this.registryInboundPort.publishPort();
         } catch (Exception e) {
@@ -80,7 +83,8 @@ public class RegistryComponent extends AbstractComponent {
 
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
         try {
-            return this.nodeIDToNodeInfoMap.get(sensorNodeId);
+            NodeInfoI nodeInfo = this.nodeIDToNodeInfoMap.get(sensorNodeId);
+            return new ConnectionInfoImpl(nodeInfo.nodeIdentifier(), nodeInfo.endPointInfo());
         } catch (Exception e) {
             throw new Exception("No node with id " + sensorNodeId + " found.");
         }
@@ -90,9 +94,9 @@ public class RegistryComponent extends AbstractComponent {
         try {
             assert z != null;
             Set<ConnectionInfoI> result = new HashSet<>();
-            for (NodeInfoI nodeInfo : nodeIDToNodeInfoMap.values()) {
-                if (z.in(nodeInfo.nodePosition())) {
-                    result.add(nodeInfo);
+            for (NodeInfoI n : nodeIDToNodeInfoMap.values()) {
+                if (z.in(n.nodePosition())) {
+                    result.add(new ConnectionInfoImpl(n.nodeIdentifier(), n.endPointInfo()));
                 }
             }
             return result;

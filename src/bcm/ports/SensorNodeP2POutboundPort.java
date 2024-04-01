@@ -7,15 +7,15 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 
-public class NodeP2POutboundPort extends AbstractOutboundPort
+public class SensorNodeP2POutboundPort extends AbstractOutboundPort
         implements SensorNodeP2PCI {
 
-    public NodeP2POutboundPort(String uri, ComponentI owner) throws Exception {
+    public SensorNodeP2POutboundPort(String uri, ComponentI owner) throws Exception {
         super(uri, SensorNodeP2PCI.class, owner);
         assert uri != null;
     }
 
-    public NodeP2POutboundPort(ComponentI owner) throws Exception {
+    public SensorNodeP2POutboundPort(ComponentI owner) throws Exception {
         super(SensorNodeP2PCI.class, owner);
         // assert owner instanceof RegistryComponent;
     }
