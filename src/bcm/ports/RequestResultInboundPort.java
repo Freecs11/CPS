@@ -8,10 +8,15 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import bcm.components.ClientComponent;
 
-public class ClientRequestResultInboundPort extends AbstractInboundPort implements RequestResultCI {
+public class RequestResultInboundPort extends AbstractInboundPort implements RequestResultCI {
     private static final long serialVersionUID = 1L;
 
-    public ClientRequestResultInboundPort(ComponentI owner)
+    public RequestResultInboundPort(String uri, ComponentI owner)
+            throws Exception {
+        super(uri, RequestResultCI.class, owner);
+    }
+
+    public RequestResultInboundPort(ComponentI owner)
             throws Exception {
         super(RequestResultCI.class, owner);
     }
