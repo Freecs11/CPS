@@ -59,6 +59,10 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		return this.maxDistance;
 	}
 
+	public int getMaxHops() {
+		return this.maxHops;
+	}
+
 	public void updateMaxDistance(Double maxDistance) {
 		this.maxDistance = maxDistance;
 	}

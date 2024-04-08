@@ -1,10 +1,7 @@
 package implementation;
 
-import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 
 public class EndPointDescIMPL implements BCM4JavaEndPointDescriptorI {
     /**

@@ -10,6 +10,7 @@ public class EmptyContinuation extends AbstractContinuation {
 
 	@Override
 	public Object eval(ExecutionStateI context) {
+
 		return null;
 	}
 

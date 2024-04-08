@@ -1,15 +1,11 @@
 package query.ast;
 
-import java.io.Serializable;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Map;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import implementation.QueryResultIMPL;
-import implementation.SensorDataIMPL;
 import query.abstraction.AbstractContinuation;
 import query.abstraction.AbstractGather;
 import query.abstraction.AbstractQuery;
@@ -38,8 +34,8 @@ public class GatherQuery extends AbstractQuery {
 		continuation.eval(context);
 		QueryResultIMPL newRes = new QueryResultIMPL(false, true, new ArrayList<>(), GatheredSensorDataList);
 		((QueryResultIMPL) context.getCurrentResult()).setGR(true);
-		System.err.println("Gathered Sensor Data: " + GatheredSensorDataList.toString());
-		System.err.println("GatherQuery: " + newRes.toString());
+//		System.err.println("Gathered Sensor Data: " + GatheredSensorDataList.toString());
+//		System.err.println("GatherQuery: " + newRes.toString());
 		context.addToCurrentResult(newRes);
 		return context.getCurrentResult();
 	}

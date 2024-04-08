@@ -1,14 +1,8 @@
 package bcm;
 
-import java.lang.reflect.Array;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +11,6 @@ import bcm.components.ClientComponent;
 import bcm.components.NodeComponent;
 import bcm.components.RegistryComponent;
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.AbstractPort;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
@@ -32,6 +25,7 @@ public class CVM extends AbstractCVM {
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
         protected static final double accelerationFactor = 60.0;
+        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(30);
 
         /** URI of the provider component (convenience). */
         protected static final String NODE_COMPONENT_URI = "node-URI";
@@ -132,13 +126,14 @@ public class CVM extends AbstractCVM {
                 // ---------------------------------------------------------------------
                 // Creation phase
                 // ---------------------------------------------------------------------
+                // Register is starting directly with no link to the clock
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
                                                 1, 1,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI });
-                
+
                 // create the node components
                 Set<NodeComponentInfo> nodes = buildMap(9);
                 int i = 0;
@@ -156,7 +151,8 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        RegistryComponent.REG_START_INSTANT.plusSeconds(5) });
+                                                        REG_START_INSTANT.plusSeconds(3) });
+
                         if (i < 7) {
                                 assert this.isDeployedComponent(uri);
                                 this.toggleTracing(uri);
@@ -164,15 +160,16 @@ public class CVM extends AbstractCVM {
                                 i++;
                         }
                 }
-                
+
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
-                                                RegistryComponent.REG_START_INSTANT.plusSeconds(35+nodes.size())
-                                }); // to be changed
-                                    // ---------------------------------------------------------------------
-                                    // Deployment phase
-                                    // ---------------------------------------------------------------------
+                                                REG_START_INSTANT.plusSeconds(45)
+                                });
+                // to be changed
+                // ---------------------------------------------------------------------
+                // Deployment phase
+                // ---------------------------------------------------------------------
                 assert this.isDeployedComponent(this.uriClientURI);
                 this.toggleTracing(this.uriClientURI);
                 this.toggleLogging(this.uriClientURI);

@@ -1,7 +1,5 @@
 package implementation;
 
-import java.sql.Connection;
-
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 

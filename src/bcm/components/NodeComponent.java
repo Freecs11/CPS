@@ -5,18 +5,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
-import bcm.connectors.ClientRequestResult;
+import bcm.connectors.NodeConnector;
 import bcm.connectors.RegistryConnector;
-import bcm.connectors.SensorNodeConnector;
-import bcm.ports.RequestingInboundPort;
 import bcm.ports.RegistrationOutboundPort;
 import bcm.ports.RequestResultInboundPort;
 import bcm.ports.RequestResultOutboundPort;
+import bcm.ports.RequestingInboundPort;
 import bcm.ports.SensorNodeP2PInboundPort;
 import bcm.ports.SensorNodeP2POutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -27,11 +25,9 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
@@ -45,19 +41,16 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import fr.sorbonne_u.utils.Pair;
 import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
 import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
-import implementation.ConnectionInfoImpl;
 import implementation.EndPointDescIMPL;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 import implementation.QueryResultIMPL;
 import implementation.RequestContinuationIMPL;
-import implementation.SensorDataIMPL;
 import implementation.request.ExecutionStateIMPL;
 import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
@@ -310,7 +303,7 @@ public class NodeComponent extends AbstractComponent
                 p2poutboundP.publishPort();
                 this.doPortConnection(p2poutboundP.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) neighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        SensorNodeConnector.class.getCanonicalName());
+                        NodeConnector.class.getCanonicalName());
                 this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
                 System.err.println("Connecting to neighbour: " + neighbour.nodeIdentifier());
                 p2poutboundP.ask4Connection(this.nodeInfo);
@@ -351,7 +344,7 @@ public class NodeComponent extends AbstractComponent
                 this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                 this.doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        SensorNodeConnector.class.getCanonicalName());
+                        NodeConnector.class.getCanonicalName());
                 newPort.ask4Connection(this.nodeInfo);
                 this.neighbours.add(newNeighbour);
                 this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
@@ -383,7 +376,7 @@ public class NodeComponent extends AbstractComponent
                 this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                 this.doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        SensorNodeConnector.class.getCanonicalName());
+                        NodeConnector.class.getCanonicalName());
                 newPort.ask4Connection(this.nodeInfo);
                 this.neighbours.add(newNeighbour);
                 this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");

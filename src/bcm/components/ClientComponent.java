@@ -5,23 +5,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
 import bcm.connectors.LookUpRegistryConnector;
 import bcm.connectors.RequestingConnector;
-import bcm.ports.RequestingOutboundPort;
 import bcm.ports.LookupOutboundPort;
 import bcm.ports.RequestResultInboundPort;
-import bcm.ports.RequestingInboundPort;
+import bcm.ports.RequestingOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
@@ -34,20 +31,16 @@ import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import implementation.ConnectionInfoImpl;
 import implementation.EndPointDescIMPL;
-import implementation.QueryResultIMPL;
 import implementation.RequestIMPL;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
-import query.ast.DirectionContinuation;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
-import query.ast.FinalDirections;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
 import query.ast.OrBooleanExpr;
-import query.ast.RecursiveDirections;
 import query.ast.RecursiveGather;
 import query.ast.RelativeBase;
 import query.ast.SensorRand;
@@ -159,10 +152,10 @@ public class ClientComponent extends AbstractComponent {
                                 new RecursiveGather("temperature",
                                                 new FinalGather("humidity")),
                                 // new EmptyContinuation());
-                                 new FloodingContinuation(new RelativeBase(), 455.0));
-//                                new DirectionContinuation(15, new FinalDirections(Direction.SE)));
-//                 new DirectionContinuation(8, new RecursiveDirections(Direction.NW,
-//                 new FinalDirections(Direction.NE))));
+                                new FloodingContinuation(new RelativeBase(), 45.0));
+                // new DirectionContinuation(15, new FinalDirections(Direction.SE)));
+                // new DirectionContinuation(8, new RecursiveDirections(Direction.NW,
+                // new FinalDirections(Direction.NE))));
 
                 // -------------Boolean Query Test---------------
                 OrBooleanExpr res = new OrBooleanExpr(
@@ -179,15 +172,47 @@ public class ClientComponent extends AbstractComponent {
                                 new EmptyContinuation());
                 // ------Actual Request to look up-------
                 this.request = new RequestIMPL("req1",
-                                query,
+                                query2,
                                 // query2,
                                 false,
                                 clientInfo); // change later
 
                 // Finding node with identifier "node1"
-                String nodeIdentifier = "node0";
+                String nodeIdentifier = "node3";
                 long delayTilStart1 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(1));
                 long waitForResponse = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20));
+
+                RequestI request2 = new RequestIMPL("req2",
+                                query,
+                                false,
+                                null);
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(10));
+                this.scheduleTask(new AbstractTask() {
+                        @Override
+                        public void run() {
+                                try {
+                                        ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
+                                                        .findByIdentifier(nodeIdentifier); // modify to return an
+                                        // implementation of
+                                        // connectionInfo
+                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                                        ClientComponent.this.doPortConnection(
+                                                        ClientComponent.this.RequestingOutboundPort.getPortURI(),
+                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo())
+                                                                        .getInboundPortURI(),
+                                                        RequestingConnector.class.getCanonicalName());
+                                        QueryResultI res = ClientComponent.this.RequestingOutboundPort
+                                                        .execute(request2);
+                                        ClientComponent.this.logMessage("Query result: " + res.toString());
+                                        ClientComponent.this.doPortDisconnection(
+                                                        ClientComponent.this.RequestingOutboundPort.getPortURI());
+                                } catch (Exception e) {
+                                        e.printStackTrace();
+                                }
+                        }
+                }, delayTilRequest2, TimeUnit.NANOSECONDS);
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
+
                 // this.scheduleTask(
                 // new AbstractTask() {
                 // @Override
@@ -244,37 +269,6 @@ public class ClientComponent extends AbstractComponent {
                 // }
                 // }
                 // }, waitForResponse, TimeUnit.NANOSECONDS);
-
-                RequestI request2 = new RequestIMPL("req2",
-                                query,
-                                false,
-                                null);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
-                this.scheduleTask(new AbstractTask() {
-                        @Override
-                        public void run() {
-                                try {
-                                        ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
-                                                        .findByIdentifier(nodeIdentifier); // modify to return an
-                                        // implementation of
-                                        // connectionInfo
-                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
-                                        ClientComponent.this.doPortConnection(
-                                                        ClientComponent.this.RequestingOutboundPort.getPortURI(),
-                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo())
-                                                                        .getInboundPortURI(),
-                                                        RequestingConnector.class.getCanonicalName());
-                                        QueryResultI res = ClientComponent.this.RequestingOutboundPort
-                                                        .execute(request2);
-                                        ClientComponent.this.logMessage("Query result: " + res.toString());
-                                        ClientComponent.this.doPortDisconnection(
-                                                        ClientComponent.this.RequestingOutboundPort.getPortURI());
-                                } catch (Exception e) {
-                                        e.printStackTrace();
-                                }
-                        }
-                }, delayTilRequest2, TimeUnit.NANOSECONDS);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(startInstant.plusSeconds(20));
 
                 // GatherQuery query3 = new GatherQuery(
                 // new RecursiveGather("temperature",

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
 import bcm.ports.LookupInboundPort;
@@ -29,7 +28,6 @@ import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import implementation.ConnectionInfoImpl;
-import implementation.NodeInfoIMPL;
 
 @OfferedInterfaces(offered = { LookupCI.class, RegistrationCI.class })
 @RequiredInterfaces(required = { ClocksServerCI.class })
@@ -38,10 +36,6 @@ public class RegistryComponent extends AbstractComponent {
     protected RegistrationInboundPort registryInboundPort;
 
     protected Map<String, NodeInfoI> nodeIDToNodeInfoMap;
-
-    public static final Instant REG_START_INSTANT = CVM.CLOCK_START_INSTANT;
-
-    private AcceleratedClock clock;
 
     protected RegistryComponent(String uri,
             int nbThreads, int nbSchedulableThreads,
@@ -62,23 +56,7 @@ public class RegistryComponent extends AbstractComponent {
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
-        try {
-            ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
-                    AbstractOutboundPort.generatePortURI(), this);
-            clockPort.publishPort();
-            this.doPortConnection(
-                    clockPort.getPortURI(),
-                    ClocksServer.STANDARD_INBOUNDPORT_URI,
-                    ClocksServerConnector.class.getCanonicalName());
-            this.clock = clockPort.getClock(CVM.CLOCK_URI);
-            this.doPortDisconnection(clockPort.getPortURI());
-            clockPort.unpublishPort();
-            clockPort.destroyPort();
-            this.clock.waitUntilStart();
-            this.logMessage("Registry component waiting.......");
-        } catch (Exception e) {
-            throw new ComponentStartException(e);
-        }
+        this.logMessage("starting Registry component.");
     }
 
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
@@ -223,6 +201,13 @@ public class RegistryComponent extends AbstractComponent {
             throw new ComponentShutdownException(e);
         }
         super.shutdownNow();
+    }
+
+    // TODO document why this method is empty
+    @Override
+    public void execute() throws Exception {
+        super.execute();
+        this.logMessage("executing Registry component.");
     }
 
 }

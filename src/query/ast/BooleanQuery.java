@@ -1,7 +1,6 @@
 package query.ast;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
