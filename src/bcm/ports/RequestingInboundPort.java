@@ -38,17 +38,8 @@ public class RequestingInboundPort extends AbstractInboundPort
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        this.owner.runTask(
-                new AbstractComponent.AbstractTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            ((NodeComponent) this.getTaskOwner()).executeAsync(request);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+        this.getOwner().handleRequest(owner -> ((NodeComponent) owner)).executeAsync(request);
+
     }
 
 }

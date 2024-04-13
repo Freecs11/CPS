@@ -22,14 +22,7 @@ public class RequestResultInboundPort extends AbstractInboundPort implements Req
 
     @Override
     public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
-        this.owner.handleRequest(
-                new AbstractComponent.AbstractService<QueryResultI>() {
-                    @Override
-                    public QueryResultI call() throws Exception {
-                        ((ClientComponent) this.getServiceOwner()).acceptRequestResult(requestURI, result);
-                        return null;
-                    }
-                });
+        this.getOwner().handleRequest(owner -> ((ClientComponent) owner)).acceptRequestResult(requestURI, result);
     }
 
 }

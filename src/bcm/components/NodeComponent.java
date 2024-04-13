@@ -9,8 +9,10 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
+import bcm.connectors.ClientRequestResult;
 import bcm.connectors.NodeConnector;
 import bcm.connectors.RegistryConnector;
+import bcm.connectors.SensorNodeConnector;
 import bcm.ports.RegistrationOutboundPort;
 import bcm.ports.RequestResultInboundPort;
 import bcm.ports.RequestResultOutboundPort;
@@ -55,7 +57,7 @@ import implementation.request.ExecutionStateIMPL;
 import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
 
-@OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class, RequestResultCI.class })
+@OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
 @RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class,
         RequestResultCI.class })
 public class NodeComponent extends AbstractComponent
@@ -71,7 +73,7 @@ public class NodeComponent extends AbstractComponent
 
     // -------------------- Les PORTS -------------------------
     protected final RequestingInboundPort requestingInboundPort;
-    protected final RequestResultInboundPort requestResultInboundPort;
+    // protected final RequestResultInboundPort requestResultInboundPort;
     protected final SensorNodeP2PInboundPort sensorNodeP2PInboundPort;
     protected final RegistrationOutboundPort RegistrationOutboundPort;
     protected final RequestResultOutboundPort requestResultOutboundPort;
@@ -95,9 +97,12 @@ public class NodeComponent extends AbstractComponent
             String registryInboundPortURI,
             ArrayList<SensorDataI> sensorData,
             Instant startInstant) throws Exception {
-        // only one thread to ensure the serialised execution of services
-        // inside the component.
-        super(uri, 1, 1);
+        // we put in 15 threads to ensure that the component does not block when doing a
+        // task that requires calling other components that then need to call back this
+        // component.
+        // TODO : do this programmatically, for example when we send a continuation to a
+        // neighbour we add a thread to the component ...
+        super(uri, 15, 15);
 
         assert uri != null : new PreconditionException("uri can't be null!");
         assert registryInboundPortURI != null : new PreconditionException("registryInboundPortURI can't be null!");
@@ -120,7 +125,8 @@ public class NodeComponent extends AbstractComponent
         // initialisation des ports
         this.requestingInboundPort = new RequestingInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
-        this.requestResultInboundPort = new RequestResultInboundPort(AbstractInboundPort.generatePortURI(), this);
+        // this.requestResultInboundPort = new
+        // RequestResultInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.RegistrationOutboundPort = new RegistrationOutboundPort(AbstractOutboundPort.generatePortURI(), this);
         this.requestResultOutboundPort = new RequestResultOutboundPort(
                 AbstractOutboundPort.generatePortURI(), this);
@@ -128,7 +134,7 @@ public class NodeComponent extends AbstractComponent
         // publication des ports
         this.requestingInboundPort.publishPort();
         this.sensorNodeP2PInboundPort.publishPort();
-        this.requestResultInboundPort.publishPort();
+        // this.requestResultInboundPort.publishPort();
         this.RegistrationOutboundPort.publishPort();
         this.requestResultOutboundPort.publishPort();
 
@@ -163,9 +169,12 @@ public class NodeComponent extends AbstractComponent
             String registryInboundPortURI,
             ArrayList<SensorDataI> sensorData,
             Instant startInstant) throws Exception {
-        // only one thread to ensure the serialised execution of services
-        // inside the component.
-        super(AbstractInboundPort.generatePortURI(), 1, 1);
+        // we put in 15 threads to ensure that the component does not block when doing a
+        // task that requires calling other components that then need to call back this
+        // component.
+        // TODO : do this programmatically, for example when we send a continuation to a
+        // neighbour we add a thread to the component ...
+        super(AbstractInboundPort.generatePortURI(), 15, 15);
         assert this.reflectionInboundPortURI != null : new PreconditionException("generated uri can't be null!");
         assert registryInboundPortURI != null : new PreconditionException("registryInboundPortURI can't be null!");
         assert nodeId != null : new PreconditionException("nodeId can't be null!");
@@ -186,7 +195,8 @@ public class NodeComponent extends AbstractComponent
         // initialisation des ports
         this.requestingInboundPort = new RequestingInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
-        this.requestResultInboundPort = new RequestResultInboundPort(AbstractInboundPort.generatePortURI(), this);
+        // this.requestResultInboundPort = new
+        // RequestResultInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.RegistrationOutboundPort = new RegistrationOutboundPort(AbstractOutboundPort.generatePortURI(), this);
         this.requestResultOutboundPort = new RequestResultOutboundPort(
                 AbstractOutboundPort.generatePortURI(), this);
@@ -194,7 +204,7 @@ public class NodeComponent extends AbstractComponent
         // publication des ports
         this.requestingInboundPort.publishPort();
         this.sensorNodeP2PInboundPort.publishPort();
-        this.requestResultInboundPort.publishPort();
+        // this.requestResultInboundPort.publishPort();
         this.RegistrationOutboundPort.publishPort();
         this.requestResultOutboundPort.publishPort();
 
@@ -237,8 +247,8 @@ public class NodeComponent extends AbstractComponent
         }
         this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
 
-        System.err
-                .println(" Sensor Nodes : " + ((ProcessingNodeIMPL) this.processingNode).getSensorDataMap().toString());
+        // System.err.println(" Sensor Nodes : " + ((ProcessingNodeIMPL)
+        // this.processingNode).getSensorDataMap().toString());
 
         super.start();
     }
@@ -261,10 +271,13 @@ public class NodeComponent extends AbstractComponent
 
         // ----------------- DELAYED STARTUP -----------------
         this.logMessage("Node component waiting.......");
-        long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
-        this.logMessage("Waiting " + delayTilStart + " ns before executing the node component.");
+        // print the current time and the start time
+        this.clock.waitUntilStart(); // wait until the start time
+        this.logMessage("Node component starting.......");
+
+        long delayRegister = this.clock.nanoDelayUntilInstant(this.startInstant);
         this.scheduleTask(
-                nil -> {
+                o -> {
                     try {
                         // ----------------- REGISTRATION -----------------
                         this.neighbours = RegistrationOutboundPort.register(nodeInfo);
@@ -278,18 +291,20 @@ public class NodeComponent extends AbstractComponent
                     }
                     this.logMessage("Node Component successfully executed: " + this.nodeInfo.nodeIdentifier());
 
-                }, delayTilStart, TimeUnit.NANOSECONDS);
+                }, delayRegister, TimeUnit.NANOSECONDS);
 
         // ----------------- CONNECTING TO NEIGHBOURS -----------------
-        long delayTilConnect2Neighbours = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(5));
+        long delayTilConnect2Neighbours = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(2L));
         this.scheduleTask(
-                nil -> {
+                o -> {
                     try {
                         this.connect2Neighbours();
+                        this.logMessage("Connected to all the neighbours : " + this.printNeighbours());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }, delayTilConnect2Neighbours, TimeUnit.NANOSECONDS);
+
     }
 
     private void connect2Neighbours() throws ComponentStartException {
@@ -303,7 +318,7 @@ public class NodeComponent extends AbstractComponent
                 p2poutboundP.publishPort();
                 this.doPortConnection(p2poutboundP.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) neighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        NodeConnector.class.getCanonicalName());
+                        SensorNodeConnector.class.getCanonicalName());
                 this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
                 System.err.println("Connecting to neighbour: " + neighbour.nodeIdentifier());
                 p2poutboundP.ask4Connection(this.nodeInfo);
@@ -332,6 +347,7 @@ public class NodeComponent extends AbstractComponent
             for (NodeInfoI neighbour : this.neighbours) {
                 if (this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition()) == direction) {
                     neighbourInTheDirection = neighbour;
+                    break;
                 }
             }
 
@@ -344,7 +360,7 @@ public class NodeComponent extends AbstractComponent
                 this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                 this.doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        NodeConnector.class.getCanonicalName());
+                        SensorNodeConnector.class.getCanonicalName());
                 newPort.ask4Connection(this.nodeInfo);
                 this.neighbours.add(newNeighbour);
                 this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
@@ -376,7 +392,7 @@ public class NodeComponent extends AbstractComponent
                 this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                 this.doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
-                        NodeConnector.class.getCanonicalName());
+                        SensorNodeConnector.class.getCanonicalName());
                 newPort.ask4Connection(this.nodeInfo);
                 this.neighbours.add(newNeighbour);
                 this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");
@@ -421,8 +437,8 @@ public class NodeComponent extends AbstractComponent
                 this.requestingInboundPort.unpublishPort();
             if (this.sensorNodeP2PInboundPort.isPublished())
                 this.sensorNodeP2PInboundPort.unpublishPort();
-            if (this.requestResultInboundPort.isPublished())
-                this.requestResultInboundPort.unpublishPort();
+            // if (this.requestResultInboundPort.isPublished())
+            // this.requestResultInboundPort.unpublishPort();
 
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
@@ -439,8 +455,8 @@ public class NodeComponent extends AbstractComponent
                 this.requestingInboundPort.unpublishPort();
             if (this.sensorNodeP2PInboundPort.isPublished())
                 this.sensorNodeP2PInboundPort.unpublishPort();
-            if (this.requestResultInboundPort.isPublished())
-                this.requestResultInboundPort.unpublishPort();
+            // if (this.requestResultInboundPort.isPublished())
+            // this.requestResultInboundPort.unpublishPort();
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
@@ -453,6 +469,7 @@ public class NodeComponent extends AbstractComponent
         if (request == null) {
             throw new Exception("request is null");
         }
+        this.logMessage(request.toString());
         if (this.requestURIs.contains(request.requestURI())) {
             this.logMessage("Request URI: " + request.requestURI() + " already executed");
             return new QueryResultIMPL();
@@ -465,13 +482,15 @@ public class NodeComponent extends AbstractComponent
         if (state == null) {
             throw new Exception("State is null");
         }
-
+        System.err.println("executinh RequestContinuationI: " + request.toString());
         state.updateProcessingNode(this.processingNode);
+        System.err.println("Processing Node: " + this.processingNode.getNodeIdentifier());
+
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = query.eval(state);
         if (state.isFlooding()) {
             // Propagate the request to neighbours and update the result
-            this.floodingPropagation(state, request, result);
+            return this.floodingPropagation(state, request, result);
         } else if (state.isDirectional()) {
             // Can't propagate if no more hops
             // Return local result
@@ -479,17 +498,11 @@ public class NodeComponent extends AbstractComponent
                 return result;
             }
             // Propagate the request to neighbours and update the result
-            this.directionalPropagation(state, request, result);
+            return this.directionalPropagation(state, request, result);
         }
 
         // Return the final result
         return result;
-    }
-
-    @Override
-    public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'executeAsync'");
     }
 
     @Override
@@ -501,6 +514,11 @@ public class NodeComponent extends AbstractComponent
             this.logMessage("Request URI: " + request.requestURI() + " already executed");
             return new QueryResultIMPL();
         }
+
+        // System.err.println("Request URI: " + request.requestURI() + " not executed
+        // yet");
+        // System.err.println("RequestURIS : " + this.requestURIs.toString());
+
         if (request.getQueryCode() == null) {
             throw new Exception("Query is null");
         }
@@ -521,51 +539,56 @@ public class NodeComponent extends AbstractComponent
                 return result;
             }
             // Propagate the request to neighbours and update the result
-            this.directionalPropagation(state, request, result);
+            return this.directionalPropagation(state, request, result);
         }
 
         // Return the final result
         return result;
     }
 
-    private void directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
+    private QueryResultI directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
         for (NodeInfoI neighbour : neighbours) {
             if (state.getDirections()
                     .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 if (nodePort != null) {
-                    ExecutionStateI newState = new ExecutionStateIMPL();
-                    ((ExecutionStateIMPL) newState).incrementHops();
+                    // ExecutionStateI newState = new ExecutionStateIMPL();
+                    // ((ExecutionStateIMPL) newState).setDirectional(true);
+                    ((ExecutionStateIMPL) state).incrementHops();
+
                     RequestContinuationI continuation = new RequestContinuationIMPL(
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
+                            request.clientConnectionInfo(), state);
                     QueryResultI res = nodePort.execute(continuation);
                     ((QueryResultIMPL) result).update(res);
                 }
             }
         }
+        return result;
     }
 
     private QueryResultI floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
+
+        System.err.println("Neighbours : ");
+        neighbours.forEach(n -> System.err.println(n.nodeIdentifier()));
         for (NodeInfoI neighbour : neighbours) {
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 if (nodePort != null) {
-                    // Init new state with updated maximal distance
-                    // because we are propagating the request
-                    ExecutionStateI newState = new ExecutionStateIMPL();
                     double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
                             - processingNode.getPosition().distance(neighbour.nodePosition());
-                    ((ExecutionStateIMPL) newState).updateMaxDistance(newMaximalDistance);
-
+                    ((ExecutionStateIMPL) state).updateMaxDistance(newMaximalDistance);
                     // Create new continuation
                     RequestContinuationI continuation = new RequestContinuationIMPL(
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
+                            request.clientConnectionInfo(), state);
                     // Execute the continuation
+
                     QueryResultI res = nodePort.execute(continuation);
+                    // print the result of the query in a readable format
+                    System.err.println("result we got " + res.toString() + " from " + neighbour.nodeIdentifier());
                     // Update the result
                     ((QueryResultIMPL) result).update(res);
                 }
@@ -576,342 +599,126 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'executeAsync'");
+        if (request == null) {
+            throw new Exception("request is null");
+        }
+        if (this.requestURIs.contains(request.requestURI())) {
+            this.logMessage("Request URI: " + request.requestURI() + " already executed");
+            return;
+        }
+
+        if (request.getQueryCode() == null) {
+            throw new Exception("Query is null");
+        }
+        this.requestURIs.add(request.requestURI());
+
+        this.logMessage("received async request: " + request.toString());
+
+        AbstractQuery query = (AbstractQuery) request.getQueryCode();
+        ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
+        QueryResultI result = query.eval(state);
+        if (!state.isContinuationSet()) {
+            this.logMessage("No continuation set");
+            returnResultToClient(request, result); // return the result to the client
+        } else if (state.isFlooding()) {
+            // Propagate the request to neighbours and update the result
+            this.floodingPropagationAsync(state, request);
+        } else if (state.isDirectional()) {
+            // Can't propagate if no more hops
+            // Return local result
+            if (((ExecutionStateIMPL) state).noMoreHops()) {
+                this.logMessage("No more hops");
+                returnResultToClient(request, result); // return the result to the client
+            }
+            // Propagate the request to neighbours and update the result
+            this.directionalPropagationAsync(state, request);
+        }
     }
 
-    // public QueryResultI execute(RequestContinuationI request) throws Exception {
-    // if (request == null) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // throw new Exception("Request is null");
-    // }
-    // System.err.println("REQUEST URI: " + request.requestURI());
-    // System.err.println("REQUEST MAP URIS: " + this.requestURIs.toString());
+    private void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
+        this.doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
+                ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
+                ClientRequestResult.class.getCanonicalName());
 
-    // if (this.requestURIs.contains(request.requestURI())) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // QueryResultI result = new QueryResultIMPL();
-    // System.err.println("REQUEST URI: " + request.requestURI() + " already
-    // executed");
-    // return result;
-    // }
-    // ExecutionStateI state = ((RequestContinuationIMPL)
-    // request).getExecutionState();
-    // ProcessingNodeI lastNode = state.getProcessingNode();
-    // PositionI lastPosition = lastNode.getPosition();
+        this.logMessage("Sending result to client");
+        this.requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
 
-    // ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
-    // // Local execution
-    // if (request.getQueryCode() == null) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // throw new Exception("Query is null");
-    // }
-    // AbstractQuery query = (AbstractQuery) request.getQueryCode();
-    // QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-    // // we add the node to the visited nodes in the state to avoid loops
-    // // Directional
-    // System.err.println("STATE: " + this.context.toString());
+        this.doPortDisconnection(this.requestResultOutboundPort.getClientPortURI());
+    }
 
-    // this.requestURIs.add(request.requestURI());
+    private void directionalPropagationAsync(ExecutionStateI state, RequestI request)
+            throws Exception {
+        for (NodeInfoI neighbour : neighbours) {
+            if (state.getDirections()
+                    .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
+                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                if (nodePort != null) {
+                    ((ExecutionStateIMPL) state).incrementHops();
+                    RequestContinuationI continuation = new RequestContinuationIMPL(
+                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
+                            request.clientConnectionInfo(), state);
+                    nodePort.executeAsync(continuation);
+                }
+            }
+        }
+    }
 
-    // if (state.isDirectional()) {
-    // state.incrementHops();
-    // if (((ExecutionStateIMPL) state).noMoreHops()) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // return result;
-    // }
-    // // New continuation
-    // Set<Direction> directions = this.context.getDirections();
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // state);
-    // for (Direction direction : directions) {
-    // NodeInfoI neighbour =
-    // this.RegistrationOutboundPort.findNewNeighbour(nodeInfo, direction);
-    // if (neighbour != null) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // if (nodePort != null)
-    // ((QueryResultIMPL) result).update(nodePort.execute(continuation));
-    // }
-    // }
-    // }
-    // // Flooding
-    // else {
-    // System.err.println("FLOODING in continuation");
-    // if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return result;
-    // }
-    // Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
-    // Double distanceTraveled =
-    // this.processingNode.getPosition().distance(lastPosition);
-    // ((ExecutionStateIMPL) state).updateMaxDistance(currentMaxDist -
-    // distanceTraveled);
-    // // New continuation
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // state);
-    // for (NodeInfoI neighbour : neighbours) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // if (nodePort != null) {
-    // System.err.println("FLOODING in continuation: " +
-    // neighbour.nodeIdentifier());
+    private void floodingPropagationAsync(ExecutionStateI state, RequestI request)
+            throws Exception {
+        for (NodeInfoI neighbour : neighbours) {
+            if (state.withinMaximalDistance(neighbour.nodePosition())) {
+                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                if (nodePort != null) {
+                    double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
+                            - processingNode.getPosition().distance(neighbour.nodePosition());
+                    ((ExecutionStateIMPL) state).updateMaxDistance(newMaximalDistance);
 
-    // QueryResultI execInNeighhbour = nodePort.execute(continuation);
+                    RequestContinuationI continuation = new RequestContinuationIMPL(
+                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
+                            request.clientConnectionInfo(), state);
+                    nodePort.executeAsync(continuation);
+                }
+            }
+        }
+    }
 
-    // ((QueryResultIMPL) result).update(execInNeighhbour);
-    // }
-    // }
-    // }
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // // Return final result
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // return result;
-    // }
+    @Override
+    public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
+        if (requestContinuation == null) {
+            throw new Exception("request is null");
+        }
+        if (this.requestURIs.contains(requestContinuation.requestURI())) {
+            this.logMessage("Request URI: " + requestContinuation.requestURI() + " already executed");
+            return;
+        }
 
-    // public QueryResultI execute(RequestI request) throws Exception {
-    // if (requestURIs.contains(request.requestURI())) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // return new QueryResultIMPL();
-    // }
-    // if (request == null || request.getQueryCode() == null) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // throw new Exception("Query is null or request is null");
-    // }
-    // this.requestURIs.add(request.requestURI());
+        if (requestContinuation.getQueryCode() == null) {
+            throw new Exception("Query is null");
+        }
+        this.requestURIs.add(requestContinuation.requestURI());
 
-    // AbstractQuery query = (AbstractQuery) request.getQueryCode();
-    // QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-    // System.err.println("STATE: " + this.context.toString());
+        this.logMessage("received async request: " + requestContinuation.toString());
 
-    // // Check if not continuation
-    // if (!this.context.isContinuationSet()) {
-    // // nouvelle facon de faire le flush
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // return result;
-    // }
+        AbstractQuery query = (AbstractQuery) requestContinuation.getQueryCode();
+        ExecutionStateI state = ((RequestContinuationIMPL) requestContinuation).getExecutionState();
+        ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
+        QueryResultI result = query.eval(state);
+        if (state.isFlooding()) {
+            // Propagate the request to neighbours and update the result
+            this.floodingPropagationAsync(state, requestContinuation);
+        } else if (state.isDirectional()) {
+            // Can't propagate if no more hops
+            // Return local result
+            if (((ExecutionStateIMPL) state).noMoreHops()) {
+                this.logMessage("No more hops");
+                returnResultToClient(requestContinuation, result); // return the result to the client
+            }
+            // Propagate the request to neighbours and update the result
+            this.directionalPropagationAsync(state, requestContinuation);
+        }
 
-    // // Set<Direction> directions = this.context.getDirections();
-    // // System.err.println("DIRECTIONS: " + directions.toString());
-    // // Flooding
-    // if (context.isFlooding()) {
-    // System.err.println("FLOODING");
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // this.context);
-    // for (NodeInfoI neighbour : neighbours) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // System.err.println("was here ");
-    // QueryResultI res = nodePort.execute(continuation);
-    // ((QueryResultIMPL) result).update(res);
-    // }
-    // }
-    // // Directional if not flooding
-    // else {
-    // Set<Direction> directions = this.context.getDirections();
-    // System.err.println("DIRECTIONS: " + directions.toString());
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // this.context);
-    // for (Direction direction : directions) {
-    // NodeInfoI neighbour =
-    // this.RegistrationOutboundPort.findNewNeighbour(nodeInfo, direction);
-    // System.err.println("NEIGHBOUR: " + neighbour);
-    // if (neighbour != null) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // if (nodePort != null) {
-    // QueryResultI ress = nodePort.execute(continuation);
-    // System.err.println("RESS: " + ress.toString());
-    // ((QueryResultIMPL) result).update(ress);
-    // }
-    // }
-    // }
-    // }
-    // this.context = new ExecutionStateIMPL();
-    // this.context.updateProcessingNode(this.processingNode);
-    // return result;
-    // }
-
-    // public void executeAsync(RequestI request) throws Exception {
-    // // local
-    // ConnectionInfoImpl clientInfo = (ConnectionInfoImpl)
-    // request.clientConnectionInfo();
-    // if (clientInfo != null) {
-    // System.err.println("CLIENT INFO: " + clientInfo.toString());
-    // }
-
-    // if (requestURIs.contains(request.requestURI())) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-
-    // if (request == null || request.getQueryCode() == null) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // throw new Exception("Query is null or request is null");
-    // }
-    // AbstractQuery query = (AbstractQuery) request.getQueryCode();
-    // QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-    // System.err.println("STATE: " + this.context.toString());
-
-    // // Check if not continuation
-    // if (!this.context.isContinuationSet()) {
-    // System.err.println("NOT CONTINUATION");
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // this.requestURIs.add(request.requestURI());
-    // this.doPortConnection(this.requestResultOutboundPort.getPortURI(),
-    // ((EndPointDescIMPL) clientInfo.endPointInfo()).getURI(),
-    // ClientRequestResult.class.getCanonicalName());
-    // this.requestResultOutboundPort.acceptRequestResult(request.requestURI(),
-    // result);
-    // // this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-    // // this.context.addToCurrentResult(result);
-    // if (context.isFlooding()) {
-    // System.err.println("FLOODING");
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // this.context);
-    // for (NodeInfoI neighbour : neighbours) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // nodePort.executeAsync(continuation);
-    // }
-
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-    // // Directional if not flooding
-    // else {
-    // Set<Direction> directions = this.context.getDirections();
-    // System.err.println("DIRECTIONS: " + directions.toString());
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // this.context);
-    // for (Direction direction : directions) {*
-
-    // NodeInfoI neighbour =
-    // this.RegistrationOutboundPort.findNewNeighbour(nodeInfo, direction);
-    // if (neighbour != null) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // if (nodePort != null) {
-    // System.err.println("EXECUTING ASYNC");
-    // nodePort.executeAsync(continuation);
-    // }
-    // }
-    // }
-
-    // return;
-    // }
-
-    // }
-
-    // public void executeAsync(RequestContinuationI request) throws Exception {
-    // if (request == null) {
-    // throw new Exception("Request is null");
-    // }
-    // if (this.requestURIs.contains(request.requestURI())) {
-    // // this.context = new
-    // return;
-    // }
-    // ExecutionStateI state = ((RequestContinuationIMPL)
-    // request).getExecutionState();
-    // ProcessingNodeI lastNode = state.getProcessingNode();
-    // PositionI lastPosition = lastNode.getPosition();
-
-    // ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
-    // // Local execution
-    // if (request.getQueryCode() == null) {
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // throw new Exception("Query is null");
-    // }
-    // AbstractQuery query = (AbstractQuery) request.getQueryCode();
-    // QueryResultI result = (QueryResultIMPL) query.eval(this.context);
-    // // we add the node to the visited nodes in the state to avoid loops
-    // // Directional
-    // if (state.isDirectional()) {
-    // state.incrementHops();
-    // if (((ExecutionStateIMPL) state).noMoreHops()) {
-    // System.err.println("NO MORE HOPS");
-    // this.context.addToCurrentResult(result);
-    // this.doPortConnection(this.requestResultOutboundPort.getPortURI(),
-    // ((EndPointDescIMPL) request.clientConnectionInfo().endPointInfo()).getURI(),
-    // ClientRequestResult.class.getCanonicalName());
-    // this.requestResultOutboundPort.acceptRequestResult(request.requestURI(),
-    // result);
-    // this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-    // // New continuation
-    // Set<Direction> directions = this.context.getDirections();
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // state);
-    // for (Direction direction : directions) {
-    // NodeInfoI neighbour =
-    // this.RegistrationOutboundPort.findNewNeighbour(nodeInfo, direction);
-    // if (neighbour != null) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // if (nodePort != null) {
-    // nodePort.executeAsync(continuation);
-    // }
-    // }
-    // }
-
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-    // // Flooding
-    // else {
-    // if (!this.context.withinMaximalDistance(this.processingNode.getPosition())) {
-    // this.context.addToCurrentResult(result);
-    // this.doPortConnection(this.requestResultOutboundPort.getPortURI(),
-    // ((EndPointDescIMPL) request.clientConnectionInfo().endPointInfo()).getURI(),
-    // ClientRequestResult.class.getCanonicalName());
-    // this.requestResultOutboundPort.acceptRequestResult(request.requestURI(),
-    // result);
-    // this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-    // Double currentMaxDist = ((ExecutionStateIMPL) state).getMaxDistance();
-    // Double distanceTraveled =
-    // this.processingNode.getPosition().distance(lastPosition);
-    // ((ExecutionStateIMPL) state).updateMaxDistance(currentMaxDist -
-    // distanceTraveled);
-    // // New continuation
-    // RequestContinuationI continuation = new RequestContinuationIMPL(request,
-    // state);
-    // for (NodeInfoI neighbour : neighbours) {
-    // // if (!((ExecutionStateIMPL)
-    // // state).getNodesVisited().contains(neighbour.nodeIdentifier())) {
-    // NodeP2POutboundPort nodePort =
-    // this.nodeInfoToP2POutboundPortMap.get(neighbour);
-    // if (nodePort != null)
-    // nodePort.executeAsync(continuation);
-    // }
-
-    // // ((ExecutionStateIMPL) this.context).flush();
-    // return;
-    // }
-
-    // }
-
+        // every node will return the result to the client after executing the request
+        // and propagating it to the neighbours
+        returnResultToClient(requestContinuation, result); // return the result to the client
+    }
 }

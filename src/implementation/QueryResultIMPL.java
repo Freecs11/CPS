@@ -80,33 +80,43 @@ public class QueryResultIMPL implements QueryResultI {
 		if (this.gatheredSensors == null) {
 			this.gatheredSensors = new ArrayList<>();
 		}
-		Boolean found = false;
-		System.err.println(this.gatheredSensors.toString());
-		for (SensorDataI sensor : this.gatheredSensors) {
-			if (sensor.getNodeIdentifier().equals(sensorData.getNodeIdentifier())
-					&& sensor.getSensorIdentifier().equals(sensorData.getSensorIdentifier())) {
-				found = true;
-				break;
-			}
-		}
-		if (Boolean.FALSE.equals(found)) {
+		if (!isSensorDataPresent(sensorData)) {
 			this.gatheredSensors.add(sensorData);
 		}
 	}
 
-	public void update(QueryResultI query) {
-		System.err.println("query we got " + query.toString());
-		if (!query.isBooleanRequest() && query.isGatherRequest()) {
-			ArrayList<SensorDataI> gathered = query.gatheredSensorsValues();
-			for (SensorDataI sensor : gathered) {
-				this.addToGatheredSensors(sensor);
+	private boolean isSensorDataPresent(SensorDataI sensorData) {
+		System.err.println(this.gatheredSensors.toString());
+		for (SensorDataI sensor : this.gatheredSensors) {
+			if (sensor.getNodeIdentifier().equals(sensorData.getNodeIdentifier())
+					&& sensor.getSensorIdentifier().equals(sensorData.getSensorIdentifier())) {
+				return true;
 			}
+		}
+		return false;
+	}
+
+	public void update(QueryResultI query) {
+		if (!query.isBooleanRequest() && query.isGatherRequest()) {
+			processGatherRequest(query);
+			// System.err.println("gathered sensors: " + this.gatheredSensors.toString());
 		} else if (query.isBooleanRequest() && !query.isGatherRequest()) {
-			ArrayList<String> positive = query.positiveSensorNodes();
-			if (positive != null) {
-				for (String sn : positive) {
-					this.addPositiveSN(sn);
-				}
+			processBooleanRequest(query);
+		}
+	}
+
+	private void processGatherRequest(QueryResultI query) {
+		ArrayList<SensorDataI> gathered = query.gatheredSensorsValues();
+		for (SensorDataI sensor : gathered) {
+			this.addToGatheredSensors(sensor);
+		}
+	}
+
+	private void processBooleanRequest(QueryResultI query) {
+		ArrayList<String> positive = query.positiveSensorNodes();
+		if (positive != null) {
+			for (String sn : positive) {
+				this.addPositiveSN(sn);
 			}
 		}
 	}
@@ -115,8 +125,9 @@ public class QueryResultIMPL implements QueryResultI {
 		if (this.positiveSN == null) {
 			this.positiveSN = new ArrayList<>();
 		}
-		if (!this.positiveSN.contains(sensorId))
+		if (!this.positiveSN.contains(sensorId)) {
 			this.positiveSN.add(sensorId);
+		}
 	}
 
 	@Override
@@ -124,10 +135,10 @@ public class QueryResultIMPL implements QueryResultI {
 		// print the result of the query in a readable format
 		if (this.isBooleanRequest()) {
 			if (this.positiveSN.isEmpty()) {
-				return "No positive sensor nodes";
+				return "No positive nodes to the query";
 			}
 			StringBuilder bld = new StringBuilder();
-			bld.append("\nPositive Sensor Nodes:--->| \u2193 \n");
+			bld.append("\nPositive Nodes:--->| \u2193 \n");
 			for (String sn : this.positiveSN) {
 				bld.append("  |--- " + sn + "\n");
 			}

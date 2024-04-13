@@ -44,8 +44,6 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	public void setIsFlooding(boolean isFlooding) {
 		if (isContinuationSet() == false) {
 			this.isFlooding = isFlooding;
-		} else {
-			throw new IllegalStateException("Cannot set flooding or directional if continuation is set");
 		}
 	}
 

@@ -20,17 +20,13 @@ import utils.NodeComponentInfo;
 
 public class CVM extends AbstractCVM {
         public static final String CLOCK_URI = "CLOCK-SERVER";
-        protected static final long TIME_TO_START = 6000L;
+        protected static final long TIME_TO_START = 3000L;
         protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
         protected static final double accelerationFactor = 60.0;
-        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(30);
+        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(5);
 
-        /** URI of the provider component (convenience). */
-        protected static final String NODE_COMPONENT_URI = "node-URI";
-        protected static final String NODE2_COMPONENT_URI = "node2-URI";
-        protected static final String NODE3_COMPONENT_URI = "node3-URI";
         /** URI of the consumer component (convenience). */
         protected static final String CLIENT_COMPONENT_URI = "client-URI";
         protected static final String REGISTER_COMPONENT_URI = "register-URI";
@@ -130,7 +126,7 @@ public class CVM extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                1, 1,
+                                                1, 0,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI });
 
@@ -151,9 +147,9 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(3) });
+                                                        REG_START_INSTANT.plusSeconds(10L) });
 
-                        if (i < 7) {
+                        if (i < 5) {
                                 assert this.isDeployedComponent(uri);
                                 this.toggleTracing(uri);
                                 this.toggleLogging(uri);
@@ -164,7 +160,7 @@ public class CVM extends AbstractCVM {
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
-                                                REG_START_INSTANT.plusSeconds(45)
+                                                REG_START_INSTANT.plusSeconds(100L)
                                 });
                 // to be changed
                 // ---------------------------------------------------------------------

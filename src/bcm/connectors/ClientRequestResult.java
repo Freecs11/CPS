@@ -10,5 +10,6 @@ public class ClientRequestResult extends AbstractConnector
     @Override
     public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
         ((RequestResultCI) this.offering).acceptRequestResult(requestURI, result);
+
     }
 }

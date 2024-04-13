@@ -171,6 +171,12 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     @Override
+    public synchronized void execute() throws Exception {
+        super.execute();
+        this.logMessage("executing Registry component.");
+    }
+
+    @Override
     public synchronized void finalise() throws Exception {
         this.logMessage("finalising Registry component.");
         this.logMessage(printAllNodes());
@@ -201,13 +207,6 @@ public class RegistryComponent extends AbstractComponent {
             throw new ComponentShutdownException(e);
         }
         super.shutdownNow();
-    }
-
-    // TODO document why this method is empty
-    @Override
-    public void execute() throws Exception {
-        super.execute();
-        this.logMessage("executing Registry component.");
     }
 
 }
