@@ -366,7 +366,32 @@ public class NodeComponent extends AbstractComponent
                 this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
                 this.printNeighbours();
             } else {
-                this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " already connected");
+                // ------- compare the distance between the new neighbour and the neighbour in
+                // the same direction
+                double distanceNewNeighbour = this.nodeInfo.nodePosition().distance(newNeighbour.nodePosition());
+                double distanceNeighbourInTheDirection = this.nodeInfo.nodePosition()
+                        .distance(neighbourInTheDirection.nodePosition());
+                if (distanceNewNeighbour < distanceNeighbourInTheDirection) {
+                    SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
+                            AbstractOutboundPort.generatePortURI(), this);
+                    newPort.publishPort();
+                    this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                    this.doPortConnection(newPort.getPortURI(),
+                            ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                            SensorNodeConnector.class.getCanonicalName());
+                    newPort.ask4Connection(this.nodeInfo);
+                    this.neighbours.add(newNeighbour);
+                    this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
+                    this.logMessage("Disconnecting neighbour in the same direction: "
+                            + neighbourInTheDirection.nodeIdentifier());
+                    this.ask4Disconnection(neighbourInTheDirection);
+                    this.printNeighbours();
+                } else {
+                    this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " not connected");
+                    this.logMessage("Distance between " + newNeighbour.nodeIdentifier() + " and "
+                            + neighbourInTheDirection.nodeIdentifier() + " is less than the distance between "
+                            + newNeighbour.nodeIdentifier() + " and " + neighbourInTheDirection.nodeIdentifier());
+                }
             }
         } catch (Exception e) {
             throw new Exception("Error in ask4Connection" + e.getMessage());
@@ -376,6 +401,10 @@ public class NodeComponent extends AbstractComponent
     public void ask4Disconnection(NodeInfoI neighbour) {
         try {
             SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+            if (nodePort == null) {
+                this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " not connected");
+                return;
+            }
             Direction directionOfNeighbour = this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition());
             this.neighbours.remove(neighbour);
             this.nodeInfoToP2POutboundPortMap.remove(neighbour);
@@ -466,6 +495,7 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
+
         if (request == null) {
             throw new Exception("request is null");
         }

@@ -20,12 +20,12 @@ import utils.NodeComponentInfo;
 
 public class CVM extends AbstractCVM {
         public static final String CLOCK_URI = "CLOCK-SERVER";
-        protected static final long TIME_TO_START = 3000L;
+        protected static final long TIME_TO_START = 6000L;
         protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
-        protected static final double accelerationFactor = 60.0;
-        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(5);
+        protected static final double accelerationFactor = 10.0;
+        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(10L);
 
         /** URI of the consumer component (convenience). */
         protected static final String CLIENT_COMPONENT_URI = "client-URI";
@@ -71,7 +71,7 @@ public class CVM extends AbstractCVM {
 
         public static Set<NodeComponentInfo> buildMap(int nbNode) {
                 // build map of nbNodes , map goes +5 in and -5 in positions to expand
-                double initialRange = 100.0;
+                double initialRange = Math.random() * 100;
                 double x = 50.0;
                 double y = 50.0;
                 Set<NodeComponentInfo> nodes = new HashSet<>();
@@ -88,8 +88,8 @@ public class CVM extends AbstractCVM {
                                 y -= range;
                         }
                         nodes.add(new NodeComponentInfo("node" + i, x, y, range));
-                        stack.push(range + 5);
-                        stack.push(range - 5);
+                        stack.push(range + Math.random() * 100);
+                        stack.push(range + Math.random() * 100);
                 }
 
                 return nodes;
@@ -147,7 +147,7 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(10L) });
+                                                        REG_START_INSTANT.plusSeconds(20L) });
 
                         if (i < 5) {
                                 assert this.isDeployedComponent(uri);

@@ -53,7 +53,6 @@ import query.ast.FinalDirections;
 @OfferedInterfaces(offered = { RequestResultCI.class })
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class, ClocksServerCI.class })
 public class ClientComponent extends AbstractComponent {
-
         protected RequestingOutboundPort RequestingOutboundPort;
         protected LookupOutboundPort LookupOutboundPort;
 
@@ -69,7 +68,7 @@ public class ClientComponent extends AbstractComponent {
         private Map<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
-        private long asyncTimeout = 10000000000L; // 20 seconds in nanoseconds
+        private long asyncTimeout = 10000000000L; // 10 seconds in nanoseconds
 
         protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
                 super(uri, 5, 5);
@@ -177,15 +176,15 @@ public class ClientComponent extends AbstractComponent {
                 GatherQuery query = new GatherQuery(
                                 new RecursiveGather("temperature",
                                                 new FinalGather("humidity")),
-                                new FloodingContinuation(new RelativeBase(), 45.0));
+                                new FloodingContinuation(new RelativeBase(), 14445.0));
                 // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
                 // new FinalDirections(Direction.NE))));
-                String nodeIdentifier = "node4";
+                String nodeIdentifier = "node7";
                 RequestI request1 = new RequestIMPL("req1",
                                 query,
                                 false,
                                 clientInfo);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20L));
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(50L));
 
                 this.executeSyncRequest(request1, nodeIdentifier, delayTilRequest2);
 
@@ -196,7 +195,7 @@ public class ClientComponent extends AbstractComponent {
                                 query,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(90L));
                 this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3);
 
                 // ------------------- Boolean Query Test 1 : no continuation , Sync Request
@@ -205,7 +204,7 @@ public class ClientComponent extends AbstractComponent {
                                 query2,
                                 false,
                                 clientInfo);
-                long delayTilRequest4 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
+                long delayTilRequest4 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(120L));
 
                 this.executeSyncRequest(request3, nodeIdentifier, delayTilRequest4);
 
@@ -215,7 +214,7 @@ public class ClientComponent extends AbstractComponent {
                                 query2,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest5 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(80L));
+                long delayTilRequest5 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(150L));
 
                 this.executeAsyncRequest(request4, nodeIdentifier, delayTilRequest5);
 
