@@ -47,8 +47,10 @@ public class PositionIMPL implements PositionI {
             return Direction.NW;
         } else if (x2 > x1 && y2 < y1) {
             return Direction.SE;
-        } else {
+        } else if (x2 < x1 && y2 < y1) {
             return Direction.SW;
+        } else {
+            return null;
         }
     }
 
@@ -92,4 +94,8 @@ public class PositionIMPL implements PositionI {
         return x1 < x2 && (y1 >= y2);
     }
 
+    @Override
+    public String toString() {
+        return "Coord {" + "x=" + x + ", y=" + y + '}';
+    }
 }

@@ -113,6 +113,9 @@ public class RegistryComponent extends AbstractComponent {
             for (NodeInfoI n : nodeIDToNodeInfoMap.values()) {
                 if (inRangeOfEachOther(n, nodeInfo)) {
                     Direction nDir = nodeInfo.nodePosition().directionFrom(n.nodePosition());
+                    if (nDir == null) {
+                        continue;
+                    }
                     if (directionalNeighbours.containsKey(nDir)) {
                         Double currentDist = directionalNeighbours.get(nDir).nodePosition()
                                 .distance(nodeInfo.nodePosition());
@@ -131,6 +134,10 @@ public class RegistryComponent extends AbstractComponent {
             this.nodeIDToNodeInfoMap.put(nodeInfo.nodeIdentifier(), nodeInfo);
             this.logMessage("registered node " + nodeInfo.nodeIdentifier() + " and has neighbours: " + result.size());
             this.logMessage(this.printAllNodes());
+            for (Direction node : directionalNeighbours.keySet()) {
+                logMessage("Neighbour in direction " + node + " is " + directionalNeighbours.get(node).nodeIdentifier());
+            }
+
             return result;
         } catch (Exception e) {
             throw new Exception("Error registering node " + nodeInfo.nodeIdentifier() + ".");

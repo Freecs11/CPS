@@ -53,6 +53,7 @@ import query.ast.FinalDirections;
 @OfferedInterfaces(offered = { RequestResultCI.class })
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class, ClocksServerCI.class })
 public class ClientComponent extends AbstractComponent {
+
         protected RequestingOutboundPort RequestingOutboundPort;
         protected LookupOutboundPort LookupOutboundPort;
 
@@ -68,7 +69,7 @@ public class ClientComponent extends AbstractComponent {
         private Map<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
-        private long asyncTimeout = 10000000000L; // 10 seconds in nanoseconds
+        private long asyncTimeout = 10000000000L; // 20 seconds in nanoseconds
 
         protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
                 super(uri, 5, 5);
@@ -93,7 +94,7 @@ public class ClientComponent extends AbstractComponent {
 
         protected ClientComponent(String uri, String registryInboundPortURI, Instant startInstant) throws Exception {
                 super(uri, 5, 5);
-                // ---------Init the ports---------
+                // ---------------Init the ports----------------
                 this.LookupOutboundPort = new LookupOutboundPort(
                                 AbstractOutboundPort.generatePortURI(),
                                 this);
@@ -106,7 +107,7 @@ public class ClientComponent extends AbstractComponent {
                 this.startInstant = startInstant;
                 this.clientRequestResultInboundPort = new RequestResultInboundPort(this);
                 this.resultsMap = new HashMap<>();
-
+                
                 this.clientRequestResultInboundPort.publishPort();
                 this.getTracer().setTitle("Client Component");
                 this.getTracer().setRelativePosition(1, 1);
@@ -176,15 +177,15 @@ public class ClientComponent extends AbstractComponent {
                 GatherQuery query = new GatherQuery(
                                 new RecursiveGather("temperature",
                                                 new FinalGather("humidity")),
-                                new FloodingContinuation(new RelativeBase(), 14445.0));
+                                new FloodingContinuation(new RelativeBase(), 45.0));
                 // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
                 // new FinalDirections(Direction.NE))));
-                String nodeIdentifier = "node7";
+                String nodeIdentifier = "node4";
                 RequestI request1 = new RequestIMPL("req1",
                                 query,
                                 false,
                                 clientInfo);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(50L));
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20L));
 
                 this.executeSyncRequest(request1, nodeIdentifier, delayTilRequest2);
 
@@ -195,7 +196,7 @@ public class ClientComponent extends AbstractComponent {
                                 query,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(90L));
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
                 this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3);
 
                 // ------------------- Boolean Query Test 1 : no continuation , Sync Request
@@ -204,9 +205,9 @@ public class ClientComponent extends AbstractComponent {
                                 query2,
                                 false,
                                 clientInfo);
-                long delayTilRequest4 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(120L));
+                long delayTilRequest4 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
 
-                this.executeSyncRequest(request3, nodeIdentifier, delayTilRequest4);
+                // this.executeSyncRequest(request3, nodeIdentifier, delayTilRequest4);
 
                 // ------------------- Boolean Query Test 2 : no continuation , Async Request
                 // -------------------
@@ -214,9 +215,9 @@ public class ClientComponent extends AbstractComponent {
                                 query2,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest5 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(150L));
+                long delayTilRequest5 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(80L));
 
-                this.executeAsyncRequest(request4, nodeIdentifier, delayTilRequest5);
+                // this.executeAsyncRequest(request4, nodeIdentifier, delayTilRequest5);
 
                 // async request flooding
 
@@ -239,6 +240,14 @@ public class ClientComponent extends AbstractComponent {
                                                                         RequestingConnector.class.getCanonicalName());
                                                         QueryResultI res = ClientComponent.this.RequestingOutboundPort
                                                                         .execute(request);
+                                                        if (res.isGatherRequest()) {
+                                                               ClientComponent.this
+                                                                        .logMessage("Gathered size : "+ res.gatheredSensorsValues().size());
+
+                                                        }else {
+                                                                ClientComponent.this
+                                                                        .logMessage("Floading size : "+ res.positiveSensorNodes().size()); 
+                                                        }
                                                         ClientComponent.this
                                                                         .logMessage("Query result: " + res.toString());
                                                         ClientComponent.this.doPortDisconnection(
@@ -276,6 +285,7 @@ public class ClientComponent extends AbstractComponent {
                                                         ClientComponent.this.logMessage("Async request sent to node "
                                                                         + nodeId + " with URI " + request.requestURI()
                                                                         + " at " + Instant.now());
+                                                        
                                                         ClientComponent.this.doPortDisconnection(
                                                                         ClientComponent.this.RequestingOutboundPort
                                                                                         .getPortURI());
@@ -304,12 +314,22 @@ public class ClientComponent extends AbstractComponent {
                                                                 for (QueryResultI res : results) {
                                                                         ((QueryResultIMPL) result).update(res);
                                                                 }
+                                                                if (result.isGatherRequest()) {
+                                                                        ClientComponent.this
+                                                                        .logMessage("Gathered size : "+ result.gatheredSensorsValues().size());
+                                                                }else {
+                                                                        ClientComponent.this
+                                                                        .logMessage("Floading size : "+ result.positiveSensorNodes().size()); 
+                                                                }
+                                                                
                                                                 ClientComponent.this.logMessage(
                                                                                 "Final Query result: "
                                                                                                 + result.toString());
+                                                                                                
                                                                 ClientComponent.this.resultsMap
                                                                                 .remove(request.requestURI());
                                                         }
+
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }

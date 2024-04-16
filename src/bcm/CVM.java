@@ -69,31 +69,31 @@ public class CVM extends AbstractCVM {
 
         protected String uriRegisterURI;
 
-        public static Set<NodeComponentInfo> buildMap(int nbNode) {
-                // build map of nbNodes , map goes +5 in and -5 in positions to expand
-                double initialRange = Math.random() * 100;
-                double x = 50.0;
-                double y = 50.0;
-                Set<NodeComponentInfo> nodes = new HashSet<>();
-                Stack<Double> stack = new Stack<>();
-                stack.push(initialRange);
-                // no equals postions allowed
-                for (int i = 0; i < nbNode; i++) {
-                        double range = stack.pop();
-                        if (i % 2 == 0) {
-                                x += range;
-                                y += range;
-                        } else {
-                                x -= range;
-                                y -= range;
-                        }
-                        nodes.add(new NodeComponentInfo("node" + i, x, y, range));
-                        stack.push(range + Math.random() * 100);
-                        stack.push(range + Math.random() * 100);
-                }
+        public static ArrayList<NodeComponentInfo> buildMap(int gridSize) {
 
+                ArrayList<NodeComponentInfo> nodes = new ArrayList<>();
+                
+                int nodeId = 1;        
+                for (int y = 1; y <= gridSize; y++) {
+                        // Itération pour les lignes impaires de la grille
+                        if (y % 2 != 0) {
+                                for (int x = 1; x <= gridSize; x += 2) {
+                                        nodes.add(new NodeComponentInfo("node" + nodeId, (double) x,(double) y, 10.0));
+                                        nodeId++;
+                                }
+                        }else {
+                                // Itération pour les lignes paires de la grille
+                                for (int x = 2; x <= gridSize; x += 2) {
+                                        nodes.add(new NodeComponentInfo("node" + nodeId, (double) x,(double) y, 10.0));
+                                        nodeId++;
+                                }
+                        }
+        
+        
+                }
                 return nodes;
         }
+        
 
         @Override
         public void deploy() throws Exception {
@@ -131,7 +131,7 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
 
                 // create the node components
-                Set<NodeComponentInfo> nodes = buildMap(9);
+                ArrayList<NodeComponentInfo> nodes = buildMap(5);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
                         ArrayList<SensorDataI> data = new ArrayList<>();
@@ -147,14 +147,14 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(20L) });
+                                                        REG_START_INSTANT.plusSeconds(20L+ i) });
 
-                        if (i < 5) {
+                        // if (i < 5) {
                                 assert this.isDeployedComponent(uri);
                                 this.toggleTracing(uri);
                                 this.toggleLogging(uri);
-                                i++;
-                        }
+                                i += 5;
+                        // }
                 }
 
                 // create the client component
@@ -204,7 +204,7 @@ public class CVM extends AbstractCVM {
                 } catch (Exception e) {
                         throw new RuntimeException(e);
                 }
-                // Set<NodeComponentInfo> result = CVM.buildMap(10);
+                // ArrayList<NodeComponentInfo> result = CVM.buildMap(5);
                 // System.out.println(result.size());
                 // System.out.println(result);
         }

@@ -321,6 +321,7 @@ public class NodeComponent extends AbstractComponent
                         SensorNodeConnector.class.getCanonicalName());
                 this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
                 System.err.println("Connecting to neighbour: " + neighbour.nodeIdentifier());
+                logMessage("Connecting to neighbour: " + neighbour.nodeIdentifier());
                 p2poutboundP.ask4Connection(this.nodeInfo);
             }
         } catch (
@@ -385,7 +386,9 @@ public class NodeComponent extends AbstractComponent
                     this.logMessage("Disconnecting neighbour in the same direction: "
                             + neighbourInTheDirection.nodeIdentifier());
                     this.ask4Disconnection(neighbourInTheDirection);
-                    this.printNeighbours();
+                    // this.printNeighbours();
+                    this.logMessage("Neighbours after disconnection: -->@;" + neighbourInTheDirection.nodeIdentifier() + " disconnected");
+                this.printNeighbours();
                 } else {
                     this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " not connected");
                     this.logMessage("Distance between " + newNeighbour.nodeIdentifier() + " and "
@@ -408,13 +411,14 @@ public class NodeComponent extends AbstractComponent
             Direction directionOfNeighbour = this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition());
             this.neighbours.remove(neighbour);
             this.nodeInfoToP2POutboundPortMap.remove(neighbour);
+            // nodePort.ask4Disconnection(this.nodeInfo);
             this.doPortDisconnection(nodePort.getPortURI());
             nodePort.unpublishPort();
 
             // ----- Find new in the same direction if possible -----
             NodeInfoI newNeighbour = this.RegistrationOutboundPort.findNewNeighbour(this.nodeInfo,
                     directionOfNeighbour);
-            if (newNeighbour != null && newNeighbour != neighbour) {
+            if (newNeighbour != null && newNeighbour.nodeIdentifier() != neighbour.nodeIdentifier()) {
                 SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
                         AbstractOutboundPort.generatePortURI(), this);
                 newPort.publishPort();
@@ -431,6 +435,10 @@ public class NodeComponent extends AbstractComponent
                 this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");
                 this.logMessage("No new neighbour found in direction " + directionOfNeighbour);
             }
+
+            this.logMessage("Neighbours after disconnection: -->@;" + neighbour.nodeIdentifier() + " disconnected");
+            this.logMessage("<Neighbours after disconnection: -->@;" + printNeighbours());
+
 
         } catch (Exception e) {
             System.err.println("Error in ask4Disconnection " + e.getMessage());
@@ -495,6 +503,11 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
+        this.logMessage("Executing RequestContinuationI: " + this.nodeInfo.nodeIdentifier());
+        for (NodeInfoI neighbour : neighbours){
+            this.logMessage("Neighbour 1: of" +this.nodeInfo.nodeIdentifier() + "->"+ neighbour.nodeIdentifier());
+        }
+        this.logMessage("--------------------------------\n");
 
         if (request == null) {
             throw new Exception("request is null");
@@ -528,6 +541,7 @@ public class NodeComponent extends AbstractComponent
                 return result;
             }
             // Propagate the request to neighbours and update the result
+            this.logMessage("Directional Propagation not ended\n");
             return this.directionalPropagation(state, request, result);
         }
 
@@ -537,6 +551,11 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
+        this.logMessage("Executing Request: " + this.nodeInfo.nodeIdentifier());
+        for(NodeInfoI neighbour : neighbours){
+            this.logMessage("Neighbour 2 : of" +this.nodeInfo.nodeIdentifier() + "->"+ neighbour.nodeIdentifier());
+        }
+        this.logMessage("--------------------------------\n");
         if (request == null) {
             throw new Exception("request is null");
         }
@@ -569,6 +588,7 @@ public class NodeComponent extends AbstractComponent
                 return result;
             }
             // Propagate the request to neighbours and update the result
+            this.logMessage("Directional Propagation not ended\n");
             return this.directionalPropagation(state, request, result);
         }
 
@@ -579,9 +599,11 @@ public class NodeComponent extends AbstractComponent
     private QueryResultI directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
         for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("propagation " + neighbour.nodeIdentifier());
             if (state.getDirections()
                     .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                this.logMessage("successfully\n");
                 if (nodePort != null) {
                     // ExecutionStateI newState = new ExecutionStateIMPL();
                     // ((ExecutionStateIMPL) newState).setDirectional(true);
@@ -604,8 +626,17 @@ public class NodeComponent extends AbstractComponent
         System.err.println("Neighbours : ");
         neighbours.forEach(n -> System.err.println(n.nodeIdentifier()));
         for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("trying to propagate to " + neighbour.nodeIdentifier() + " from "
+                    + this.nodeInfo.nodeIdentifier());
+            this.logMessage("neighbour at " + neighbour.nodePosition() + " node identifier " + neighbour.nodeIdentifier());
+            this.logMessage("is in maximal " + state.withinMaximalDistance(neighbour.nodePosition()));
+            this.logMessage("distance from " + this.nodeInfo.nodePosition() +"to "+neighbour.nodePosition()+ " is "
+                    + this.nodeInfo.nodePosition().distance(neighbour.nodePosition()));
+            this.logMessage("maximal distance is " + ((ExecutionStateIMPL) state).getMaxDistance());
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
+                logMessage("finding port" + neighbour.nodeIdentifier());
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                logMessage("propagate END_node port " + nodePort + " to " + neighbour.nodeIdentifier());
                 if (nodePort != null) {
                     double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
                             - processingNode.getPosition().distance(neighbour.nodePosition());
@@ -615,8 +646,10 @@ public class NodeComponent extends AbstractComponent
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
                             request.clientConnectionInfo(), state);
                     // Execute the continuation
-
+                    this.logMessage("propagate successful");
                     QueryResultI res = nodePort.execute(continuation);
+                    // reset maximalDistance
+                    ((ExecutionStateIMPL) state).updateMaxDistance(newMaximalDistance + processingNode.getPosition().distance(neighbour.nodePosition()));
                     // print the result of the query in a readable format
                     System.err.println("result we got " + res.toString() + " from " + neighbour.nodeIdentifier());
                     // Update the result
