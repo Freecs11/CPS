@@ -131,7 +131,7 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
 
                 // create the node components
-                Set<NodeComponentInfo> nodes = buildMap(9);
+                Set<NodeComponentInfo> nodes = buildMap(13);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
                         ArrayList<SensorDataI> data = new ArrayList<>();
@@ -149,12 +149,12 @@ public class CVM extends AbstractCVM {
                                                         data,
                                                         REG_START_INSTANT.plusSeconds(20L) });
 
-                        if (i < 5) {
+//                        if (i < 5) {
                                 assert this.isDeployedComponent(uri);
                                 this.toggleTracing(uri);
                                 this.toggleLogging(uri);
                                 i++;
-                        }
+//                        }
                 }
 
                 // create the client component

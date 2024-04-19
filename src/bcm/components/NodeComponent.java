@@ -495,7 +495,10 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
-
+        this.logMessage("Neighbours of " + this.nodeInfo.nodeIdentifier());
+        for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("Neighour : " + neighbour.nodeIdentifier());
+        }
         if (request == null) {
             throw new Exception("request is null");
         }
@@ -537,6 +540,11 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
+        this.logMessage("Neighbours of " + this.nodeInfo.nodeIdentifier());
+        for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("Neighour : " + neighbour.nodeIdentifier());
+        }
+
         if (request == null) {
             throw new Exception("request is null");
         }
