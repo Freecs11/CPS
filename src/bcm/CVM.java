@@ -24,7 +24,7 @@ public class CVM extends AbstractCVM {
         protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
-        protected static final double accelerationFactor = 10.0;
+        protected static final double accelerationFactor = 60.0;
         public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(10L);
 
         /** URI of the consumer component (convenience). */
@@ -70,30 +70,35 @@ public class CVM extends AbstractCVM {
         protected String uriRegisterURI;
 
         public static ArrayList<NodeComponentInfo> buildMap(int gridSize) {
-
                 ArrayList<NodeComponentInfo> nodes = new ArrayList<>();
-                
-                int nodeId = 1;        
+                int nodeId = 1;
                 for (int y = 1; y <= gridSize; y++) {
                         // Itération pour les lignes impaires de la grille
                         if (y % 2 != 0) {
                                 for (int x = 1; x <= gridSize; x += 2) {
-                                        nodes.add(new NodeComponentInfo("node" + nodeId, (double) x,(double) y, 10.0));
+                                        nodes.add(new NodeComponentInfo("node" + nodeId, (double) x, (double) y, 10.0));
                                         nodeId++;
                                 }
-                        }else {
+                        } else {
                                 // Itération pour les lignes paires de la grille
                                 for (int x = 2; x <= gridSize; x += 2) {
-                                        nodes.add(new NodeComponentInfo("node" + nodeId, (double) x,(double) y, 10.0));
+                                        nodes.add(new NodeComponentInfo("node" + nodeId, (double) x, (double) y, 10.0));
                                         nodeId++;
                                 }
                         }
-        
-        
                 }
                 return nodes;
         }
-        
+
+        public static int getGridSize(int nbNodes) {
+                int gridSize = 0;
+                int i = 1;
+                while (i * i < nbNodes) {
+                        i++;
+                }
+                gridSize = i;
+                return gridSize;
+        }
 
         @Override
         public void deploy() throws Exception {
@@ -126,7 +131,7 @@ public class CVM extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                1, 0,
+                                                1, 1,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI });
 
@@ -147,13 +152,13 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(20L+ i) });
+                                                        REG_START_INSTANT.plusSeconds(20L + i) });
 
                         // if (i < 5) {
-                                assert this.isDeployedComponent(uri);
-                                this.toggleTracing(uri);
-                                this.toggleLogging(uri);
-                                i += 5;
+                        assert this.isDeployedComponent(uri);
+                        this.toggleTracing(uri);
+                        this.toggleLogging(uri);
+                        i += 5;
                         // }
                 }
 

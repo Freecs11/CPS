@@ -29,6 +29,20 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 		this.queryResult = new QueryResultIMPL();
 	}
 
+	public ExecutionStateIMPL(ExecutionStateI state) {
+		this.queryResult = state.getCurrentResult();
+		this.processingNode = state.getProcessingNode();
+		this.maxHops = ((ExecutionStateIMPL) state).getMaxHops();
+		this.hops = ((ExecutionStateIMPL) state).getHops();
+		this.isFlooding = ((ExecutionStateIMPL) state).isFlooding();
+		this.maxDistance = ((ExecutionStateIMPL) state).getMaxDistance();
+		this.isDirectional = ((ExecutionStateIMPL) state).isDirectional();
+		if (state.isDirectional()) {
+			this.directions = state.getDirections();
+		}
+
+	}
+
 	public void setMaxHops(int hops) {
 		if (this.maxHops == -1) {
 			this.maxHops = hops;
@@ -162,6 +176,10 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 				", isFlooding=" + isFlooding +
 				", maxDistance=" + maxDistance +
 				'}';
+	}
+
+	public int getHops() {
+		return hops;
 	}
 
 }

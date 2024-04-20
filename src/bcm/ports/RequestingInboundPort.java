@@ -15,13 +15,13 @@ public class RequestingInboundPort extends AbstractInboundPort
             ComponentI owner) throws Exception {
         super(uri, RequestingCI.class, owner);
         assert uri != null;
-        // assert owner instanceof NodeComponent;
+        assert owner instanceof NodeComponent;
     }
 
     public RequestingInboundPort(ComponentI owner)
             throws Exception {
         super(RequestingCI.class, owner);
-        // assert owner instanceof NodeComponent;
+        assert owner instanceof NodeComponent;
     }
 
     @Override
@@ -38,8 +38,17 @@ public class RequestingInboundPort extends AbstractInboundPort
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        this.getOwner().handleRequest(owner -> ((NodeComponent) owner)).executeAsync(request);
-
+        this.getOwner().runTask(
+                new AbstractComponent.AbstractTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            ((NodeComponent) this.getTaskOwner()).executeAsync(request);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
 }

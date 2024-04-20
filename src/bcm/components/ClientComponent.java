@@ -69,7 +69,7 @@ public class ClientComponent extends AbstractComponent {
         private Map<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
-        private long asyncTimeout = 10000000000L; // 20 seconds in nanoseconds
+        private long asyncTimeout = TimeUnit.SECONDS.toNanos(100L);
 
         protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
                 super(uri, 5, 5);
@@ -107,7 +107,7 @@ public class ClientComponent extends AbstractComponent {
                 this.startInstant = startInstant;
                 this.clientRequestResultInboundPort = new RequestResultInboundPort(this);
                 this.resultsMap = new HashMap<>();
-                
+
                 this.clientRequestResultInboundPort.publishPort();
                 this.getTracer().setTitle("Client Component");
                 this.getTracer().setRelativePosition(1, 1);
@@ -131,6 +131,8 @@ public class ClientComponent extends AbstractComponent {
 
         @Override
         public synchronized void execute() throws Exception {
+
+                // ---------Connection to the clock component---------
                 ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
                                 AbstractOutboundPort.generatePortURI(), this);
                 clockPort.publishPort();
@@ -158,6 +160,7 @@ public class ClientComponent extends AbstractComponent {
                 ConnectionInfoImpl clientInfoAsync = new ConnectionInfoImpl(this.clientIdentifer,
                                 new EndPointDescIMPL(this.clientRequestResultInboundPort.getPortURI(),
                                                 RequestResultCI.class));
+
                 // -------------Boolean Query Test---------------
                 OrBooleanExpr res = new OrBooleanExpr(
                                 new ConditionalExprBooleanExpr(
@@ -167,10 +170,7 @@ public class ClientComponent extends AbstractComponent {
                                                 new EqualConditionalExpr(new SensorRand("temperature"),
                                                                 new ConstantRand(60.0))));
 
-                BooleanQuery query2 = new BooleanQuery(res,
-                                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                                // new FinalDirections(Direction.NE))));
-                                new EmptyContinuation());
+                BooleanQuery query2 = new BooleanQuery(res, new EmptyContinuation());
 
                 // -------------------Gather Query Test 1 : Flooding
                 // continuation , Sync Request-------------------
@@ -241,12 +241,16 @@ public class ClientComponent extends AbstractComponent {
                                                         QueryResultI res = ClientComponent.this.RequestingOutboundPort
                                                                         .execute(request);
                                                         if (res.isGatherRequest()) {
-                                                               ClientComponent.this
-                                                                        .logMessage("Gathered size : "+ res.gatheredSensorsValues().size());
-
-                                                        }else {
                                                                 ClientComponent.this
-                                                                        .logMessage("Floading size : "+ res.positiveSensorNodes().size()); 
+                                                                                .logMessage("Gathered size : " + res
+                                                                                                .gatheredSensorsValues()
+                                                                                                .size());
+
+                                                        } else {
+                                                                ClientComponent.this
+                                                                                .logMessage("Floading size : " + res
+                                                                                                .positiveSensorNodes()
+                                                                                                .size());
                                                         }
                                                         ClientComponent.this
                                                                         .logMessage("Query result: " + res.toString());
@@ -285,7 +289,7 @@ public class ClientComponent extends AbstractComponent {
                                                         ClientComponent.this.logMessage("Async request sent to node "
                                                                         + nodeId + " with URI " + request.requestURI()
                                                                         + " at " + Instant.now());
-                                                        
+
                                                         ClientComponent.this.doPortDisconnection(
                                                                         ClientComponent.this.RequestingOutboundPort
                                                                                         .getPortURI());
@@ -313,19 +317,24 @@ public class ClientComponent extends AbstractComponent {
                                                         if (results != null) {
                                                                 for (QueryResultI res : results) {
                                                                         ((QueryResultIMPL) result).update(res);
+
                                                                 }
                                                                 if (result.isGatherRequest()) {
                                                                         ClientComponent.this
-                                                                        .logMessage("Gathered size : "+ result.gatheredSensorsValues().size());
-                                                                }else {
+                                                                                        .logMessage("Gathered size : "
+                                                                                                        + result.gatheredSensorsValues()
+                                                                                                                        .size());
+                                                                } else {
                                                                         ClientComponent.this
-                                                                        .logMessage("Floading size : "+ result.positiveSensorNodes().size()); 
+                                                                                        .logMessage("Floading size : "
+                                                                                                        + result.positiveSensorNodes()
+                                                                                                                        .size());
                                                                 }
-                                                                
+
                                                                 ClientComponent.this.logMessage(
                                                                                 "Final Query result: "
                                                                                                 + result.toString());
-                                                                                                
+
                                                                 ClientComponent.this.resultsMap
                                                                                 .remove(request.requestURI());
                                                         }

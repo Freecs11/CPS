@@ -10,11 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
 import bcm.connectors.ClientRequestResult;
-import bcm.connectors.NodeConnector;
 import bcm.connectors.RegistryConnector;
 import bcm.connectors.SensorNodeConnector;
 import bcm.ports.RegistrationOutboundPort;
-import bcm.ports.RequestResultInboundPort;
 import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.RequestingInboundPort;
 import bcm.ports.SensorNodeP2PInboundPort;
@@ -387,8 +385,9 @@ public class NodeComponent extends AbstractComponent
                             + neighbourInTheDirection.nodeIdentifier());
                     this.ask4Disconnection(neighbourInTheDirection);
                     // this.printNeighbours();
-                    this.logMessage("Neighbours after disconnection: -->@;" + neighbourInTheDirection.nodeIdentifier() + " disconnected");
-                this.printNeighbours();
+                    this.logMessage("Neighbours after disconnection: -->@;" + neighbourInTheDirection.nodeIdentifier()
+                            + " disconnected");
+                    this.printNeighbours();
                 } else {
                     this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " not connected");
                     this.logMessage("Distance between " + newNeighbour.nodeIdentifier() + " and "
@@ -438,7 +437,6 @@ public class NodeComponent extends AbstractComponent
 
             this.logMessage("Neighbours after disconnection: -->@;" + neighbour.nodeIdentifier() + " disconnected");
             this.logMessage("<Neighbours after disconnection: -->@;" + printNeighbours());
-
 
         } catch (Exception e) {
             System.err.println("Error in ask4Disconnection " + e.getMessage());
@@ -504,8 +502,8 @@ public class NodeComponent extends AbstractComponent
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         this.logMessage("Executing RequestContinuationI: " + this.nodeInfo.nodeIdentifier());
-        for (NodeInfoI neighbour : neighbours){
-            this.logMessage("Neighbour 1: of" +this.nodeInfo.nodeIdentifier() + "->"+ neighbour.nodeIdentifier());
+        for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("Neighbour 1: of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
         }
         this.logMessage("--------------------------------\n");
 
@@ -525,7 +523,7 @@ public class NodeComponent extends AbstractComponent
         if (state == null) {
             throw new Exception("State is null");
         }
-        System.err.println("executinh RequestContinuationI: " + request.toString());
+        System.err.println("executing RequestContinuationI: " + request.toString());
         state.updateProcessingNode(this.processingNode);
         System.err.println("Processing Node: " + this.processingNode.getNodeIdentifier());
 
@@ -537,6 +535,8 @@ public class NodeComponent extends AbstractComponent
         } else if (state.isDirectional()) {
             // Can't propagate if no more hops
             // Return local result
+            this.logMessage(
+                    "Directional Propagation , number of hops: " + ((ExecutionStateIMPL) state).getHops() + "\n");
             if (((ExecutionStateIMPL) state).noMoreHops()) {
                 return result;
             }
@@ -552,8 +552,8 @@ public class NodeComponent extends AbstractComponent
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
         this.logMessage("Executing Request: " + this.nodeInfo.nodeIdentifier());
-        for(NodeInfoI neighbour : neighbours){
-            this.logMessage("Neighbour 2 : of" +this.nodeInfo.nodeIdentifier() + "->"+ neighbour.nodeIdentifier());
+        for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("Neighbour 2 : of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
         }
         this.logMessage("--------------------------------\n");
         if (request == null) {
@@ -598,6 +598,7 @@ public class NodeComponent extends AbstractComponent
 
     private QueryResultI directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
+
         for (NodeInfoI neighbour : neighbours) {
             this.logMessage("propagation " + neighbour.nodeIdentifier());
             if (state.getDirections()
@@ -605,13 +606,11 @@ public class NodeComponent extends AbstractComponent
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 this.logMessage("successfully\n");
                 if (nodePort != null) {
-                    // ExecutionStateI newState = new ExecutionStateIMPL();
-                    // ((ExecutionStateIMPL) newState).setDirectional(true);
-                    ((ExecutionStateIMPL) state).incrementHops();
-
+                    ExecutionStateI newState = new ExecutionStateIMPL(state);
+                    newState.incrementHops();
                     RequestContinuationI continuation = new RequestContinuationIMPL(
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), state);
+                            request.clientConnectionInfo(), newState);
                     QueryResultI res = nodePort.execute(continuation);
                     ((QueryResultIMPL) result).update(res);
                 }
@@ -623,14 +622,14 @@ public class NodeComponent extends AbstractComponent
     private QueryResultI floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
 
-        System.err.println("Neighbours : ");
         neighbours.forEach(n -> System.err.println(n.nodeIdentifier()));
         for (NodeInfoI neighbour : neighbours) {
             this.logMessage("trying to propagate to " + neighbour.nodeIdentifier() + " from "
                     + this.nodeInfo.nodeIdentifier());
-            this.logMessage("neighbour at " + neighbour.nodePosition() + " node identifier " + neighbour.nodeIdentifier());
+            this.logMessage(
+                    "neighbour at " + neighbour.nodePosition() + " node identifier " + neighbour.nodeIdentifier());
             this.logMessage("is in maximal " + state.withinMaximalDistance(neighbour.nodePosition()));
-            this.logMessage("distance from " + this.nodeInfo.nodePosition() +"to "+neighbour.nodePosition()+ " is "
+            this.logMessage("distance from " + this.nodeInfo.nodePosition() + "to " + neighbour.nodePosition() + " is "
                     + this.nodeInfo.nodePosition().distance(neighbour.nodePosition()));
             this.logMessage("maximal distance is " + ((ExecutionStateIMPL) state).getMaxDistance());
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
@@ -640,18 +639,15 @@ public class NodeComponent extends AbstractComponent
                 if (nodePort != null) {
                     double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
                             - processingNode.getPosition().distance(neighbour.nodePosition());
-                    ((ExecutionStateIMPL) state).updateMaxDistance(newMaximalDistance);
+                    ExecutionStateIMPL newState = new ExecutionStateIMPL(state);
+                    newState.updateMaxDistance(newMaximalDistance);
                     // Create new continuation
                     RequestContinuationI continuation = new RequestContinuationIMPL(
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), state);
+                            request.clientConnectionInfo(), newState);
                     // Execute the continuation
                     this.logMessage("propagate successful");
                     QueryResultI res = nodePort.execute(continuation);
-                    // reset maximalDistance
-                    ((ExecutionStateIMPL) state).updateMaxDistance(newMaximalDistance + processingNode.getPosition().distance(neighbour.nodePosition()));
-                    // print the result of the query in a readable format
-                    System.err.println("result we got " + res.toString() + " from " + neighbour.nodeIdentifier());
                     // Update the result
                     ((QueryResultIMPL) result).update(res);
                 }
@@ -692,20 +688,23 @@ public class NodeComponent extends AbstractComponent
             if (((ExecutionStateIMPL) state).noMoreHops()) {
                 this.logMessage("No more hops");
                 returnResultToClient(request, result); // return the result to the client
+                return;
             }
             // Propagate the request to neighbours and update the result
             this.directionalPropagationAsync(state, request);
         }
+
+        // every node will return the result to the client after executing the request
+        // and propagating it to the neighbours
+        returnResultToClient(request, result); // return the result to the client
     }
 
     private void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
         this.doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
                 ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
                 ClientRequestResult.class.getCanonicalName());
-
         this.logMessage("Sending result to client");
         this.requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
-
         this.doPortDisconnection(this.requestResultOutboundPort.getClientPortURI());
     }
 
@@ -716,10 +715,11 @@ public class NodeComponent extends AbstractComponent
                     .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 if (nodePort != null) {
-                    ((ExecutionStateIMPL) state).incrementHops();
+                    ExecutionStateI newState = new ExecutionStateIMPL(state);
+                    newState.incrementHops();
                     RequestContinuationI continuation = new RequestContinuationIMPL(
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), state);
+                            request.clientConnectionInfo(), newState);
                     nodePort.executeAsync(continuation);
                 }
             }
@@ -734,11 +734,12 @@ public class NodeComponent extends AbstractComponent
                 if (nodePort != null) {
                     double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
                             - processingNode.getPosition().distance(neighbour.nodePosition());
-                    ((ExecutionStateIMPL) state).updateMaxDistance(newMaximalDistance);
+                    ExecutionStateIMPL newState = new ExecutionStateIMPL(state);
+                    newState.updateMaxDistance(newMaximalDistance);
 
                     RequestContinuationI continuation = new RequestContinuationIMPL(
                             request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), state);
+                            request.clientConnectionInfo(), newState);
                     nodePort.executeAsync(continuation);
                 }
             }
@@ -774,7 +775,9 @@ public class NodeComponent extends AbstractComponent
             // Return local result
             if (((ExecutionStateIMPL) state).noMoreHops()) {
                 this.logMessage("No more hops");
-                returnResultToClient(requestContinuation, result); // return the result to the client
+                returnResultToClient(requestContinuation, result); // return the result to the client if no more hops
+                                                                   // and return
+                return;
             }
             // Propagate the request to neighbours and update the result
             this.directionalPropagationAsync(state, requestContinuation);
