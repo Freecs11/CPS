@@ -1,7 +1,6 @@
 package implementation;
 
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
@@ -9,22 +8,22 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 public class QueryResultIMPL implements QueryResultI {
 	private boolean isBR;
 	private boolean isGR;
-	private CopyOnWriteArrayList<String> positiveSN;
-	private CopyOnWriteArrayList<SensorDataI> gatheredSensors;
+	private ArrayList<String> positiveSN;
+	private ArrayList<SensorDataI> gatheredSensors;
 
 	public QueryResultIMPL() {
 		this.isBR = false;
 		this.isGR = false;
-		this.positiveSN = new CopyOnWriteArrayList<>();
-		this.gatheredSensors = new CopyOnWriteArrayList<>();
+		this.positiveSN = new ArrayList<>();
+		this.gatheredSensors = new ArrayList<>();
 	}
 
 	public QueryResultIMPL(boolean isBR, boolean isGR, ArrayList<String> positiveSN,
 			ArrayList<SensorDataI> gatheredSensors) {
 		this.isBR = isBR;
 		this.isGR = isGR;
-		this.positiveSN = new CopyOnWriteArrayList<>(positiveSN);
-		this.gatheredSensors = new CopyOnWriteArrayList<>(gatheredSensors);
+		this.positiveSN = positiveSN;
+		this.gatheredSensors = gatheredSensors;
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class QueryResultIMPL implements QueryResultI {
 	@Override
 	public ArrayList<String> positiveSensorNodes() {
 		if (this.isBooleanRequest()) {
-			return new ArrayList<>(positiveSN);
+			return positiveSN;
 		}
 		return new ArrayList<>();
 	}
@@ -48,7 +47,7 @@ public class QueryResultIMPL implements QueryResultI {
 	@Override
 	public ArrayList<SensorDataI> gatheredSensorsValues() {
 		if (this.isGatherRequest()) {
-			return new ArrayList<>(gatheredSensors);
+			return gatheredSensors;
 		}
 		return new ArrayList<>();
 	}
@@ -62,24 +61,24 @@ public class QueryResultIMPL implements QueryResultI {
 	}
 
 	public ArrayList<String> getPositiveSN() {
-		return new ArrayList<>(positiveSN);
+		return positiveSN;
 	}
 
 	public void setPositiveSN(ArrayList<String> positiveSN) {
-		this.positiveSN = new CopyOnWriteArrayList<>(positiveSN);
+		this.positiveSN = positiveSN;
 	}
 
 	public ArrayList<SensorDataI> getGatheredSensors() {
-		return new ArrayList<>(gatheredSensors);
+		return gatheredSensors;
 	}
 
 	public void setGatheredSensors(ArrayList<SensorDataI> gatheredSensors) {
-		this.gatheredSensors = new CopyOnWriteArrayList<>(gatheredSensors);
+		this.gatheredSensors = gatheredSensors;
 	}
 
 	public void addToGatheredSensors(SensorDataI sensorData) {
 		if (this.gatheredSensors == null) {
-			this.gatheredSensors = new CopyOnWriteArrayList<>();
+			this.gatheredSensors = new ArrayList<>();
 		}
 		if (!isSensorDataPresent(sensorData)) {
 			this.gatheredSensors.add(sensorData);
@@ -123,7 +122,7 @@ public class QueryResultIMPL implements QueryResultI {
 
 	public void addPositiveSN(String sensorId) {
 		if (this.positiveSN == null) {
-			this.positiveSN = new CopyOnWriteArrayList<>();
+			this.positiveSN = new ArrayList<>();
 		}
 		if (!this.positiveSN.contains(sensorId)) {
 			this.positiveSN.add(sensorId);

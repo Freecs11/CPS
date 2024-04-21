@@ -12,6 +12,7 @@ import bcm.connectors.LookUpRegistryConnector;
 import bcm.connectors.RequestingConnector;
 import bcm.ports.LookupOutboundPort;
 import bcm.ports.RequestResultInboundPort;
+import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.RequestingOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
@@ -299,7 +300,9 @@ public class ClientComponent extends AbstractComponent {
                                 }, delay, TimeUnit.NANOSECONDS);
         }
 
-        private void executeAsyncRequest(RequestI request, String nodeId, long delay, ConnectionInfoI nodeInfo) {
+        private void executeAsyncRequest(RequestI request, String nodeId, long delay, ConnectionInfoI nodeInfo)
+                        throws Exception {
+
                 this.scheduleTask(
                                 new AbstractTask() {
                                         @Override
@@ -308,23 +311,47 @@ public class ClientComponent extends AbstractComponent {
                                                         // implementation of
                                                         // connectionInfo
                                                         // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+
+                                                        RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
+                                                                        AbstractOutboundPort.generatePortURI(),
+                                                                        ClientComponent.this);
+                                                        clientRequestingOutboundPort.publishPort();
+
                                                         ClientComponent.this.doPortConnection(
-                                                                        ClientComponent.this.RequestingOutboundPort
-                                                                                        .getPortURI(),
+                                                                        clientRequestingOutboundPort.getPortURI(),
                                                                         ((EndPointDescIMPL) nodeInfo.endPointInfo())
                                                                                         .getInboundPortURI(),
                                                                         RequestingConnector.class.getCanonicalName());
+
                                                         ClientComponent.this.resultsMap.put(request.requestURI(),
                                                                         new ArrayList<>());
-                                                        ClientComponent.this.RequestingOutboundPort
-                                                                        .executeAsync(request);
+                                                        clientRequestingOutboundPort.executeAsync(request);
                                                         ClientComponent.this.logMessage("Async request sent to node "
                                                                         + nodeId + " with URI " + request.requestURI()
                                                                         + " at " + Instant.now());
 
                                                         ClientComponent.this.doPortDisconnection(
-                                                                        ClientComponent.this.RequestingOutboundPort
-                                                                                        .getPortURI());
+                                                                        clientRequestingOutboundPort.getPortURI());
+                                                        clientRequestingOutboundPort.unpublishPort();
+                                                        clientRequestingOutboundPort.destroyPort();
+
+                                                        // ClientComponent.this.doPortConnection(
+                                                        // ClientComponent.this.RequestingOutboundPort
+                                                        // .getPortURI(),
+                                                        // ((EndPointDescIMPL) nodeInfo.endPointInfo())
+                                                        // .getInboundPortURI(),
+                                                        // RequestingConnector.class.getCanonicalName());
+                                                        // ClientComponent.this.resultsMap.put(request.requestURI(),
+                                                        // new ArrayList<>());
+                                                        // ClientComponent.this.RequestingOutboundPort
+                                                        // .executeAsync(request);
+                                                        // ClientComponent.this.logMessage("Async request sent to node "
+                                                        // + nodeId + " with URI " + request.requestURI()
+                                                        // + " at " + Instant.now());
+                                                        // ClientComponent.this.doPortDisconnection(
+                                                        // ClientComponent.this.RequestingOutboundPort
+                                                        // .getPortURI());
+
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
