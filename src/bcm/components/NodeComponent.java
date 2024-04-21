@@ -611,13 +611,13 @@ public class NodeComponent extends AbstractComponent
             throw new Exception("Query is null");
         }
 
-        // synchronized (this.requestURIs) {
-        if (this.requestURIs.contains(request.requestURI())) {
-            this.logMessage("Request URI: " + request.requestURI() + " already executed");
-            return new QueryResultIMPL();
+        synchronized (this.requestURIs) {
+            if (this.requestURIs.contains(request.requestURI())) {
+                this.logMessage("Request URI: " + request.requestURI() + " already executed");
+                return new QueryResultIMPL();
+            }
+            this.requestURIs.add(request.requestURI());
         }
-        this.requestURIs.add(request.requestURI());
-        // }
 
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
         if (state == null) {
@@ -669,13 +669,13 @@ public class NodeComponent extends AbstractComponent
             throw new Exception("Query is null");
         }
 
-        // synchronized (this.requestURIs) {
-        if (this.requestURIs.contains(request.requestURI())) {
-            this.logMessage("Request URI: " + request.requestURI() + " already executed");
-            return new QueryResultIMPL();
+        synchronized (this.requestURIs) {
+            if (this.requestURIs.contains(request.requestURI())) {
+                this.logMessage("Request URI: " + request.requestURI() + " already executed");
+                return new QueryResultIMPL();
+            }
+            this.requestURIs.add(request.requestURI());
         }
-        this.requestURIs.add(request.requestURI());
-        // }
 
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
@@ -798,7 +798,7 @@ public class NodeComponent extends AbstractComponent
         returnResultToClient(request, result); // return the result to the client
     }
 
-    private void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
+    private synchronized void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
         this.doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
                 ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
                 ClientRequestResult.class.getCanonicalName());
