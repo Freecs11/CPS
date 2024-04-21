@@ -6,16 +6,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import bcm.CVM;
 import bcm.ports.LookupInboundPort;
 import bcm.ports.RegistrationInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.AbstractComponentHelper;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.GeographicalZoneI;
@@ -23,11 +20,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
-import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
-import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
-import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
-import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import implementation.ConnectionInfoImpl;
 
 @OfferedInterfaces(offered = { LookupCI.class, RegistrationCI.class })
@@ -38,12 +31,21 @@ public class RegistryComponent extends AbstractComponent {
 
     protected ConcurrentHashMap<String, NodeInfoI> nodeIDToNodeInfoMap;
 
+    // -------- poool of threads
+    protected final String registeryPoolURI;
+
+    protected final int registeryPoolIndex;
+
     protected RegistryComponent(String uri,
             int nbThreads, int nbSchedulableThreads,
             String lookupInboundPortURI,
-            String registerInboundPortURI) {
+            String registerInboundPortURI,
+            String registeryPoolURI,
+            int registeryPoolnbThreads) {
         super(uri, nbThreads, nbSchedulableThreads);
         this.nodeIDToNodeInfoMap = new ConcurrentHashMap<>();
+        this.registeryPoolURI = registeryPoolURI;
+        this.registeryPoolIndex = createNewExecutorService(registeryPoolURI, registeryPoolnbThreads, false);
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
             this.registryInboundPort = new RegistrationInboundPort(registerInboundPortURI, this);
@@ -58,6 +60,10 @@ public class RegistryComponent extends AbstractComponent {
     public synchronized void start() throws ComponentStartException {
         super.start();
         this.logMessage("starting Registry component.");
+    }
+
+    public int getRegisteryPoolIndex() {
+        return registeryPoolIndex;
     }
 
     // --- CLIENT METHODS

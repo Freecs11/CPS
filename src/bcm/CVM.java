@@ -2,9 +2,6 @@ package bcm;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import bcm.components.ClientComponent;
@@ -25,26 +22,15 @@ public class CVM extends AbstractCVM {
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
         protected static final double accelerationFactor = 10.0;
-        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(10L);
+        public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(1L);
 
         /** URI of the consumer component (convenience). */
         protected static final String CLIENT_COMPONENT_URI = "client-URI";
         protected static final String REGISTER_COMPONENT_URI = "register-URI";
-        // /** URI of the provider outbound port (simplifies the connection). */
-        // protected static final String URIGetterOutboundPortURI = "oport";
-        // /** URI of the consumer inbound port (simplifies the connection). */
-        // protected static final String URIProviderInboundPortURI = "iport";
 
         protected static final String REGISTER_IN_BOUND_PORT_URI = "register-inbound-port";
         protected static final String LOOKUP_IN_BOUND_PORT_URI = "lookup_inbound-port";
         protected static final String CLIENTS_OUT_BOUND_PORT_URI = "client-outbound-port";
-        protected static final String NODE_TO_REG_OUT_BOUND_PORT_URI = "node2reg-outbound-port";
-        protected static final String NODE_IN_BOUND_PORT_URI = "node-inbound-port";
-        protected static final String NODE2_TO_REG_OUT_BOUND_PORT_URI = "node2_2reg-outbound-port";
-        protected static final String NODE2_IN_BOUND_PORT_URI = "node2-inbound-port";
-
-        protected static final String NODE3_TO_REG_OUT_BOUND_PORT_URI = "node3_reg-outbound-port";
-        protected static final String NODE3_IN_BOUND_PORT_URI = "node3-inbound-port";
 
         public CVM() throws Exception {
                 super();
@@ -90,16 +76,6 @@ public class CVM extends AbstractCVM {
                 return nodes;
         }
 
-        public static int getGridSize(int nbNodes) {
-                int gridSize = 0;
-                int i = 1;
-                while (i * i < nbNodes) {
-                        i++;
-                }
-                gridSize = i;
-                return gridSize;
-        }
-
         @Override
         public void deploy() throws Exception {
                 assert !this.deploymentDone();
@@ -131,12 +107,14 @@ public class CVM extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                10, 10,
+                                                15, 15,
                                                 LOOKUP_IN_BOUND_PORT_URI,
-                                                REGISTER_IN_BOUND_PORT_URI });
+                                                REGISTER_IN_BOUND_PORT_URI,
+                                                "registeryPoolURI",
+                                                10 });
 
                 // create the node components
-                ArrayList<NodeComponentInfo> nodes = buildMap(10);
+                ArrayList<NodeComponentInfo> nodes = buildMap(5);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
                         ArrayList<SensorDataI> data = new ArrayList<>();
@@ -152,9 +130,9 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(20L),
-                                                        20,
-                                                        20,
+                                                        REG_START_INSTANT.plusSeconds(5L),
+                                                        nodes.size(),
+                                                        nodes.size(),
                                                         "aysncPool_" + node.getName(),
                                                         "syncPool_" + node.getName()
                                         });

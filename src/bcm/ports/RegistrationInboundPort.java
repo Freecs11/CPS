@@ -32,6 +32,7 @@ public class RegistrationInboundPort extends AbstractInboundPort
     @Override
     public boolean registered(String nodeIdentifier) throws Exception {
         return this.owner.handleRequest(
+                ((RegistryComponent) this.owner).getRegisteryPoolIndex(),
                 new AbstractComponent.AbstractService<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
@@ -45,6 +46,7 @@ public class RegistrationInboundPort extends AbstractInboundPort
     @Override
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
         return this.owner.handleRequest(
+                ((RegistryComponent) this.owner).getRegisteryPoolIndex(),
                 new AbstractComponent.AbstractService<Set<NodeInfoI>>() {
                     @Override
                     public Set<NodeInfoI> call() throws Exception {
@@ -56,7 +58,7 @@ public class RegistrationInboundPort extends AbstractInboundPort
 
     @Override
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
-        return this.owner.handleRequest(
+        return this.owner.handleRequest(((RegistryComponent) this.owner).getRegisteryPoolIndex(),
                 new AbstractComponent.AbstractService<NodeInfoI>() {
                     @Override
                     public NodeInfoI call() throws Exception {
@@ -69,6 +71,7 @@ public class RegistrationInboundPort extends AbstractInboundPort
     @Override
     public void unregister(String nodeIdentifier) throws Exception {
         this.owner.handleRequest(
+                ((RegistryComponent) this.owner).getRegisteryPoolIndex(),
                 new AbstractComponent.AbstractService<Void>() {
                     @Override
                     public Void call() throws Exception {

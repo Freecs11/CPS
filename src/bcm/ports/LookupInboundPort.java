@@ -26,7 +26,7 @@ public class LookupInboundPort extends AbstractInboundPort
 
     @Override
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
-        return this.owner.handleRequest(
+        return this.getOwner().handleRequest(((RegistryComponent) this.owner).getRegisteryPoolIndex(),
                 new AbstractComponent.AbstractService<ConnectionInfoI>() {
                     @Override
                     public ConnectionInfoI call() throws Exception {
@@ -38,7 +38,7 @@ public class LookupInboundPort extends AbstractInboundPort
 
     @Override
     public Set<ConnectionInfoI> findByZone(GeographicalZoneI z) throws Exception {
-        return this.owner.handleRequest(
+        return this.owner.handleRequest(((RegistryComponent) this.owner).getRegisteryPoolIndex(),
                 new AbstractComponent.AbstractService<Set<ConnectionInfoI>>() {
                     @Override
                     public Set<ConnectionInfoI> call() throws Exception {

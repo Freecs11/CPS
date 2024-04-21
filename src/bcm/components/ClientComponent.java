@@ -12,7 +12,6 @@ import bcm.connectors.LookUpRegistryConnector;
 import bcm.connectors.RequestingConnector;
 import bcm.ports.LookupOutboundPort;
 import bcm.ports.RequestResultInboundPort;
-import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.RequestingOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
@@ -20,7 +19,6 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
@@ -38,18 +36,15 @@ import implementation.RequestIMPL;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
-import query.ast.DirectionContinuation;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
 import query.ast.OrBooleanExpr;
-import query.ast.RecursiveDirections;
 import query.ast.RecursiveGather;
 import query.ast.RelativeBase;
 import query.ast.SensorRand;
-import query.ast.FinalDirections;
 
 @OfferedInterfaces(offered = { RequestResultCI.class })
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class, ClocksServerCI.class })
@@ -70,7 +65,7 @@ public class ClientComponent extends AbstractComponent {
         private Map<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
-        private long asyncTimeout = TimeUnit.SECONDS.toNanos(20L);
+        private long asyncTimeout = TimeUnit.SECONDS.toNanos(30L);
 
         ConnectionInfoI nodeInfo;
 
@@ -184,35 +179,22 @@ public class ClientComponent extends AbstractComponent {
                 // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
                 // new FinalDirections(Direction.NE))));
                 String nodeIdentifier = "node4";
-                // RequestI request1 = new RequestIMPL("req1",
-                // query,
-                // false,
-                // clientInfo);
-                // long delayTilRequest2 =
-                // this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-
-                // this.executeSyncRequest(request1, nodeIdentifier, delayTilRequest2);
-
-                long delay2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20L));
-                this.scheduleRequestSync(
-                                new AbstractComponent.AbstractService<Void>() {
-                                        @Override
-                                        public Void call() throws Exception {
-                                                ClientComponent.this.nodeInfo = ClientComponent.this.LookupOutboundPort
-                                                                .findByIdentifier(nodeIdentifier);
-                                                return null;
-                                        }
-                                }, delay2, TimeUnit.NANOSECONDS);
+                RequestI request1 = new RequestIMPL("req1",
+                                query,
+                                true,
+                                clientInfoAsync);
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                this.executeAsyncRequest(request1, nodeIdentifier, delayTilRequest2);
 
                 // // -------------------Gather Query Test 2 : flooding continuation , Async
                 // // Request
                 // // -------------------
                 RequestI request2 = new RequestIMPL("req2",
                                 query,
-                                false,
-                                clientInfo);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
-                this.executeSyncRequest(request2, nodeIdentifier, delayTilRequest3);
+                                true,
+                                clientInfoAsync);
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3);
 
                 // -------------------Gather Query Test 2 : flooding continuation , Async
                 // Request
@@ -270,13 +252,17 @@ public class ClientComponent extends AbstractComponent {
                                                         ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
                                                                         .findByIdentifier(nodeId);
                                                         // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+
+                                                        RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
+                                                                        AbstractOutboundPort.generatePortURI(),
+                                                                        ClientComponent.this);
+                                                        clientRequestingOutboundPort.publishPort();
                                                         ClientComponent.this.doPortConnection(
-                                                                        ClientComponent.this.RequestingOutboundPort
-                                                                                        .getPortURI(),
+                                                                        clientRequestingOutboundPort.getPortURI(),
                                                                         ((EndPointDescIMPL) nodeInfo.endPointInfo())
                                                                                         .getInboundPortURI(),
                                                                         RequestingConnector.class.getCanonicalName());
-                                                        QueryResultI res = ClientComponent.this.RequestingOutboundPort
+                                                        QueryResultI res = clientRequestingOutboundPort
                                                                         .execute(request);
                                                         if (res.isGatherRequest()) {
                                                                 ClientComponent.this
@@ -293,10 +279,13 @@ public class ClientComponent extends AbstractComponent {
                                                                                                 .size());
                                                         }
                                                         ClientComponent.this
-                                                                        .logMessage("Query result: " + res.toString());
+                                                                        .logMessage("Query result, sent at : "
+                                                                                        + Instant.now()
+                                                                                        + " : " + res.toString());
                                                         ClientComponent.this.doPortDisconnection(
-                                                                        ClientComponent.this.RequestingOutboundPort
-                                                                                        .getPortURI());
+                                                                        clientRequestingOutboundPort.getPortURI());
+                                                        clientRequestingOutboundPort.unpublishPort();
+                                                        clientRequestingOutboundPort.destroyPort();
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -304,7 +293,7 @@ public class ClientComponent extends AbstractComponent {
                                 }, delay, TimeUnit.NANOSECONDS);
         }
 
-        private void executeAsyncRequest(RequestI request, String nodeId, long delay, ConnectionInfoI nodeInfo)
+        private void executeAsyncRequest(RequestI request, String nodeId, long delay)
                         throws Exception {
 
                 this.scheduleTask(
@@ -316,6 +305,8 @@ public class ClientComponent extends AbstractComponent {
                                                         // connectionInfo
                                                         // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
 
+                                                        ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
+                                                                        .findByIdentifier(nodeId);
                                                         RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
                                                                         AbstractOutboundPort.generatePortURI(),
                                                                         ClientComponent.this);
@@ -395,7 +386,11 @@ public class ClientComponent extends AbstractComponent {
                                                                 }
 
                                                                 ClientComponent.this.logMessage(
-                                                                                "Final Query result: "
+                                                                                "Final Query result , received at : "
+                                                                                                + Instant.now()
+                                                                                                + " , URI : "
+                                                                                                + request.requestURI()
+                                                                                                + " : "
                                                                                                 + result.toString());
 
                                                                 ClientComponent.this.resultsMap
