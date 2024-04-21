@@ -42,6 +42,16 @@ public class SensorDataIMPL implements SensorDataI {
         this.timestamp = timestamp;
         this.type = value.getClass();
     }
+    
+    public SensorDataIMPL(String sensorIdentifier, Serializable value) {
+        super();
+        this.sensorIdentifier = sensorIdentifier;
+        this.value = value;
+        this.timestamp = Instant.now();
+        this.type = value.getClass();
+    }
+    
+    
 
     @Override
     public String getNodeIdentifier() {
