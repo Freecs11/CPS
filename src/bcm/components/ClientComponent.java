@@ -1,5 +1,6 @@
 package bcm.components;
 
+import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -274,10 +275,13 @@ public class ClientComponent extends AbstractComponent {
                                                                                                 .positiveSensorNodes()
                                                                                                 .size());
                                                         }
-                                                        ClientComponent.this
-                                                                        .logMessage("Query result, sent at : "
+                                                        ClientComponent.this.logMessage(
+                                                                        "Final Query result , received at : "
                                                                                         + Instant.now()
-                                                                                        + " : " + res.toString());
+                                                                                        + "\nURI : "
+                                                                                        + request.requestURI()
+                                                                                        + " : "
+                                                                                        + res.toString());
                                                         ClientComponent.this.doPortDisconnection(
                                                                         clientRequestingOutboundPort.getPortURI());
                                                         clientRequestingOutboundPort.unpublishPort();
@@ -364,11 +368,10 @@ public class ClientComponent extends AbstractComponent {
                                                                 ClientComponent.this.logMessage(
                                                                                 "Final Query result , received at : "
                                                                                                 + Instant.now()
-                                                                                                + " , URI : "
+                                                                                                + "\nURI : "
                                                                                                 + request.requestURI()
                                                                                                 + " : "
                                                                                                 + result.toString());
-
                                                                 ClientComponent.this.resultsMap
                                                                                 .remove(request.requestURI());
                                                         }
@@ -392,6 +395,11 @@ public class ClientComponent extends AbstractComponent {
                 }
                 this.LookupOutboundPort.unpublishPort();
                 super.finalise();
+                try {
+                        this.printExecutionLogOnFile("logRegistry");
+                } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                }
                 // System.out.println("finalise ClientComponent");
         }
 
