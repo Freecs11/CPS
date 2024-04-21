@@ -209,30 +209,34 @@ public class ClientComponent extends AbstractComponent {
                 // // -------------------
                 RequestI request2 = new RequestIMPL("req2",
                                 query,
-                                true,
-                                clientInfoAsync);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-                this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3, nodeInfo);
+                                false,
+                                clientInfo);
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
+                this.executeSyncRequest(request2, nodeIdentifier, delayTilRequest3);
 
                 // -------------------Gather Query Test 2 : flooding continuation , Async
                 // Request
                 // -------------------
-                RequestI request6 = new RequestIMPL("req6",
-                                query,
-                                true,
-                                clientInfoAsync);
-                long delayTilRequest6 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-                this.executeAsyncRequest(request6, nodeIdentifier, delayTilRequest6, nodeInfo);
+                // RequestI request6 = new RequestIMPL("req6",
+                // query,
+                // true,
+                // clientInfoAsync);
+                // long delayTilRequest6 =
+                // this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                // this.executeAsyncRequest(request6, nodeIdentifier, delayTilRequest6,
+                // nodeInfo);
 
-                // -------------------Gather Query Test 2 : flooding continuation , Async
-                // Request
-                // -------------------
-                RequestI request7 = new RequestIMPL("req7",
-                                query,
-                                true,
-                                clientInfoAsync);
-                long delayTilRequest7 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-                this.executeAsyncRequest(request7, nodeIdentifier, delayTilRequest7, nodeInfo);
+                // // -------------------Gather Query Test 2 : flooding continuation , Async
+                // // Request
+                // // -------------------
+                // RequestI request7 = new RequestIMPL("req7",
+                // query,
+                // true,
+                // clientInfoAsync);
+                // long delayTilRequest7 =
+                // this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                // this.executeAsyncRequest(request7, nodeIdentifier, delayTilRequest7,
+                // nodeInfo);
                 // ------------------- Boolean Query Test 1 : no continuation , Sync Request
                 // -------------------
                 RequestI request3 = new RequestIMPL("req3",

@@ -136,7 +136,7 @@ public class CVM extends AbstractCVM {
                                                 REGISTER_IN_BOUND_PORT_URI });
 
                 // create the node components
-                ArrayList<NodeComponentInfo> nodes = buildMap(5);
+                ArrayList<NodeComponentInfo> nodes = buildMap(10);
                 int i = 0;
                 for (NodeComponentInfo node : nodes) {
                         ArrayList<SensorDataI> data = new ArrayList<>();
@@ -152,7 +152,7 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(20L + i),
+                                                        REG_START_INSTANT.plusSeconds(20L),
                                                         20,
                                                         20,
                                                         "aysncPool_" + node.getName(),
