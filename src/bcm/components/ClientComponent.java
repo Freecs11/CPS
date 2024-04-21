@@ -20,6 +20,7 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
+import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
@@ -37,12 +38,15 @@ import implementation.RequestIMPL;
 import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
+import query.ast.DirectionContinuation;
 import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
+import query.ast.FinalDirections;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
 import query.ast.OrBooleanExpr;
+import query.ast.RecursiveDirections;
 import query.ast.RecursiveGather;
 import query.ast.RelativeBase;
 import query.ast.SensorRand;
@@ -66,9 +70,7 @@ public class ClientComponent extends AbstractComponent {
         private ConcurrentHashMap<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
-        private long asyncTimeout = TimeUnit.SECONDS.toNanos(30L);
-
-        ConnectionInfoI nodeInfo;
+        private long asyncTimeout = TimeUnit.SECONDS.toNanos(20L);
 
         protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
                 super(uri, 5, 5);
@@ -176,16 +178,16 @@ public class ClientComponent extends AbstractComponent {
                 GatherQuery query = new GatherQuery(
                                 new RecursiveGather("temperature",
                                                 new FinalGather("humidity")),
-                                new FloodingContinuation(new RelativeBase(), 45.0));
-                // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                // new FinalDirections(Direction.NE))));
+                                // new FloodingContinuation(new RelativeBase(), 45.0));
+                                new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
+                                                new FinalDirections(Direction.NE))));
                 String nodeIdentifier = "node4";
                 RequestI request1 = new RequestIMPL("req1",
                                 query,
-                                true,
-                                clientInfoAsync);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(17));
-                this.executeAsyncRequest(request1, nodeIdentifier, delayTilRequest2);
+                                false,
+                                clientInfo);
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                this.executeSyncRequest(request1, nodeIdentifier, delayTilRequest2);
 
                 // // -------------------Gather Query Test 2 : flooding continuation , Async
                 // // Request

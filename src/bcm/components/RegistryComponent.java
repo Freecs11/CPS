@@ -33,7 +33,7 @@ public class RegistryComponent extends AbstractComponent {
 
     // -------- poool of threads
     protected final String registeryPoolURI;
-
+    // -------- index of the pool of threads
     protected final int registeryPoolIndex;
 
     protected RegistryComponent(String uri,

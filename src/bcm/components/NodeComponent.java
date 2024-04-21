@@ -611,13 +611,13 @@ public class NodeComponent extends AbstractComponent
             throw new Exception("Query is null");
         }
 
-        // synchronized (this.requestURIs) {
-        if (this.requestURIs.contains(request.requestURI())) {
-            this.logMessage("Request URI: " + request.requestURI() + " already executed");
-            return new QueryResultIMPL();
+        synchronized (this.requestURIs) {
+            if (this.requestURIs.contains(request.requestURI())) {
+                this.logMessage("Request URI: " + request.requestURI() + " already executed");
+                return new QueryResultIMPL();
+            }
+            this.requestURIs.add(request.requestURI());
         }
-        this.requestURIs.add(request.requestURI());
-        // }
 
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
         if (state == null) {
@@ -669,13 +669,13 @@ public class NodeComponent extends AbstractComponent
             throw new Exception("Query is null");
         }
 
-        // synchronized (this.requestURIs) {
-        if (this.requestURIs.contains(request.requestURI())) {
-            this.logMessage("Request URI: " + request.requestURI() + " already executed");
-            return new QueryResultIMPL();
+        synchronized (this.requestURIs) {
+            if (this.requestURIs.contains(request.requestURI())) {
+                this.logMessage("Request URI: " + request.requestURI() + " already executed");
+                return new QueryResultIMPL();
+            }
+            this.requestURIs.add(request.requestURI());
         }
-        this.requestURIs.add(request.requestURI());
-        // }
 
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
