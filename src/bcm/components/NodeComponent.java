@@ -77,7 +77,6 @@ public class NodeComponent extends AbstractComponent
 
     // -------------------- Les PORTS -------------------------
     protected final RequestingInboundPort requestingInboundPort;
-    // protected final RequestResultInboundPort requestResultInboundPort;
     protected final SensorNodeP2PInboundPort sensorNodeP2PInboundPort;
     protected final RegistrationOutboundPort RegistrationOutboundPort;
     protected final RequestResultOutboundPort requestResultOutboundPort;
@@ -225,8 +224,6 @@ public class NodeComponent extends AbstractComponent
         // initialisation des ports
         this.requestingInboundPort = new RequestingInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
-        // this.requestResultInboundPort = new
-        // RequestResultInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.RegistrationOutboundPort = new RegistrationOutboundPort(AbstractOutboundPort.generatePortURI(), this);
         this.requestResultOutboundPort = new RequestResultOutboundPort(
                 AbstractOutboundPort.generatePortURI(), this);
@@ -290,9 +287,6 @@ public class NodeComponent extends AbstractComponent
         }
         this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
 
-        // System.err.println(" Sensor Nodes : " + ((ProcessingNodeIMPL)
-        // this.processingNode).getSensorDataMap().toString());
-
         super.start();
     }
 
@@ -351,8 +345,6 @@ public class NodeComponent extends AbstractComponent
     }
 
     private void connect2Neighbours() throws ComponentStartException {
-        // synchronized (neighbours) {
-        // neigboursLock.writeLock().lock();
         try {
             Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator(); // Copie pour éviter
                                                                            // ConcurrentModificationException
@@ -375,7 +367,6 @@ public class NodeComponent extends AbstractComponent
         Exception e) {
             throw new ComponentStartException(e);
         } finally {
-            // neigboursLock.writeLock().unlock();
         }
     }
 
@@ -417,14 +408,12 @@ public class NodeComponent extends AbstractComponent
 
     public void ask4Connection(NodeInfoI newNeighbour)
             throws Exception {
-        // synchronized (neighbours) {
         try {
             Direction direction = this.nodeInfo.nodePosition().directionFrom(newNeighbour.nodePosition()); // direction
             NodeInfoI neighbourInTheDirection = null;
 
             Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator(); // Copie pour éviter
                                                                            // ConcurrentModificationException
-
             while (it.hasNext()) {
                 NodeInfoI neighbour = it.next();
                 if (this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition()) == direction) {
@@ -471,9 +460,8 @@ public class NodeComponent extends AbstractComponent
                     this.logMessage("Disconnecting neighbour in the same direction: "
                             + neighbourInTheDirection.nodeIdentifier());
                     this.ask4Disconnection(neighbourInTheDirection);
-                    // this.printNeighbours();
                     this.logMessage(
-                            "Neighbours after disconnection: -->@;" + neighbourInTheDirection.nodeIdentifier()
+                            "Neighbours after disconnection: -->;" + neighbourInTheDirection.nodeIdentifier()
                                     + " disconnected");
                     this.printNeighbours();
                 } else {
@@ -486,11 +474,9 @@ public class NodeComponent extends AbstractComponent
         } catch (Exception e) {
             throw new Exception("Error in ask4Connection" + e.getMessage());
         }
-        // }
     }
 
     public void ask4Disconnection(NodeInfoI neighbour) {
-        // synchronized (neighbours) {
         try {
             SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
             if (nodePort == null) {
@@ -503,7 +489,6 @@ public class NodeComponent extends AbstractComponent
             this.removeNeighbour(neighbour);
 
             this.nodeInfoToP2POutboundPortMap.remove(neighbour);
-            // nodePort.ask4Disconnection(this.nodeInfo);
             this.doPortDisconnection(nodePort.getPortURI());
             nodePort.unpublishPort();
 
@@ -557,7 +542,6 @@ public class NodeComponent extends AbstractComponent
             }
         }
         super.finalise();
-        // System.out.println("NodeComponent finalise");
     }
 
     @Override
@@ -568,14 +552,11 @@ public class NodeComponent extends AbstractComponent
                 this.requestingInboundPort.unpublishPort();
             if (this.sensorNodeP2PInboundPort.isPublished())
                 this.sensorNodeP2PInboundPort.unpublishPort();
-            // if (this.requestResultInboundPort.isPublished())
-            // this.requestResultInboundPort.unpublishPort();
 
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
         super.shutdown();
-        // System.out.println("NodeComponent shutdown");
     }
 
     @Override
@@ -586,13 +567,10 @@ public class NodeComponent extends AbstractComponent
                 this.requestingInboundPort.unpublishPort();
             if (this.sensorNodeP2PInboundPort.isPublished())
                 this.sensorNodeP2PInboundPort.unpublishPort();
-            // if (this.requestResultInboundPort.isPublished())
-            // this.requestResultInboundPort.unpublishPort();
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
         super.shutdownNow();
-        // System.out.println("NodeComponent shutdownNow");
     }
 
     @Override
@@ -601,7 +579,7 @@ public class NodeComponent extends AbstractComponent
         for (NodeInfoI neighbour : neighbours) {
             this.logMessage("Neighbour : of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
         }
-        this.logMessage("--------------------------------\n");
+        this.logMessage("-----------------------------------------------------------------------------\n");
 
         if (request == null) {
             throw new Exception("request is null");
@@ -660,7 +638,7 @@ public class NodeComponent extends AbstractComponent
             this.logMessage(
                     "Neighbour 2 : of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
         }
-        this.logMessage("--------------------------------\n");
+        this.logMessage("--------------------------------------------------------------------------------\n");
         if (request == null) {
             throw new Exception("request is null");
         }
@@ -703,8 +681,9 @@ public class NodeComponent extends AbstractComponent
 
     private QueryResultI directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
-        // synchronized (neighbours) {
-        for (NodeInfoI neighbour : neighbours) {
+        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+        while (it.hasNext()) {
+            NodeInfoI neighbour = it.next();
             this.logMessage("propagation " + neighbour.nodeIdentifier());
             if (state.getDirections()
                     .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
@@ -721,14 +700,14 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-        // }
         return result;
     }
 
     private QueryResultI floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
-        // synchronized (neighbours) {
-        for (NodeInfoI neighbour : neighbours) {
+            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+            while (it.hasNext()) {
+                NodeInfoI neighbour = it.next();
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 if (nodePort != null) {
@@ -747,7 +726,6 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-        // }
         return result;
     }
 
@@ -809,8 +787,9 @@ public class NodeComponent extends AbstractComponent
 
     private void directionalPropagationAsync(ExecutionStateI state, RequestI request)
             throws Exception {
-        // synchronized (neighbours) {
-        for (NodeInfoI neighbour : neighbours) {
+            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+            while (it.hasNext()) {
+                NodeInfoI neighbour = it.next();
             if (state.getDirections()
                     .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
@@ -824,13 +803,13 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-        // }
     }
 
     private void floodingPropagationAsync(ExecutionStateI state, RequestI request)
             throws Exception {
-        // synchronized (neighbours) {
-        for (NodeInfoI neighbour : neighbours) {
+            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+            while (it.hasNext()) {
+                NodeInfoI neighbour = it.next();
             this.logMessage("propagation " + neighbour.nodeIdentifier());
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
@@ -847,7 +826,6 @@ public class NodeComponent extends AbstractComponent
                 }
             }
         }
-        // }
     }
 
     @Override

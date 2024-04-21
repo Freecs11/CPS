@@ -132,7 +132,6 @@ public class ClientComponent extends AbstractComponent {
 
         @Override
         public synchronized void execute() throws Exception {
-
                 // ---------Connection to the clock component---------
                 ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
                                 AbstractOutboundPort.generatePortURI(), this);
@@ -151,10 +150,7 @@ public class ClientComponent extends AbstractComponent {
 
                 long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
                 this.logMessage("Waiting " + delayTilStart + " ns before starting the client component.");
-                this.scheduleTask(
-                                nil -> {
-                                        this.logMessage("Client " + " component starting...");
-                                }, delayTilStart, TimeUnit.NANOSECONDS);
+                this.logMessage("Client " + " component starting...");
 
                 ConnectionInfoImpl clientInfo = new ConnectionInfoImpl(this.clientIdentifer,
                                 new EndPointDescIMPL(this.RequestingOutboundPort.getPortURI(), RequestingCI.class));
@@ -170,7 +166,6 @@ public class ClientComponent extends AbstractComponent {
                                 new ConditionalExprBooleanExpr(
                                                 new EqualConditionalExpr(new SensorRand("temperature"),
                                                                 new ConstantRand(60.0))));
-
                 BooleanQuery query2 = new BooleanQuery(res, new EmptyContinuation());
 
                 // -------------------Gather Query Test 1 : Flooding
@@ -191,12 +186,12 @@ public class ClientComponent extends AbstractComponent {
 
                 // // -------------------Gather Query Test 2 : flooding continuation , Async
                 // // Request
-                // // -------------------
+                // // -----------------------------------------------------------------------
                 RequestI request2 = new RequestIMPL("req2",
                                 query,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40));
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
                 this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3);
 
                 // -------------------Gather Query Test 2 : flooding continuation , Async
@@ -254,7 +249,6 @@ public class ClientComponent extends AbstractComponent {
                                                 try {
                                                         ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
                                                                         .findByIdentifier(nodeId);
-                                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
 
                                                         RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
                                                                         AbstractOutboundPort.generatePortURI(),
@@ -274,7 +268,6 @@ public class ClientComponent extends AbstractComponent {
                                                                                                 .size()
                                                                                                 + " for request with URI "
                                                                                                 + request.requestURI());
-
                                                         } else {
                                                                 ClientComponent.this
                                                                                 .logMessage("Floading size : " + res
@@ -304,9 +297,6 @@ public class ClientComponent extends AbstractComponent {
                                         @Override
                                         public void run() {
                                                 try {
-                                                        // implementation of
-                                                        // connectionInfo
-                                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
 
                                                         ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
                                                                         .findByIdentifier(nodeId);
@@ -333,23 +323,6 @@ public class ClientComponent extends AbstractComponent {
                                                         clientRequestingOutboundPort.unpublishPort();
                                                         clientRequestingOutboundPort.destroyPort();
 
-                                                        // ClientComponent.this.doPortConnection(
-                                                        // ClientComponent.this.RequestingOutboundPort
-                                                        // .getPortURI(),
-                                                        // ((EndPointDescIMPL) nodeInfo.endPointInfo())
-                                                        // .getInboundPortURI(),
-                                                        // RequestingConnector.class.getCanonicalName());
-                                                        // ClientComponent.this.resultsMap.put(request.requestURI(),
-                                                        // new ArrayList<>());
-                                                        // ClientComponent.this.RequestingOutboundPort
-                                                        // .executeAsync(request);
-                                                        // ClientComponent.this.logMessage("Async request sent to node "
-                                                        // + nodeId + " with URI " + request.requestURI()
-                                                        // + " at " + Instant.now());
-                                                        // ClientComponent.this.doPortDisconnection(
-                                                        // ClientComponent.this.RequestingOutboundPort
-                                                        // .getPortURI());
-
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -369,8 +342,8 @@ public class ClientComponent extends AbstractComponent {
                                                         if (results == null || results.isEmpty()) {
                                                                 return;
                                                         }
-                                                        QueryResultI result = results.get(0);
-                                                        results.remove(0);
+                                                        QueryResultI result = results.remove(0);
+                                                        
                                                         if (results != null) {
                                                                 for (QueryResultI res : results) {
                                                                         ((QueryResultIMPL) result).update(res);
