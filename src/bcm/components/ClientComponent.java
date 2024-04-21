@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
@@ -62,7 +63,7 @@ public class ClientComponent extends AbstractComponent {
         protected AcceleratedClock clock;
         protected Instant startInstant;
 
-        private Map<String, List<QueryResultI>> resultsMap;
+        private ConcurrentHashMap<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
         private long asyncTimeout = TimeUnit.SECONDS.toNanos(30L);
@@ -81,7 +82,7 @@ public class ClientComponent extends AbstractComponent {
                                 AbstractOutboundPort.generatePortURI(),
                                 this);
                 this.RequestingOutboundPort.publishPort();
-                this.resultsMap = new HashMap<>();
+                this.resultsMap = new ConcurrentHashMap<>();
                 this.clientRequestResultInboundPort = new RequestResultInboundPort(this);
                 this.clientRequestResultInboundPort.publishPort();
                 this.getTracer().setTitle("Client Component");
@@ -91,7 +92,7 @@ public class ClientComponent extends AbstractComponent {
         }
 
         protected ClientComponent(String uri, String registryInboundPortURI, Instant startInstant) throws Exception {
-                super(uri, 10, 15);
+                super(uri, 5, 15);
                 // ---------------Init the ports----------------
                 this.LookupOutboundPort = new LookupOutboundPort(
                                 AbstractOutboundPort.generatePortURI(),
@@ -104,7 +105,7 @@ public class ClientComponent extends AbstractComponent {
                 this.RequestingOutboundPort.publishPort();
                 this.startInstant = startInstant;
                 this.clientRequestResultInboundPort = new RequestResultInboundPort(this);
-                this.resultsMap = new HashMap<>();
+                this.resultsMap = new ConcurrentHashMap<>();
 
                 this.clientRequestResultInboundPort.publishPort();
                 this.getTracer().setTitle("Client Component");
@@ -183,7 +184,7 @@ public class ClientComponent extends AbstractComponent {
                                 query,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(17));
                 this.executeAsyncRequest(request1, nodeIdentifier, delayTilRequest2);
 
                 // // -------------------Gather Query Test 2 : flooding continuation , Async
@@ -193,7 +194,7 @@ public class ClientComponent extends AbstractComponent {
                                 query,
                                 true,
                                 clientInfoAsync);
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40));
                 this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3);
 
                 // -------------------Gather Query Test 2 : flooding continuation , Async

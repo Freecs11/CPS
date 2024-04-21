@@ -328,7 +328,7 @@ public class NodeComponent extends AbstractComponent
                         this.logMessage(this.printNeighbours());
                         this.logMessage("Registration Success: "
                                 + RegistrationOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
-                        this.logMessage("Connecting to all the neighbours received from the registry........");
+                        this.logMessage("Connecting to all the neighbours received from the registry at Time : " + Instant.now()+ " .....................");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -769,7 +769,7 @@ public class NodeComponent extends AbstractComponent
             this.requestURIs.add(request.requestURI());
         }
 
-        this.logMessage("received async request: " + request.toString());
+        this.logMessage("received async request, URI: " + request.requestURI());
 
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
@@ -798,11 +798,11 @@ public class NodeComponent extends AbstractComponent
         returnResultToClient(request, result); // return the result to the client
     }
 
-    private void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
+    private synchronized void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
         this.doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
                 ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
                 ClientRequestResult.class.getCanonicalName());
-        this.logMessage("Sending result to client");
+        this.logMessage("Sending result to client URI: " + requestURIs);
         this.requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
         this.doPortDisconnection(this.requestResultOutboundPort.getClientPortURI());
     }
@@ -831,6 +831,7 @@ public class NodeComponent extends AbstractComponent
             throws Exception {
         // synchronized (neighbours) {
         for (NodeInfoI neighbour : neighbours) {
+            this.logMessage("propagation " + neighbour.nodeIdentifier());
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 if (nodePort != null) {
@@ -867,7 +868,7 @@ public class NodeComponent extends AbstractComponent
             this.requestURIs.add(requestContinuation.requestURI());
         }
 
-        this.logMessage("received async request: " + requestContinuation.toString());
+        this.logMessage("received async request, URI: " + requestContinuation.requestURI()+ " Time: " + Instant.now() );
 
         AbstractQuery query = (AbstractQuery) requestContinuation.getQueryCode();
         ExecutionStateI state = ((RequestContinuationIMPL) requestContinuation).getExecutionState();
