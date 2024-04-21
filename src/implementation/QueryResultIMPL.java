@@ -1,6 +1,7 @@
 package implementation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
@@ -8,8 +9,8 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 public class QueryResultIMPL implements QueryResultI {
 	private boolean isBR;
 	private boolean isGR;
-	private ArrayList<String> positiveSN;
-	private ArrayList<SensorDataI> gatheredSensors;
+	private List<String> positiveSN;
+	private List<SensorDataI> gatheredSensors;
 
 	public QueryResultIMPL() {
 		this.isBR = false;
@@ -18,12 +19,19 @@ public class QueryResultIMPL implements QueryResultI {
 		this.gatheredSensors = new ArrayList<>();
 	}
 
-	public QueryResultIMPL(boolean isBR, boolean isGR, ArrayList<String> positiveSN,
-			ArrayList<SensorDataI> gatheredSensors) {
+	public QueryResultIMPL(boolean isBR, boolean isGR, List<String> positiveSN,
+			List<SensorDataI> gatheredSensors) {
 		this.isBR = isBR;
 		this.isGR = isGR;
 		this.positiveSN = positiveSN;
 		this.gatheredSensors = gatheredSensors;
+	}
+
+	public QueryResultIMPL(QueryResultI query) {
+		this.isBR = query.isBooleanRequest();
+		this.isGR = query.isGatherRequest();
+		this.positiveSN = new ArrayList<>(query.positiveSensorNodes());
+		this.gatheredSensors = new ArrayList<>(query.gatheredSensorsValues());
 	}
 
 	@Override
@@ -34,7 +42,7 @@ public class QueryResultIMPL implements QueryResultI {
 	@Override
 	public ArrayList<String> positiveSensorNodes() {
 		if (this.isBooleanRequest()) {
-			return positiveSN;
+			return (ArrayList<String>) positiveSN;
 		}
 		return new ArrayList<>();
 	}
@@ -47,7 +55,7 @@ public class QueryResultIMPL implements QueryResultI {
 	@Override
 	public ArrayList<SensorDataI> gatheredSensorsValues() {
 		if (this.isGatherRequest()) {
-			return gatheredSensors;
+			return (ArrayList<SensorDataI>) gatheredSensors;
 		}
 		return new ArrayList<>();
 	}
@@ -60,19 +68,19 @@ public class QueryResultIMPL implements QueryResultI {
 		this.isGR = isGR;
 	}
 
-	public ArrayList<String> getPositiveSN() {
+	public List<String> getPositiveSN() {
 		return positiveSN;
 	}
 
-	public void setPositiveSN(ArrayList<String> positiveSN) {
+	public void setPositiveSN(List<String> positiveSN) {
 		this.positiveSN = positiveSN;
 	}
 
-	public ArrayList<SensorDataI> getGatheredSensors() {
+	public List<SensorDataI> getGatheredSensors() {
 		return gatheredSensors;
 	}
 
-	public void setGatheredSensors(ArrayList<SensorDataI> gatheredSensors) {
+	public void setGatheredSensors(List<SensorDataI> gatheredSensors) {
 		this.gatheredSensors = gatheredSensors;
 	}
 
@@ -98,7 +106,6 @@ public class QueryResultIMPL implements QueryResultI {
 	public void update(QueryResultI query) {
 		if (!query.isBooleanRequest() && query.isGatherRequest()) {
 			processGatherRequest(query);
-			// System.err.println("gathered sensors: " + this.gatheredSensors.toString());
 		} else if (query.isBooleanRequest() && !query.isGatherRequest()) {
 			processBooleanRequest(query);
 		}

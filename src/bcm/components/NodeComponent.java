@@ -543,32 +543,39 @@ public class NodeComponent extends AbstractComponent
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         this.logMessage("Executing RequestContinuationI: " + this.nodeInfo.nodeIdentifier());
         for (NodeInfoI neighbour : neighbours) {
-            this.logMessage("Neighbour 1: of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
+            this.logMessage("Neighbour : of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
         }
         this.logMessage("--------------------------------\n");
 
         if (request == null) {
             throw new Exception("request is null");
         }
-        this.logMessage(request.toString());
-        if (this.requestURIs.contains(request.requestURI())) {
-            this.logMessage("Request URI: " + request.requestURI() + " already executed");
-            return new QueryResultIMPL();
-        }
+
         if (request.getQueryCode() == null) {
             throw new Exception("Query is null");
         }
-        this.requestURIs.add(request.requestURI());
+
+        synchronized (this.requestURIs) {
+            if (this.requestURIs.contains(request.requestURI())) {
+                this.logMessage("Request URI: " + request.requestURI() + " already executed");
+                return new QueryResultIMPL();
+            }
+            this.requestURIs.add(request.requestURI());
+        }
+
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
         if (state == null) {
             throw new Exception("State is null");
         }
         System.err.println("executing RequestContinuationI: " + request.toString());
+
         state.updateProcessingNode(this.processingNode);
         System.err.println("Processing Node: " + this.processingNode.getNodeIdentifier());
 
+        // Execute the query
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         QueryResultI result = query.eval(state);
+
         if (state.isFlooding()) {
             // Propagate the request to neighbours and update the result
             return this.floodingPropagation(state, request, result);
@@ -601,19 +608,18 @@ public class NodeComponent extends AbstractComponent
         if (request == null) {
             throw new Exception("request is null");
         }
-        if (this.requestURIs.contains(request.requestURI())) {
-            this.logMessage("Request URI: " + request.requestURI() + " already executed");
-            return new QueryResultIMPL();
-        }
-
-        // System.err.println("Request URI: " + request.requestURI() + " not executed
-        // yet");
-        // System.err.println("RequestURIS : " + this.requestURIs.toString());
 
         if (request.getQueryCode() == null) {
             throw new Exception("Query is null");
         }
-        this.requestURIs.add(request.requestURI());
+
+        synchronized (this.requestURIs) {
+            if (this.requestURIs.contains(request.requestURI())) {
+                this.logMessage("Request URI: " + request.requestURI() + " already executed");
+                return new QueryResultIMPL();
+            }
+            this.requestURIs.add(request.requestURI());
+        }
 
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
@@ -641,21 +647,22 @@ public class NodeComponent extends AbstractComponent
 
     private QueryResultI directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
-
-        for (NodeInfoI neighbour : neighbours) {
-            this.logMessage("propagation " + neighbour.nodeIdentifier());
-            if (state.getDirections()
-                    .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
-                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                this.logMessage("successfully\n");
-                if (nodePort != null) {
-                    ExecutionStateI newState = new ExecutionStateIMPL(state);
-                    newState.incrementHops();
-                    RequestContinuationI continuation = new RequestContinuationIMPL(
-                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
-                    QueryResultI res = nodePort.execute(continuation);
-                    ((QueryResultIMPL) result).update(res);
+        synchronized (neighbours) {
+            for (NodeInfoI neighbour : neighbours) {
+                this.logMessage("propagation " + neighbour.nodeIdentifier());
+                if (state.getDirections()
+                        .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
+                    SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+                    this.logMessage("successfully\n");
+                    if (nodePort != null) {
+                        ExecutionStateI newState = new ExecutionStateIMPL(state);
+                        newState.incrementHops();
+                        RequestContinuationI continuation = new RequestContinuationIMPL(
+                                request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
+                                request.clientConnectionInfo(), newState);
+                        QueryResultI res = nodePort.execute(continuation);
+                        ((QueryResultIMPL) result).update(res);
+                    }
                 }
             }
         }
@@ -707,6 +714,7 @@ public class NodeComponent extends AbstractComponent
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
         QueryResultI result = query.eval(state);
+
         if (!state.isContinuationSet()) {
             this.logMessage("No continuation set");
             returnResultToClient(request, result); // return the result to the client
@@ -797,10 +805,8 @@ public class NodeComponent extends AbstractComponent
         AbstractQuery query = (AbstractQuery) requestContinuation.getQueryCode();
         ExecutionStateI state = ((RequestContinuationIMPL) requestContinuation).getExecutionState();
         QueryResultI result;
-        synchronized (state) {
-            ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
-            result = query.eval(state);
-        }
+        ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
+        result = query.eval(state);
         if (state.isFlooding()) {
             // Propagate the request to neighbours and update the result
             this.floodingPropagationAsync(state, requestContinuation);

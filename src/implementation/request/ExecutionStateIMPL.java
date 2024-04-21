@@ -34,7 +34,7 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	}
 
 	public ExecutionStateIMPL(ExecutionStateI state) {
-		this.queryResult = state.getCurrentResult();
+		this.queryResult = new QueryResultIMPL(state.getCurrentResult());
 		this.processingNode = state.getProcessingNode();
 		this.maxHops = ((ExecutionStateIMPL) state).getMaxHops();
 		this.hops = ((ExecutionStateIMPL) state).getHops();
