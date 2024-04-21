@@ -1,15 +1,16 @@
 package bcm.components;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import bcm.CVM;
 import bcm.ports.LookupInboundPort;
 import bcm.ports.RegistrationInboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.AbstractComponentHelper;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
@@ -35,14 +36,14 @@ public class RegistryComponent extends AbstractComponent {
     protected LookupInboundPort lookUpInboundPort;
     protected RegistrationInboundPort registryInboundPort;
 
-    protected Map<String, NodeInfoI> nodeIDToNodeInfoMap;
+    protected ConcurrentHashMap<String, NodeInfoI> nodeIDToNodeInfoMap;
 
     protected RegistryComponent(String uri,
             int nbThreads, int nbSchedulableThreads,
             String lookupInboundPortURI,
             String registerInboundPortURI) {
         super(uri, nbThreads, nbSchedulableThreads);
-        this.nodeIDToNodeInfoMap = new HashMap<>();
+        this.nodeIDToNodeInfoMap = new ConcurrentHashMap<>();
         try {
             this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
             this.registryInboundPort = new RegistrationInboundPort(registerInboundPortURI, this);
@@ -58,6 +59,8 @@ public class RegistryComponent extends AbstractComponent {
         super.start();
         this.logMessage("starting Registry component.");
     }
+
+    // --- CLIENT METHODS
 
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
         try {
@@ -86,6 +89,8 @@ public class RegistryComponent extends AbstractComponent {
     public boolean registered(String nodeIdentifier) throws Exception {
         return this.nodeIDToNodeInfoMap.containsKey(nodeIdentifier);
     }
+
+    // --- REGISTRY METHODS
 
     private String printAllNodes() {
         StringBuilder sb = new StringBuilder();
@@ -135,7 +140,8 @@ public class RegistryComponent extends AbstractComponent {
             this.logMessage("registered node " + nodeInfo.nodeIdentifier() + " and has neighbours: " + result.size());
             this.logMessage(this.printAllNodes());
             for (Direction node : directionalNeighbours.keySet()) {
-                logMessage("Neighbour in direction " + node + " is " + directionalNeighbours.get(node).nodeIdentifier());
+                logMessage(
+                        "Neighbour in direction " + node + " is " + directionalNeighbours.get(node).nodeIdentifier());
             }
 
             return result;

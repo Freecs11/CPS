@@ -11,6 +11,10 @@ import implementation.QueryResultIMPL;
 
 public class ExecutionStateIMPL implements ExecutionStateI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6858748451128986487L;
 	private ProcessingNodeI processingNode;
 	private QueryResultI queryResult;
 	private boolean isDirectional;

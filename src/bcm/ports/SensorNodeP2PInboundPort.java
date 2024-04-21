@@ -55,7 +55,7 @@ public class SensorNodeP2PInboundPort extends AbstractInboundPort
 
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
-        return this.owner.handleRequest(
+        return this.owner.handleRequest((((NodeComponent) this.getOwner()).getSyncPoolIndex()),
                 new AbstractComponent.AbstractService<QueryResultI>() {
                     @Override
                     public QueryResultI call() throws Exception {
@@ -67,7 +67,7 @@ public class SensorNodeP2PInboundPort extends AbstractInboundPort
 
     @Override
     public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
-        this.owner.runTask(
+        this.owner.runTask((((NodeComponent) this.getOwner()).getAsyncPoolIndex()),
                 new AbstractComponent.AbstractTask() {
                     @Override
                     public void run() {

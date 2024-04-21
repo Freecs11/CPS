@@ -69,7 +69,9 @@ public class ClientComponent extends AbstractComponent {
         private Map<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
-        private long asyncTimeout = TimeUnit.SECONDS.toNanos(100L);
+        private long asyncTimeout = TimeUnit.SECONDS.toNanos(20L);
+
+        ConnectionInfoI nodeInfo;
 
         protected ClientComponent(String uri, String registryInboundPortURI) throws Exception {
                 super(uri, 5, 5);
@@ -93,7 +95,7 @@ public class ClientComponent extends AbstractComponent {
         }
 
         protected ClientComponent(String uri, String registryInboundPortURI, Instant startInstant) throws Exception {
-                super(uri, 5, 5);
+                super(uri, 10, 15);
                 // ---------------Init the ports----------------
                 this.LookupOutboundPort = new LookupOutboundPort(
                                 AbstractOutboundPort.generatePortURI(),
@@ -181,24 +183,55 @@ public class ClientComponent extends AbstractComponent {
                 // new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
                 // new FinalDirections(Direction.NE))));
                 String nodeIdentifier = "node4";
-                RequestI request1 = new RequestIMPL("req1",
-                                query,
-                                false,
-                                clientInfo);
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20L));
+                // RequestI request1 = new RequestIMPL("req1",
+                // query,
+                // false,
+                // clientInfo);
+                // long delayTilRequest2 =
+                // this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
 
-                this.executeSyncRequest(request1, nodeIdentifier, delayTilRequest2);
+                // this.executeSyncRequest(request1, nodeIdentifier, delayTilRequest2);
 
-                // -------------------Gather Query Test 2 : flooding continuation , Async
-                // Request
-                // -------------------
+                long delay2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(20L));
+                this.scheduleRequestSync(
+                                new AbstractComponent.AbstractService<Void>() {
+                                        @Override
+                                        public Void call() throws Exception {
+                                                ClientComponent.this.nodeInfo = ClientComponent.this.LookupOutboundPort
+                                                                .findByIdentifier(nodeIdentifier);
+                                                return null;
+                                        }
+                                }, delay2, TimeUnit.NANOSECONDS);
+
+                // // -------------------Gather Query Test 2 : flooding continuation , Async
+                // // Request
+                // // -------------------
                 RequestI request2 = new RequestIMPL("req2",
                                 query,
                                 true,
                                 clientInfoAsync);
                 long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-                this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3);
+                this.executeAsyncRequest(request2, nodeIdentifier, delayTilRequest3, nodeInfo);
 
+                // -------------------Gather Query Test 2 : flooding continuation , Async
+                // Request
+                // -------------------
+                RequestI request6 = new RequestIMPL("req6",
+                                query,
+                                true,
+                                clientInfoAsync);
+                long delayTilRequest6 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                this.executeAsyncRequest(request6, nodeIdentifier, delayTilRequest6, nodeInfo);
+
+                // -------------------Gather Query Test 2 : flooding continuation , Async
+                // Request
+                // -------------------
+                RequestI request7 = new RequestIMPL("req7",
+                                query,
+                                true,
+                                clientInfoAsync);
+                long delayTilRequest7 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
+                this.executeAsyncRequest(request7, nodeIdentifier, delayTilRequest7, nodeInfo);
                 // ------------------- Boolean Query Test 1 : no continuation , Sync Request
                 // -------------------
                 RequestI request3 = new RequestIMPL("req3",
@@ -244,7 +277,9 @@ public class ClientComponent extends AbstractComponent {
                                                                 ClientComponent.this
                                                                                 .logMessage("Gathered size : " + res
                                                                                                 .gatheredSensorsValues()
-                                                                                                .size());
+                                                                                                .size()
+                                                                                                + " for request with URI "
+                                                                                                + request.requestURI());
 
                                                         } else {
                                                                 ClientComponent.this
@@ -264,15 +299,12 @@ public class ClientComponent extends AbstractComponent {
                                 }, delay, TimeUnit.NANOSECONDS);
         }
 
-        private void executeAsyncRequest(RequestI request, String nodeId, long delay) {
+        private void executeAsyncRequest(RequestI request, String nodeId, long delay, ConnectionInfoI nodeInfo) {
                 this.scheduleTask(
                                 new AbstractTask() {
                                         @Override
                                         public void run() {
                                                 try {
-                                                        ConnectionInfoI nodeInfo = ClientComponent.this.LookupOutboundPort
-                                                                        .findByIdentifier(nodeId); // modify to
-                                                                                                   // return an
                                                         // implementation of
                                                         // connectionInfo
                                                         // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
@@ -309,7 +341,7 @@ public class ClientComponent extends AbstractComponent {
                                                 try {
                                                         List<QueryResultI> results = ClientComponent.this.resultsMap
                                                                         .get(request.requestURI());
-                                                        if (results.isEmpty()) {
+                                                        if (results == null || results.isEmpty()) {
                                                                 return;
                                                         }
                                                         QueryResultI result = results.get(0);
