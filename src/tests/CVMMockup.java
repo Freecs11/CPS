@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
 import bcm.components.ClientComponent;
 import bcm.components.NodeComponent;
 import bcm.components.RegistryComponent;
@@ -201,6 +205,19 @@ public class CVMMockup extends AbstractCVM {
                         CVMMockup cvm = new CVMMockup();
                         cvm.startStandardLifeCycle(50000L);
                         Thread.sleep(10000L);
+                        System.out.println("End of the simulation");
+                        System.out.println(
+                                        "------------------------------TESTING INTEGRATION---------------------------------");
+                        Result result = JUnitCore.runClasses(IntegrationTests.class);
+
+                        if (result.wasSuccessful()) {
+                                System.out.println("All tests passed.");
+                        } else {
+                                System.out.println("Some tests failed.");
+                                for (Failure failure : result.getFailures()) {
+                                        System.out.println(failure.toString());
+                                }
+                        }
                         System.exit(0);
                 } catch (Exception e) {
                         throw new RuntimeException(e);

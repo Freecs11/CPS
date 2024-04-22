@@ -379,6 +379,15 @@ public class NodeComponent extends AbstractComponent
         }
     }
 
+    private String printNeighbours() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Neighbours of " + this.nodeInfo.nodeIdentifier() + " : ");
+        for (NodeInfoI neighbour : neighbours) {
+            sb.append(neighbour.nodeIdentifier() + ", ");
+        }
+        return sb.toString();
+    }
+
     public void ask4Connection(NodeInfoI newNeighbour)
             throws Exception {
         try {

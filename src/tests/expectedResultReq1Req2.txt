@@ -1,0 +1,71 @@
+URI : req1 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=22.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=21.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode2
+ sensorIdentifier=humidity
+ value=52.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode2
+ sensorIdentifier=temperature
+ value=51.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=72.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=71.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode8
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode8
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode7
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode7
+ sensorIdentifier=temperature
+ value=41.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=62.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=61.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode13
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode13
+ sensorIdentifier=temperature
+ value=81.0]
