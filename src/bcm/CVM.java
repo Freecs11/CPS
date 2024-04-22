@@ -95,7 +95,7 @@ public class CVM extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                15, 15,
+                                                1, 0,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI,
                                                 "registeryPoolURI",
@@ -133,8 +133,10 @@ public class CVM extends AbstractCVM {
                                                         REG_START_INSTANT.plusSeconds(5L + i),
                                                         nodes.size(),
                                                         nodes.size(),
-                                                        "aysncPool_" + node.getName(),
-                                                        "syncPool_" + node.getName()
+                                                        "syncRequestPool_" + node.getName(),
+                                                        "asyncRequestPool_" + node.getName(),
+                                                        "syncContPool_" + node.getName(),
+                                                        "asyncContPool_" + node.getName()
                                         });
 
                         // if (i < 5) {

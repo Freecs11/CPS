@@ -26,7 +26,7 @@ public class RequestingInboundPort extends AbstractInboundPort
 
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
-        return this.owner.handleRequest((((NodeComponent) this.getOwner()).getSyncPoolIndex()),
+        return this.owner.handleRequest((((NodeComponent) this.getOwner()).getSyncRequestPoolIndex()),
                 new AbstractComponent.AbstractService<QueryResultI>() {
                     @Override
                     public QueryResultI call() throws Exception {
@@ -38,7 +38,7 @@ public class RequestingInboundPort extends AbstractInboundPort
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        this.getOwner().runTask((((NodeComponent) this.getOwner()).getAsyncPoolIndex()),
+        this.getOwner().runTask((((NodeComponent) this.getOwner()).getAsyncRequestPoolIndex()),
                 new AbstractComponent.AbstractTask() {
                     @Override
                     public void run() {

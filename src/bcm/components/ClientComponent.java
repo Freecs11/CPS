@@ -75,7 +75,7 @@ public class ClientComponent extends AbstractComponent {
 
         // ---------Async timeout , the time to wait for the results to be gathered and
         // combined---------
-        private long asyncTimeout = TimeUnit.SECONDS.toNanos(20L);
+        private long asyncTimeout = TimeUnit.SECONDS.toNanos(30L);
 
         protected ClientComponent(String uri, String registryInboundPortURI,
                         int nbThreads, int nbSchedulableThreads) throws Exception {

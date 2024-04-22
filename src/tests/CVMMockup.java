@@ -26,7 +26,7 @@ public class CVMMockup extends AbstractCVM {
         protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
                         System.currentTimeMillis() + TIME_TO_START);
         public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
-        protected static final double accelerationFactor = 10.0;
+        protected static final double accelerationFactor = 60.0;
         public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(1L);
 
         /** URI of the consumer component (convenience). */
@@ -42,20 +42,7 @@ public class CVMMockup extends AbstractCVM {
         }
 
         protected String clockURI;
-        /**
-         * Reference to the provider component to share between deploy
-         * and shutdown.
-         */
-        // protected String uriNodeURI;
-        // protected String uriNode2URI;
-        // protected String uriNode3URI;
-        // protected String uriNode4URI;
-        // protected String uriNode5URI;
-        // protected String uriNode6URI;
-        /**
-         * Reference to the consumer component to share between deploy
-         * and shutdown.
-         */
+
         protected String uriClientURI;
 
         protected String uriRegisterURI;
@@ -112,7 +99,7 @@ public class CVMMockup extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                15, 15,
+                                                1, 0,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI,
                                                 "registeryPoolURI",
@@ -147,11 +134,14 @@ public class CVMMockup extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(5L),
+                                                        REG_START_INSTANT.plusSeconds(5
+                                                                        + i),
                                                         nodes.size(),
                                                         nodes.size(),
-                                                        "aysncPool_" + node.getName(),
-                                                        "syncPool_" + node.getName()
+                                                        "syncRequestPool_" + node.getName(),
+                                                        "asyncRequestPool_" + node.getName(),
+                                                        "syncContPool_" + node.getName(),
+                                                        "asyncContPool_" + node.getName()
                                         });
 
                         // if (i < 5) {
@@ -165,7 +155,7 @@ public class CVMMockup extends AbstractCVM {
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
-                                                REG_START_INSTANT.plusSeconds(100L), 10, 10
+                                                REG_START_INSTANT.plusSeconds(100L), nodes.size(), nodes.size()
                                 });
                 // to be changed
                 // ---------------------------------------------------------------------

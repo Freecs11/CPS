@@ -94,11 +94,16 @@ public class NodeComponent extends AbstractComponent
     protected String nodeURI;
 
     // -------------------- POOL de thread
-    protected final int asyncPoolIndex;
-    protected final String asyncPoolUri;
 
-    protected final int syncPoolIndex;
-    protected final String syncPoolUri;
+    protected final String syncRequestPoolUri;
+    protected final String asyncRequestPoolUri;
+    protected final String syncContPoolUri;
+    protected final String asyncContPoolUri;
+
+    protected final int syncRequestPoolIndex;
+    protected final int asyncRequestPoolIndex;
+    protected final int syncContPoolIndex;
+    protected final int asyncContPoolIndex;
 
     // -------------------- lock pour la liste des neighbours
     // ------------------------- ca laisse les lectures en parallele pour plusieurs
@@ -115,8 +120,10 @@ public class NodeComponent extends AbstractComponent
             Instant startInstant,
             int nbAsyncThreads,
             int nbSyncThreads,
-            String asyncPoolUri,
-            String syncPoolUri) throws Exception {
+            String syncRequestPoolUri,
+            String asyncRequestPoolUri,
+            String syncContPoolUri,
+            String asyncContPoolUri) throws Exception {
         // we mainly use our own pool of threads, we use bcm's pool of threads only
         // for connections
         super(uri, 15, 15);
@@ -131,8 +138,6 @@ public class NodeComponent extends AbstractComponent
         assert startInstant != null : new PreconditionException("startInstant can't be null!");
         assert nbAsyncThreads > 0 : new PreconditionException("nbAsyncThreads must be greater than 0!");
         assert nbSyncThreads > 0 : new PreconditionException("nbSyncThread must be greater than 0!");
-        assert asyncPoolUri != null : new PreconditionException("asyncPoolUri can't be null!");
-        assert syncPoolUri != null : new PreconditionException("syncPoolUri can't be null!");
 
         // port URI for the registry
         this.registerInboundPortURI = registryInboundPortURI;
@@ -176,10 +181,15 @@ public class NodeComponent extends AbstractComponent
         this.startInstant = startInstant;
 
         // initialisation des pools de threads
-        this.asyncPoolUri = asyncPoolUri;
-        this.syncPoolUri = syncPoolUri;
-        this.asyncPoolIndex = this.createNewExecutorService(asyncPoolUri, nbAsyncThreads, true);
-        this.syncPoolIndex = this.createNewExecutorService(syncPoolUri, nbSyncThreads, false);
+        this.syncRequestPoolUri = syncRequestPoolUri;
+        this.asyncRequestPoolUri = asyncRequestPoolUri;
+        this.syncContPoolUri = syncContPoolUri;
+        this.asyncContPoolUri = asyncContPoolUri;
+        this.syncRequestPoolIndex = this.createNewExecutorService(syncRequestPoolUri, nbSyncThreads, false);
+        this.asyncRequestPoolIndex = this.createNewExecutorService(asyncRequestPoolUri, nbAsyncThreads, true);
+        this.syncContPoolIndex = this.createNewExecutorService(syncContPoolUri, nbSyncThreads, false);
+        this.asyncContPoolIndex = this.createNewExecutorService(asyncContPoolUri, nbAsyncThreads, true);
+
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
     }
@@ -194,8 +204,10 @@ public class NodeComponent extends AbstractComponent
             Instant startInstant,
             int nbAsyncThreads,
             int nbSyncThreads,
-            String asyncPoolUri,
-            String syncPoolUri) throws Exception {
+            String syncRequestPoolUri,
+            String asyncRequestPoolUri,
+            String syncContPoolUri,
+            String asyncContPoolUri) throws Exception {
         // we mainly use our own pool of threads, we use bcm's pool of threads only
         // for connections
         super(AbstractInboundPort.generatePortURI(), 15, 15);
@@ -209,8 +221,6 @@ public class NodeComponent extends AbstractComponent
         assert startInstant != null : new PreconditionException("startInstant can't be null!");
         assert nbAsyncThreads > 0 : new PreconditionException("nbAsyncThreads must be greater than 0!");
         assert nbSyncThreads > 0 : new PreconditionException("nbSyncThread must be greater than 0!");
-        assert asyncPoolUri != null : new PreconditionException("asyncPoolUri can't be null!");
-        assert syncPoolUri != null : new PreconditionException("syncPoolUri can't be null!");
         // port URI for the registry
         this.registerInboundPortURI = registryInboundPortURI;
 
@@ -253,20 +263,32 @@ public class NodeComponent extends AbstractComponent
         this.startInstant = startInstant;
 
         // initialisation des pools de threads
-        this.asyncPoolUri = asyncPoolUri;
-        this.syncPoolUri = syncPoolUri;
-        this.asyncPoolIndex = this.createNewExecutorService(asyncPoolUri, nbAsyncThreads, true);
-        this.syncPoolIndex = this.createNewExecutorService(syncPoolUri, nbSyncThreads, false);
+        this.syncRequestPoolUri = syncRequestPoolUri;
+        this.asyncRequestPoolUri = asyncRequestPoolUri;
+        this.syncContPoolUri = syncContPoolUri;
+        this.asyncContPoolUri = asyncContPoolUri;
+        this.syncRequestPoolIndex = this.createNewExecutorService(syncRequestPoolUri, nbSyncThreads, false);
+        this.asyncRequestPoolIndex = this.createNewExecutorService(asyncRequestPoolUri, nbAsyncThreads, true);
+        this.syncContPoolIndex = this.createNewExecutorService(syncContPoolUri, nbSyncThreads, false);
+        this.asyncContPoolIndex = this.createNewExecutorService(asyncContPoolUri, nbAsyncThreads, true);
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
     }
 
-    public int getAsyncPoolIndex() {
-        return asyncPoolIndex;
+    public int getSyncRequestPoolIndex() {
+        return syncRequestPoolIndex;
     }
 
-    public int getSyncPoolIndex() {
-        return syncPoolIndex;
+    public int getAsyncRequestPoolIndex() {
+        return asyncRequestPoolIndex;
+    }
+
+    public int getSyncContPoolIndex() {
+        return syncContPoolIndex;
+    }
+
+    public int getAsyncContPoolIndex() {
+        return asyncContPoolIndex;
     }
 
     @Override
