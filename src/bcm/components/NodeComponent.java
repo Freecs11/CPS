@@ -129,6 +129,10 @@ public class NodeComponent extends AbstractComponent
         assert range != null : new PreconditionException("range can't be null!");
         assert sensorData != null : new PreconditionException("ArrayList of sensorData can't be null!");
         assert startInstant != null : new PreconditionException("startInstant can't be null!");
+        assert nbAsyncThreads > 0 : new PreconditionException("nbAsyncThreads must be greater than 0!");
+        assert nbSyncThreads > 0 : new PreconditionException("nbSyncThread must be greater than 0!");
+        assert asyncPoolUri != null : new PreconditionException("asyncPoolUri can't be null!");
+        assert syncPoolUri != null : new PreconditionException("syncPoolUri can't be null!");
 
         // port URI for the registry
         this.registerInboundPortURI = registryInboundPortURI;
@@ -189,7 +193,7 @@ public class NodeComponent extends AbstractComponent
             ArrayList<SensorDataI> sensorData,
             Instant startInstant,
             int nbAsyncThreads,
-            int nbSyncThread,
+            int nbSyncThreads,
             String asyncPoolUri,
             String syncPoolUri) throws Exception {
         // we mainly use our own pool of threads, we use bcm's pool of threads only
@@ -203,6 +207,10 @@ public class NodeComponent extends AbstractComponent
         assert range != null : new PreconditionException("range can't be null!");
         assert sensorData != null : new PreconditionException("ArrayList of sensorData can't be null!");
         assert startInstant != null : new PreconditionException("startInstant can't be null!");
+        assert nbAsyncThreads > 0 : new PreconditionException("nbAsyncThreads must be greater than 0!");
+        assert nbSyncThreads > 0 : new PreconditionException("nbSyncThread must be greater than 0!");
+        assert asyncPoolUri != null : new PreconditionException("asyncPoolUri can't be null!");
+        assert syncPoolUri != null : new PreconditionException("syncPoolUri can't be null!");
         // port URI for the registry
         this.registerInboundPortURI = registryInboundPortURI;
 
@@ -248,7 +256,7 @@ public class NodeComponent extends AbstractComponent
         this.asyncPoolUri = asyncPoolUri;
         this.syncPoolUri = syncPoolUri;
         this.asyncPoolIndex = this.createNewExecutorService(asyncPoolUri, nbAsyncThreads, true);
-        this.syncPoolIndex = this.createNewExecutorService(syncPoolUri, nbSyncThread, false);
+        this.syncPoolIndex = this.createNewExecutorService(syncPoolUri, nbSyncThreads, false);
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
     }

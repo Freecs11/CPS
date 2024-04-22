@@ -203,19 +203,19 @@ public class CVMMockup extends AbstractCVM {
         public static void main(String[] args) {
                 try {
                         CVMMockup cvm = new CVMMockup();
-                        cvm.startStandardLifeCycle(50000L);
+                        cvm.startStandardLifeCycle(70000L);
                         Thread.sleep(10000L);
-                        System.out.println("End of the simulation");
-                        System.out.println(
+                        System.err.println("End of the simulation");
+                        System.err.println(
                                         "------------------------------TESTING INTEGRATION---------------------------------");
                         Result result = JUnitCore.runClasses(IntegrationTests.class);
 
                         if (result.wasSuccessful()) {
-                                System.out.println("All tests passed.");
+                                System.err.println("All tests passed.");
                         } else {
-                                System.out.println("Some tests failed.");
+                                System.err.println("Some tests failed.");
                                 for (Failure failure : result.getFailures()) {
-                                        System.out.println(failure.toString());
+                                        System.err.println(failure.toString());
                                 }
                         }
                         System.exit(0);
