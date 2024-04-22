@@ -18,6 +18,7 @@ import bcm.ports.RequestingOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
@@ -57,21 +58,23 @@ import query.ast.SensorRand;
 @RequiredInterfaces(required = { RequestingCI.class, LookupCI.class, ClocksServerCI.class })
 public class ClientComponent extends AbstractComponent {
 
-        // protected RequestingOutboundPort RequestingOutboundPort;
-
+        // ---------Ports---------
         protected LookupOutboundPort LookupOutboundPort;
-
         protected RequestResultInboundPort clientRequestResultInboundPort;
-
-        protected long startAfter;
         protected String registryInboundPortURI;
+
+        // --------- clock and start instant---------
+        protected long startAfter;
 
         protected AcceleratedClock clock;
         protected Instant startInstant;
 
+        // ---------Results map---------
         private ConcurrentHashMap<String, List<QueryResultI>> resultsMap;
         private String clientIdentifer = "client1";
 
+        // ---------Async timeout , the time to wait for the results to be gathered and
+        // combined---------
         private long asyncTimeout = TimeUnit.SECONDS.toNanos(20L);
 
         protected ClientComponent(String uri, String registryInboundPortURI,
@@ -192,6 +195,13 @@ public class ClientComponent extends AbstractComponent {
                 long delayTilRequest5 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(55L));
                 this.executeAsyncRequest("req4", query2, nodeIdentifier, delayTilRequest5);
 
+                // launch 2 async requests with at the same time
+                // we launch the previous gather requests ( flooding and directionnal)
+                long delayTilRequest8 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
+                this.executeAsyncRequest("req7", query, nodeIdentifier, delayTilRequest8);
+                long delayTilRequest9 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
+                this.executeAsyncRequest("req8", query2, nodeIdentifier, delayTilRequest9);
+
                 boolean req = true;
                 if (req) {
                         return;
@@ -202,16 +212,16 @@ public class ClientComponent extends AbstractComponent {
                 BooleanQuery query3 = new BooleanQuery(
                                 new ConditionalExprBooleanExpr(
                                                 new EqualConditionalExpr(new SensorRand("humidity"),
-                                                                new ConstantRand(80.0))),
+                                                                new ConstantRand(70.0))),
                                 new FloodingContinuation(new RelativeBase(), 45.0));
 
-                long delayTilRequest6 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(50L));
+                long delayTilRequest6 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(70L));
                 this.executeSyncRequest("req5", query3, nodeIdentifier, delayTilRequest6);
 
                 // ------------------- Boolean Query Test 2 : Flooding continuation , Async
                 // Request
                 // -------------------
-                long delayTilRequest7 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(52L));
+                long delayTilRequest7 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(72L));
                 this.executeAsyncRequest("req6", query3, nodeIdentifier, delayTilRequest7);
 
         }
@@ -395,6 +405,7 @@ public class ClientComponent extends AbstractComponent {
                         this.doPortDisconnection(this.LookupOutboundPort.getPortURI());
                 }
                 this.LookupOutboundPort.unpublishPort();
+                this.LookupOutboundPort.destroyPort();
 
                 super.finalise();
                 try {
@@ -402,6 +413,31 @@ public class ClientComponent extends AbstractComponent {
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
+        }
+
+        @Override
+        public synchronized void shutdown() throws ComponentShutdownException {
+                // the shutdown is a good place to unpublish inbound ports.
+                try {
+                        if (this.clientRequestResultInboundPort.isPublished())
+                                this.clientRequestResultInboundPort.unpublishPort();
+
+                } catch (Exception e) {
+                        throw new ComponentShutdownException(e);
+                }
+                super.shutdown();
+        }
+
+        @Override
+        public synchronized void shutdownNow() throws ComponentShutdownException {
+                try {
+                        if (this.clientRequestResultInboundPort.isPublished())
+                                this.clientRequestResultInboundPort.unpublishPort();
+
+                } catch (Exception e) {
+                        throw new ComponentShutdownException(e);
+                }
+                super.shutdown();
         }
 
         public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {

@@ -117,11 +117,8 @@ public class NodeComponent extends AbstractComponent
             int nbSyncThreads,
             String asyncPoolUri,
             String syncPoolUri) throws Exception {
-        // we put in 15 threads to ensure that the component does not block when doing a
-        // task that requires calling other components that then need to call back this
-        // component.
-        // TODO : do this programmatically, for example when we send a continuation to a
-        // neighbour we add a thread to the component ...
+        // we mainly use our own pool of threads, we use bcm's pool of threads only
+        // for connections
         super(uri, 15, 15);
 
         assert uri != null : new PreconditionException("uri can't be null!");
@@ -145,8 +142,6 @@ public class NodeComponent extends AbstractComponent
         // initialisation des ports
         this.requestingInboundPort = new RequestingInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
-        // this.requestResultInboundPort = new
-        // RequestResultInboundPort(AbstractInboundPort.generatePortURI(), this);
         this.RegistrationOutboundPort = new RegistrationOutboundPort(AbstractOutboundPort.generatePortURI(), this);
         this.requestResultOutboundPort = new RequestResultOutboundPort(
                 AbstractOutboundPort.generatePortURI(), this);
@@ -154,7 +149,6 @@ public class NodeComponent extends AbstractComponent
         // publication des ports
         this.requestingInboundPort.publishPort();
         this.sensorNodeP2PInboundPort.publishPort();
-        // this.requestResultInboundPort.publishPort();
         this.RegistrationOutboundPort.publishPort();
         this.requestResultOutboundPort.publishPort();
 
@@ -198,11 +192,8 @@ public class NodeComponent extends AbstractComponent
             int nbSyncThread,
             String asyncPoolUri,
             String syncPoolUri) throws Exception {
-        // we put in 15 threads to ensure that the component does not block when doing a
-        // task that requires calling other components that then need to call back this
-        // component.
-        // TODO : do this programmatically, for example when we send a continuation to a
-        // neighbour we add a thread to the component ...
+        // we mainly use our own pool of threads, we use bcm's pool of threads only
+        // for connections
         super(AbstractInboundPort.generatePortURI(), 15, 15);
         assert this.reflectionInboundPortURI != null : new PreconditionException("generated uri can't be null!");
         assert registryInboundPortURI != null : new PreconditionException("registryInboundPortURI can't be null!");
@@ -231,7 +222,6 @@ public class NodeComponent extends AbstractComponent
         // publication des ports
         this.requestingInboundPort.publishPort();
         this.sensorNodeP2PInboundPort.publishPort();
-        // this.requestResultInboundPort.publishPort();
         this.RegistrationOutboundPort.publishPort();
         this.requestResultOutboundPort.publishPort();
 
@@ -322,7 +312,8 @@ public class NodeComponent extends AbstractComponent
                         this.logMessage(this.printNeighbours());
                         this.logMessage("Registration Success: "
                                 + RegistrationOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
-                        this.logMessage("Connecting to all the neighbours received from the registry at Time : " + Instant.now()+ " .....................");
+                        this.logMessage("Connecting to all the neighbours received from the registry at Time : "
+                                + Instant.now() + " .....................");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -386,24 +377,6 @@ public class NodeComponent extends AbstractComponent
         } finally {
             neigboursLock.writeLock().unlock();
         }
-    }
-
-    public boolean checkNeighbour(NodeInfoI neighbour) {
-        neigboursLock.readLock().lock();
-        try {
-            return neighbours.contains(neighbour);
-        } finally {
-            neigboursLock.readLock().unlock();
-        }
-    }
-
-    private String printNeighbours() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Neighbours of " + this.nodeInfo.nodeIdentifier() + " : ");
-        for (NodeInfoI neighbour : neighbours) {
-            sb.append(neighbour.nodeIdentifier() + ", ");
-        }
-        return sb.toString();
     }
 
     public void ask4Connection(NodeInfoI newNeighbour)
@@ -532,15 +505,22 @@ public class NodeComponent extends AbstractComponent
 
         if (this.RegistrationOutboundPort.connected()) {
             this.doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
-            this.RegistrationOutboundPort.unpublishPort();
         }
-
+        this.RegistrationOutboundPort.unpublishPort();
         for (SensorNodeP2POutboundPort p2poutboundPort : this.nodeInfoToP2POutboundPortMap.values()) {
             if (p2poutboundPort.connected()) {
                 this.doPortDisconnection(p2poutboundPort.getPortURI());
-                p2poutboundPort.unpublishPort();
             }
+            p2poutboundPort.unpublishPort();
         }
+
+        if (this.requestResultOutboundPort.connected()) {
+            this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
+
+        }
+        this.requestResultOutboundPort.unpublishPort();
+        // clock
+
         super.finalise();
     }
 
@@ -567,6 +547,7 @@ public class NodeComponent extends AbstractComponent
                 this.requestingInboundPort.unpublishPort();
             if (this.sensorNodeP2PInboundPort.isPublished())
                 this.sensorNodeP2PInboundPort.unpublishPort();
+
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
@@ -705,9 +686,9 @@ public class NodeComponent extends AbstractComponent
 
     private QueryResultI floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
             throws Exception {
-            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-            while (it.hasNext()) {
-                NodeInfoI neighbour = it.next();
+        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+        while (it.hasNext()) {
+            NodeInfoI neighbour = it.next();
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
                 if (nodePort != null) {
@@ -787,9 +768,9 @@ public class NodeComponent extends AbstractComponent
 
     private void directionalPropagationAsync(ExecutionStateI state, RequestI request)
             throws Exception {
-            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-            while (it.hasNext()) {
-                NodeInfoI neighbour = it.next();
+        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+        while (it.hasNext()) {
+            NodeInfoI neighbour = it.next();
             if (state.getDirections()
                     .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
@@ -807,9 +788,9 @@ public class NodeComponent extends AbstractComponent
 
     private void floodingPropagationAsync(ExecutionStateI state, RequestI request)
             throws Exception {
-            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-            while (it.hasNext()) {
-                NodeInfoI neighbour = it.next();
+        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
+        while (it.hasNext()) {
+            NodeInfoI neighbour = it.next();
             this.logMessage("propagation " + neighbour.nodeIdentifier());
             if (state.withinMaximalDistance(neighbour.nodePosition())) {
                 SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
@@ -846,7 +827,7 @@ public class NodeComponent extends AbstractComponent
             this.requestURIs.add(requestContinuation.requestURI());
         }
 
-        this.logMessage("received async request, URI: " + requestContinuation.requestURI()+ " Time: " + Instant.now() );
+        this.logMessage("received async request, URI: " + requestContinuation.requestURI() + " Time: " + Instant.now());
 
         AbstractQuery query = (AbstractQuery) requestContinuation.getQueryCode();
         ExecutionStateI state = ((RequestContinuationIMPL) requestContinuation).getExecutionState();

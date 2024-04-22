@@ -1,4 +1,4 @@
-package bcm;    
+package bcm;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -38,20 +38,7 @@ public class CVM extends AbstractCVM {
         }
 
         protected String clockURI;
-        /**
-         * Reference to the provider component to share between deploy
-         * and shutdown.
-         */
-        // protected String uriNodeURI;
-        // protected String uriNode2URI;
-        // protected String uriNode3URI;
-        // protected String uriNode4URI;
-        // protected String uriNode5URI;
-        // protected String uriNode6URI;
-        /**
-         * Reference to the consumer component to share between deploy
-         * and shutdown.
-         */
+
         protected String uriClientURI;
 
         protected String uriRegisterURI;
@@ -163,7 +150,7 @@ public class CVM extends AbstractCVM {
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
                                                 REG_START_INSTANT.plusSeconds(100L), 10, 10
                                 });
-                // to be changed
+
                 // ---------------------------------------------------------------------
                 // Deployment phase
                 // ---------------------------------------------------------------------
@@ -184,8 +171,8 @@ public class CVM extends AbstractCVM {
 
         @Override
         public void finalise() throws Exception {
+
                 super.finalise();
-                // System.out.println("CVM finalise");
         }
 
         @Override
@@ -193,7 +180,6 @@ public class CVM extends AbstractCVM {
                 assert this.allFinalised();
 
                 super.shutdown();
-                // System.out.println("CVM shutdown");
         }
 
         public static void main(String[] args) {
