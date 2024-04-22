@@ -1,7 +1,8 @@
-package bcm;
+package bcm;    
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import bcm.components.ClientComponent;
@@ -107,7 +108,7 @@ public class CVM extends AbstractCVM {
                 this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                                 new Object[] {
                                                 REGISTER_COMPONENT_URI,
-                                                1, 0,
+                                                15, 15,
                                                 LOOKUP_IN_BOUND_PORT_URI,
                                                 REGISTER_IN_BOUND_PORT_URI,
                                                 "registeryPoolURI",
@@ -116,13 +117,25 @@ public class CVM extends AbstractCVM {
                 // create the node components
                 ArrayList<NodeComponentInfo> nodes = buildMap(5);
                 int i = 0;
+
+                List<List<Double>> valuesList = new ArrayList<>();
+
+                for (int j = 0; j < 14; j++) {
+                        List<Double> values = new ArrayList<>();
+                        values.add(10 * j + 1.0);
+                        values.add(10 * j + 2.0);
+                        values.add(10 * j + 3.0);
+                        values.add(10 * j + 4.0);
+                        valuesList.add(values);
+                }
+
                 for (NodeComponentInfo node : nodes) {
                         ArrayList<SensorDataI> data = new ArrayList<>();
                         String uriNode = "uri" + node.getName();
-                        data.add(new SensorDataIMPL(uriNode, "temperature", 20.0));
-                        data.add(new SensorDataIMPL(uriNode, "humidity", 50.0));
-                        data.add(new SensorDataIMPL(uriNode, "pressure", 1013.0));
-                        data.add(new SensorDataIMPL(uriNode, "wind", 10.0));
+                        data.add(new SensorDataIMPL(uriNode, "temperature", valuesList.get(i % 13).get(0)));
+                        data.add(new SensorDataIMPL(uriNode, "humidity", valuesList.get(i % 13).get(1)));
+                        data.add(new SensorDataIMPL(uriNode, "pressure", valuesList.get(i % 13).get(2)));
+                        data.add(new SensorDataIMPL(uriNode, "wind", valuesList.get(i % 13).get(3)));
 
                         String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
                                         new Object[] { uriNode, node.getName(), node.getX(),
@@ -130,7 +143,7 @@ public class CVM extends AbstractCVM {
                                                         node.getRange(),
                                                         REGISTER_IN_BOUND_PORT_URI,
                                                         data,
-                                                        REG_START_INSTANT.plusSeconds(5 + i),
+                                                        REG_START_INSTANT.plusSeconds(5L + i),
                                                         nodes.size(),
                                                         nodes.size(),
                                                         "aysncPool_" + node.getName(),
@@ -148,7 +161,7 @@ public class CVM extends AbstractCVM {
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
-                                                REG_START_INSTANT.plusSeconds(100L)
+                                                REG_START_INSTANT.plusSeconds(100L), 10, 10
                                 });
                 // to be changed
                 // ---------------------------------------------------------------------
@@ -186,7 +199,7 @@ public class CVM extends AbstractCVM {
         public static void main(String[] args) {
                 try {
                         CVM cvm = new CVM();
-                        cvm.startStandardLifeCycle(1500000L);
+                        cvm.startStandardLifeCycle(50000L);
                         Thread.sleep(10000L);
                         System.exit(0);
                 } catch (Exception e) {
