@@ -15,7 +15,6 @@ import bcm.CVM;
 import bcm.connectors.ClientRequestResult;
 import bcm.connectors.RegistryConnector;
 import bcm.connectors.SensorNodeConnector;
-import bcm.plugin.NodePlugin;
 import bcm.ports.RegistrationOutboundPort;
 import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.RequestingInboundPort;
@@ -62,7 +61,7 @@ import query.abstraction.AbstractQuery;
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
 @RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class,
         RequestResultCI.class })
-public class NodeComponent extends AbstractComponent
+public class NodeComponentP extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
 
     protected Set<NodeInfoI> neighbours;
@@ -113,10 +112,7 @@ public class NodeComponent extends AbstractComponent
     // -------------------------
     private final ReadWriteLock neigboursLock = new ReentrantReadWriteLock();
 
-    // Plugin
-    protected NodePlugin nodePlugin;
-
-    protected NodeComponent(String uri,
+    protected NodeComponentP(String uri,
             String nodeId,
             Double x, Double y,
             Double range,
@@ -195,19 +191,12 @@ public class NodeComponent extends AbstractComponent
         this.syncContPoolIndex = this.createNewExecutorService(syncContPoolUri, nbSyncThreads, false);
         this.asyncContPoolIndex = this.createNewExecutorService(asyncContPoolUri, nbAsyncThreads, true);
 
-        this.nodePlugin = new NodePlugin(
-                this.registerInboundPortURI,
-                this.nodeInfo,
-                this.processingNode);
-        this.nodePlugin.setPluginURI(AbstractInboundPort.generatePortURI());
-        this.installPlugin(nodePlugin);
-
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
     }
 
     // Constructeur avec auto-génération de l'URI
-    protected NodeComponent(
+    protected NodeComponentP(
             String nodeId,
             Double x, Double y,
             Double range,
@@ -283,13 +272,6 @@ public class NodeComponent extends AbstractComponent
         this.asyncRequestPoolIndex = this.createNewExecutorService(asyncRequestPoolUri, nbAsyncThreads, true);
         this.syncContPoolIndex = this.createNewExecutorService(syncContPoolUri, nbSyncThreads, false);
         this.asyncContPoolIndex = this.createNewExecutorService(asyncContPoolUri, nbAsyncThreads, true);
-
-        this.nodePlugin = new NodePlugin(
-                this.registerInboundPortURI,
-                this.nodeInfo,
-                this.processingNode);
-        this.nodePlugin.setPluginURI(AbstractInboundPort.generatePortURI());
-        this.installPlugin(nodePlugin);
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
     }
@@ -312,8 +294,8 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public synchronized void start() throws ComponentStartException {
+
         try {
-            this.nodePlugin.initialise();
             this.doPortConnection(
                     this.RegistrationOutboundPort.getPortURI(),
                     this.registerInboundPortURI,
@@ -355,20 +337,205 @@ public class NodeComponent extends AbstractComponent
         this.scheduleTask(
                 o -> {
                     try {
-                        this.nodePlugin.registerNode();
+                        // ----------------- REGISTRATION -----------------
+                        this.neighbours = RegistrationOutboundPort.register(nodeInfo);
+                        ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
+                        this.logMessage(this.printNeighbours());
+                        this.logMessage("Registration Success: "
+                                + RegistrationOutboundPort.registered(nodeInfo.nodeIdentifier()) + "");
+                        this.logMessage("Connecting to all the neighbours received from the registry at Time : "
+                                + Instant.now() + " .....................");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    this.logMessage("Node Component successfully executed: " +
+                            this.nodeInfo.nodeIdentifier());
                 }, delayRegister, TimeUnit.NANOSECONDS);
+
+        // ----------------- CONNECTING TO NEIGHBOURS -----------------
+        long delayTilConnect2Neighbours = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(10L));
+        this.scheduleTask(
+                o -> {
+                    try {
+                        this.connect2Neighbours();
+                        this.logMessage("Connected to all the neighbours : " + this.printNeighbours());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }, delayTilConnect2Neighbours, TimeUnit.NANOSECONDS);
+
+    }
+
+    private void connect2Neighbours() throws ComponentStartException {
+        try {
+            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator(); // Copie pour éviter
+                                                                           // ConcurrentModificationException
+            while (it.hasNext()) {
+                NodeInfoI neighbour = it.next();
+                SensorNodeP2POutboundPort p2poutboundP = new SensorNodeP2POutboundPort(
+                        AbstractOutboundPort.generatePortURI(),
+                        this);
+                p2poutboundP.publishPort();
+                this.doPortConnection(p2poutboundP.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) neighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        SensorNodeConnector.class.getCanonicalName());
+                this.nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
+                System.err.println("Connecting to neighbour: " + neighbour.nodeIdentifier());
+                logMessage("Connecting to neighbour: " + neighbour.nodeIdentifier());
+                p2poutboundP.ask4Connection(this.nodeInfo);
+            }
+        } catch (
+
+        Exception e) {
+            throw new ComponentStartException(e);
+        } finally {
+        }
+    }
+
+    public void addNeighbour(NodeInfoI neighbour) {
+        neigboursLock.writeLock().lock();
+        try {
+            neighbours.add(neighbour);
+        } finally {
+            neigboursLock.writeLock().unlock();
+        }
+    }
+
+    public void removeNeighbour(NodeInfoI neighbour) {
+        neigboursLock.writeLock().lock();
+        try {
+            neighbours.remove(neighbour);
+        } finally {
+            neigboursLock.writeLock().unlock();
+        }
+    }
+
+    public String printNeighbours() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Neighbours of " + this.nodeInfo.nodeIdentifier() + " : ");
+        for (NodeInfoI neighbour : neighbours) {
+            sb.append(neighbour.nodeIdentifier() + ", ");
+        }
+        return sb.toString();
     }
 
     public void ask4Connection(NodeInfoI newNeighbour)
             throws Exception {
-        this.nodePlugin.ask4Connection(newNeighbour);
+        try {
+            Direction direction = this.nodeInfo.nodePosition().directionFrom(newNeighbour.nodePosition()); // direction
+            NodeInfoI neighbourInTheDirection = null;
+
+            Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator(); // Copie pour éviter
+                                                                           // ConcurrentModificationException
+            while (it.hasNext()) {
+                NodeInfoI neighbour = it.next();
+                if (this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition()) == direction) {
+                    neighbourInTheDirection = neighbour;
+                    break;
+                }
+            }
+
+            System.err.println("Neighbour in the direction: " + neighbourInTheDirection);
+
+            if (neighbourInTheDirection == null) {
+                SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
+                        AbstractOutboundPort.generatePortURI(), this);
+                newPort.publishPort();
+                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                this.doPortConnection(newPort.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        SensorNodeConnector.class.getCanonicalName());
+                newPort.ask4Connection(this.nodeInfo);
+
+                this.addNeighbour(newNeighbour);
+
+                this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
+                this.printNeighbours();
+            } else {
+                // ------- compare the distance between the new neighbour and the neighbour in
+                // the same direction
+                double distanceNewNeighbour = this.nodeInfo.nodePosition().distance(newNeighbour.nodePosition());
+                double distanceNeighbourInTheDirection = this.nodeInfo.nodePosition()
+                        .distance(neighbourInTheDirection.nodePosition());
+                if (distanceNewNeighbour < distanceNeighbourInTheDirection) {
+                    SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
+                            AbstractOutboundPort.generatePortURI(), this);
+                    newPort.publishPort();
+                    this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                    this.doPortConnection(newPort.getPortURI(),
+                            ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                            SensorNodeConnector.class.getCanonicalName());
+                    newPort.ask4Connection(this.nodeInfo);
+
+                    this.addNeighbour(newNeighbour);
+
+                    this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
+                    this.logMessage("Disconnecting neighbour in the same direction: "
+                            + neighbourInTheDirection.nodeIdentifier());
+                    this.ask4Disconnection(neighbourInTheDirection);
+                    this.logMessage(
+                            "Neighbours after disconnection: -->;" + neighbourInTheDirection.nodeIdentifier()
+                                    + " disconnected");
+                    this.printNeighbours();
+                } else {
+                    this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " not connected");
+                    this.logMessage("Distance between " + newNeighbour.nodeIdentifier() + " and "
+                            + neighbourInTheDirection.nodeIdentifier() + " is less than the distance between "
+                            + newNeighbour.nodeIdentifier() + " and " + neighbourInTheDirection.nodeIdentifier());
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("Error in ask4Connection" + e.getMessage());
+        }
     }
 
     public void ask4Disconnection(NodeInfoI neighbour) {
-        this.nodePlugin.ask4Disconnection(neighbour);
+        try {
+            SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
+            if (nodePort == null) {
+                this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " not connected");
+                return;
+            }
+
+            Direction directionOfNeighbour = this.nodeInfo.nodePosition().directionFrom(neighbour.nodePosition());
+
+            this.removeNeighbour(neighbour);
+
+            this.nodeInfoToP2POutboundPortMap.remove(neighbour);
+            this.doPortDisconnection(nodePort.getPortURI());
+            nodePort.unpublishPort();
+
+            // ----- Find new in the same direction if possible -----
+            NodeInfoI newNeighbour = this.RegistrationOutboundPort.findNewNeighbour(this.nodeInfo,
+                    directionOfNeighbour);
+            if (newNeighbour != null && newNeighbour.nodeIdentifier() != neighbour.nodeIdentifier()) {
+                SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
+                        AbstractOutboundPort.generatePortURI(), this);
+                newPort.publishPort();
+                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                this.doPortConnection(newPort.getPortURI(),
+                        ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
+                        SensorNodeConnector.class.getCanonicalName());
+                newPort.ask4Connection(this.nodeInfo);
+
+                this.addNeighbour(newNeighbour);
+
+                this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");
+                this.logMessage("Found new neighbour in direction " + directionOfNeighbour + " : "
+                        + newNeighbour.nodeIdentifier());
+            } else {
+                this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");
+                this.logMessage("No new neighbour found in direction " + directionOfNeighbour);
+            }
+
+            this.logMessage("Neighbours after disconnection: -->@;" + neighbour.nodeIdentifier() + " disconnected");
+            this.logMessage("<Neighbours after disconnection: -->@;" + printNeighbours());
+
+        } catch (Exception e) {
+            System.err.println("Error in ask4Disconnection " + e.getMessage());
+            e.printStackTrace();
+        }
+        // }
     }
 
     @Override
