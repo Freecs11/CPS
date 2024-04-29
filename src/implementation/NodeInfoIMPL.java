@@ -7,7 +7,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.PositionI;
 public class NodeInfoIMPL extends ConnectionInfoImpl
         implements NodeInfoI {
     private final PositionI position;
-    private final EndPointDescriptorI p2pEndpoint;
+    private EndPointDescriptorI p2pEndpoint;
     private final double range;
 
     public NodeInfoIMPL(String nodeIdentifier, PositionI position, EndPointDescriptorI endpoint,
@@ -33,4 +33,7 @@ public class NodeInfoIMPL extends ConnectionInfoImpl
         return this.p2pEndpoint;
     }
 
+    public void setP2pEndPointInfo(EndPointDescriptorI p2pEndpoint) {
+        this.p2pEndpoint = p2pEndpoint;
+    }
 }

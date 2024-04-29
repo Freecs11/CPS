@@ -22,4 +22,8 @@ public class ConnectionInfoImpl implements ConnectionInfoI {
         return this.endPointDesc;
     }
 
+    public void setEndPointInfo(EndPointDescriptorI endPointDesc) {
+        this.endPointDesc = endPointDesc;
+    }
+
 }

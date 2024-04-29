@@ -60,39 +60,15 @@ import implementation.request.ProcessingNodeIMPL;
 import query.abstraction.AbstractQuery;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
-@RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class, ClocksServerCI.class,
-        RequestResultCI.class })
+// @RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class,
+// ClocksServerCI.class,
+// RequestResultCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
-
-    protected Set<NodeInfoI> neighbours;
-
-    private ProcessingNodeI processingNode;
-
-    // Liste des données des capteurs,,
-    private ArrayList<SensorDataI> sensorData;
-
-    // Uris des requetes deja executees
-    protected final Set<String> requestURIs;
-
-    protected final NodeInfoI nodeInfo;
-
-    // -------------------- Les PORTS -------------------------
-    protected final RequestingInboundPort requestingInboundPort;
-    protected final SensorNodeP2PInboundPort sensorNodeP2PInboundPort;
-    protected final RegistrationOutboundPort RegistrationOutboundPort;
-    protected final RequestResultOutboundPort requestResultOutboundPort;
-
-    // -------------------- HashMap pour garder les ports des voisins
-    // -------------------------
-    protected final ConcurrentHashMap<NodeInfoI, SensorNodeP2POutboundPort> nodeInfoToP2POutboundPortMap;
 
     // -------------------- L'HORLOGE -------------------------
     protected AcceleratedClock clock;
     protected Instant startInstant;
-
-    // -------------------- URI du registre -------------------------
-    protected String registerInboundPortURI;
     protected String nodeURI;
 
     // -------------------- POOL de thread
@@ -106,12 +82,6 @@ public class NodeComponent extends AbstractComponent
     protected final int asyncRequestPoolIndex;
     protected final int syncContPoolIndex;
     protected final int asyncContPoolIndex;
-
-    // -------------------- lock pour la liste des neighbours
-    // ------------------------- ca laisse les lectures en parallele pour plusieurs
-    // -------------------------- mais l'écriture est bloquante et execute une à une
-    // -------------------------
-    private final ReadWriteLock neigboursLock = new ReentrantReadWriteLock();
 
     // Plugin
     protected NodePlugin nodePlugin;
@@ -144,47 +114,9 @@ public class NodeComponent extends AbstractComponent
         assert nbAsyncThreads > 0 : new PreconditionException("nbAsyncThreads must be greater than 0!");
         assert nbSyncThreads > 0 : new PreconditionException("nbSyncThread must be greater than 0!");
 
-        // port URI for the registry
-        this.registerInboundPortURI = registryInboundPortURI;
         this.nodeURI = uri;
-        // initialisation des listes
-        this.requestURIs = new HashSet<>();
-        this.neighbours = new HashSet<>();
-        this.sensorData = sensorData;
-        this.nodeInfoToP2POutboundPortMap = new ConcurrentHashMap<>();
-
-        // initialisation des ports
-        this.requestingInboundPort = new RequestingInboundPort(AbstractInboundPort.generatePortURI(), this);
-        this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
-        this.RegistrationOutboundPort = new RegistrationOutboundPort(AbstractOutboundPort.generatePortURI(), this);
-        this.requestResultOutboundPort = new RequestResultOutboundPort(
-                AbstractOutboundPort.generatePortURI(), this);
-
-        // publication des ports
-        this.requestingInboundPort.publishPort();
-        this.sensorNodeP2PInboundPort.publishPort();
-        this.RegistrationOutboundPort.publishPort();
-        this.requestResultOutboundPort.publishPort();
-
-        // initialisation d'endpoint et p2pendpoint
-        EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(this.sensorNodeP2PInboundPort.getPortURI(),
-                SensorNodeP2PCI.class);
-        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.requestingInboundPort.getPortURI(),
-                RequestingCI.class);
-
-        // initialisation de l'objet nodeInfo
-        this.nodeInfo = new NodeInfoIMPL(nodeId, new PositionIMPL(x, y), endpoint, p2pendpoint, range);
-
-        // initialisation de l'objet processingNode
-        this.processingNode = new ProcessingNodeIMPL(this.nodeInfo.nodePosition(), null,
-                nodeId);
-
-        // ajout des sensorData
-        ((ProcessingNodeIMPL) this.processingNode).addAllSensorData(this.sensorData);
-
         // initialisation de l'horloge
         this.startInstant = startInstant;
-
         // initialisation des pools de threads
         this.syncRequestPoolUri = syncRequestPoolUri;
         this.asyncRequestPoolUri = asyncRequestPoolUri;
@@ -195,10 +127,12 @@ public class NodeComponent extends AbstractComponent
         this.syncContPoolIndex = this.createNewExecutorService(syncContPoolUri, nbSyncThreads, false);
         this.asyncContPoolIndex = this.createNewExecutorService(asyncContPoolUri, nbAsyncThreads, true);
 
+        // initialisation de l'objet nodeInfo
+        NodeInfoI nodeInfo = new NodeInfoIMPL(nodeId, new PositionIMPL(x, y), null, null, range);
         this.nodePlugin = new NodePlugin(
-                this.registerInboundPortURI,
-                this.nodeInfo,
-                this.processingNode);
+                registryInboundPortURI,
+                nodeInfo,
+                sensorData);
         this.nodePlugin.setPluginURI(AbstractInboundPort.generatePortURI());
         this.installPlugin(nodePlugin);
 
@@ -233,44 +167,7 @@ public class NodeComponent extends AbstractComponent
         assert startInstant != null : new PreconditionException("startInstant can't be null!");
         assert nbAsyncThreads > 0 : new PreconditionException("nbAsyncThreads must be greater than 0!");
         assert nbSyncThreads > 0 : new PreconditionException("nbSyncThread must be greater than 0!");
-        // port URI for the registry
-        this.registerInboundPortURI = registryInboundPortURI;
-
-        // initialisation des listes
-        this.requestURIs = new HashSet<>();
-        this.neighbours = new HashSet<>();
-        this.sensorData = sensorData;
-        this.nodeInfoToP2POutboundPortMap = new ConcurrentHashMap<>();
-
-        // initialisation des ports
-        this.requestingInboundPort = new RequestingInboundPort(AbstractInboundPort.generatePortURI(), this);
-        this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(AbstractInboundPort.generatePortURI(), this);
-        this.RegistrationOutboundPort = new RegistrationOutboundPort(AbstractOutboundPort.generatePortURI(), this);
-        this.requestResultOutboundPort = new RequestResultOutboundPort(
-                AbstractOutboundPort.generatePortURI(), this);
-
-        // publication des ports
-        this.requestingInboundPort.publishPort();
-        this.sensorNodeP2PInboundPort.publishPort();
-        this.RegistrationOutboundPort.publishPort();
-        this.requestResultOutboundPort.publishPort();
-
-        // initialisation d'endpoint et p2pendpoint
-        EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(this.sensorNodeP2PInboundPort.getPortURI(),
-                SensorNodeP2PCI.class);
-        EndPointDescriptorI endpoint = new EndPointDescIMPL(this.requestingInboundPort.getPortURI(),
-                RequestingCI.class);
-
-        // initialisation de l'objet nodeInfo
-        this.nodeInfo = new NodeInfoIMPL(nodeId, new PositionIMPL(x, y), endpoint, p2pendpoint, range);
-
-        // initialisation de l'objet processingNode
-        this.processingNode = new ProcessingNodeIMPL(this.nodeInfo.nodePosition(), null,
-                this.nodeInfo.nodeIdentifier());
-
-        // ajout des sensorData
-        ((ProcessingNodeIMPL) this.processingNode).addAllSensorData(sensorData);
-
+        this.nodeURI = this.reflectionInboundPortURI;
         // initialisation de l'horloge
         this.startInstant = startInstant;
 
@@ -284,10 +181,12 @@ public class NodeComponent extends AbstractComponent
         this.syncContPoolIndex = this.createNewExecutorService(syncContPoolUri, nbSyncThreads, false);
         this.asyncContPoolIndex = this.createNewExecutorService(asyncContPoolUri, nbAsyncThreads, true);
 
+        // initialisation de l'objet nodeInfo
+        NodeInfoI nodeInfo = new NodeInfoIMPL(nodeId, new PositionIMPL(x, y), null, null, range);
         this.nodePlugin = new NodePlugin(
-                this.registerInboundPortURI,
-                this.nodeInfo,
-                this.processingNode);
+                registryInboundPortURI,
+                nodeInfo,
+                sensorData);
         this.nodePlugin.setPluginURI(AbstractInboundPort.generatePortURI());
         this.installPlugin(nodePlugin);
         AbstractComponent.checkImplementationInvariant(this);
@@ -313,18 +212,11 @@ public class NodeComponent extends AbstractComponent
     @Override
     public synchronized void start() throws ComponentStartException {
         try {
-            this.nodePlugin.initialise();
-            this.doPortConnection(
-                    this.RegistrationOutboundPort.getPortURI(),
-                    this.registerInboundPortURI,
-                    RegistryConnector.class.getCanonicalName());
-
-            this.logMessage("Starting " + nodeInfo.nodeIdentifier());
-
+            this.logMessage("Starting " + this.nodeURI);
         } catch (Exception e) {
             throw new ComponentStartException(e);
         }
-        this.logMessage("Node Component successfully started: " + this.nodeInfo.nodeIdentifier());
+        this.logMessage("Node Component successfully started: " + this.nodeURI);
 
         super.start();
     }
@@ -356,7 +248,9 @@ public class NodeComponent extends AbstractComponent
                 o -> {
                     try {
                         this.nodePlugin.registerNode();
+                        System.err.println("Node registered");
                     } catch (Exception e) {
+                        System.err.println("Node registered");
                         e.printStackTrace();
                     }
                 }, delayRegister, TimeUnit.NANOSECONDS);
@@ -373,25 +267,26 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public synchronized void finalise() throws Exception {
-        this.logMessage("stopping node component : " + this.nodeInfo.nodeIdentifier());
+        this.logMessage("stopping node component : " + this.nodeURI);
         // ----- NO CALL TO SERVICES IN FINALISE -----
 
-        if (this.RegistrationOutboundPort.connected()) {
-            this.doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
-        }
-        this.RegistrationOutboundPort.unpublishPort();
-        for (SensorNodeP2POutboundPort p2poutboundPort : this.nodeInfoToP2POutboundPortMap.values()) {
-            if (p2poutboundPort.connected()) {
-                this.doPortDisconnection(p2poutboundPort.getPortURI());
-            }
-            p2poutboundPort.unpublishPort();
-        }
+        // if (this.RegistrationOutboundPort.connected()) {
+        // this.doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
+        // }
+        // this.RegistrationOutboundPort.unpublishPort();
+        // for (SensorNodeP2POutboundPort p2poutboundPort :
+        // this.nodeInfoToP2POutboundPortMap.values()) {
+        // if (p2poutboundPort.connected()) {
+        // this.doPortDisconnection(p2poutboundPort.getPortURI());
+        // }
+        // p2poutboundPort.unpublishPort();
+        // }
 
-        if (this.requestResultOutboundPort.connected()) {
-            this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
+        // if (this.requestResultOutboundPort.connected()) {
+        // this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
 
-        }
-        this.requestResultOutboundPort.unpublishPort();
+        // }
+        // this.requestResultOutboundPort.unpublishPort();
         // clock
 
         super.finalise();
@@ -401,10 +296,10 @@ public class NodeComponent extends AbstractComponent
     public synchronized void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
-            if (this.requestingInboundPort.isPublished())
-                this.requestingInboundPort.unpublishPort();
-            if (this.sensorNodeP2PInboundPort.isPublished())
-                this.sensorNodeP2PInboundPort.unpublishPort();
+            // if (this.requestingInboundPort.isPublished())
+            // this.requestingInboundPort.unpublishPort();
+            // if (this.sensorNodeP2PInboundPort.isPublished())
+            // this.sensorNodeP2PInboundPort.unpublishPort();
 
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
@@ -416,10 +311,10 @@ public class NodeComponent extends AbstractComponent
     public synchronized void shutdownNow() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
-            if (this.requestingInboundPort.isPublished())
-                this.requestingInboundPort.unpublishPort();
-            if (this.sensorNodeP2PInboundPort.isPublished())
-                this.sensorNodeP2PInboundPort.unpublishPort();
+            // if (this.requestingInboundPort.isPublished())
+            // this.requestingInboundPort.unpublishPort();
+            // if (this.sensorNodeP2PInboundPort.isPublished())
+            // this.sensorNodeP2PInboundPort.unpublishPort();
 
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
@@ -429,303 +324,21 @@ public class NodeComponent extends AbstractComponent
 
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
-        this.logMessage("Executing RequestContinuationI: " + this.nodeInfo.nodeIdentifier());
-        for (NodeInfoI neighbour : neighbours) {
-            this.logMessage("Neighbour : of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
-        }
-        this.logMessage("-----------------------------------------------------------------------------\n");
-
-        if (request == null) {
-            throw new Exception("request is null");
-        }
-
-        if (request.getQueryCode() == null) {
-            throw new Exception("Query is null");
-        }
-
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(request.requestURI())) {
-                this.logMessage("Request URI: " + request.requestURI() + " already executed");
-                return new QueryResultIMPL();
-            }
-            this.requestURIs.add(request.requestURI());
-        }
-
-        ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
-        if (state == null) {
-            throw new Exception("State is null");
-        }
-        System.err.println("executing RequestContinuationI: " + request.toString());
-
-        state.updateProcessingNode(this.processingNode);
-        System.err.println("Processing Node: " + this.processingNode.getNodeIdentifier());
-
-        // Execute the query
-        AbstractQuery query = (AbstractQuery) request.getQueryCode();
-        QueryResultI result = query.eval(state);
-
-        if (state.isFlooding()) {
-            // Propagate the request to neighbours and update the result
-            return this.floodingPropagation(state, request, result);
-        } else if (state.isDirectional()) {
-            // Can't propagate if no more hops
-            // Return local result
-            this.logMessage(
-                    "Directional Propagation , number of hops: " + ((ExecutionStateIMPL) state).getHops() + "\n");
-            if (((ExecutionStateIMPL) state).noMoreHops()) {
-                return result;
-            }
-            // Propagate the request to neighbours and update the result
-            this.logMessage("Directional Propagation not ended\n");
-            return this.directionalPropagation(state, request, result);
-        }
-
-        // Return the final result
-        return result;
-
+        return this.nodePlugin.execute(request);
     }
 
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
-        this.logMessage("Executing Request: " + this.nodeInfo.nodeIdentifier());
-        for (NodeInfoI neighbour : neighbours) {
-            this.logMessage(
-                    "Neighbour 2 : of" + this.nodeInfo.nodeIdentifier() + "->" + neighbour.nodeIdentifier());
-        }
-        this.logMessage("--------------------------------------------------------------------------------\n");
-        if (request == null) {
-            throw new Exception("request is null");
-        }
-
-        if (request.getQueryCode() == null) {
-            throw new Exception("Query is null");
-        }
-
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(request.requestURI())) {
-                this.logMessage("Request URI: " + request.requestURI() + " already executed");
-                return new QueryResultIMPL();
-            }
-            this.requestURIs.add(request.requestURI());
-        }
-
-        AbstractQuery query = (AbstractQuery) request.getQueryCode();
-        ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
-        QueryResultI result = query.eval(state);
-        if (!state.isContinuationSet()) {
-            return result;
-        } else if (state.isFlooding()) {
-            // Propagate the request to neighbours and update the result
-            return this.floodingPropagation(state, request, result);
-        } else if (state.isDirectional()) {
-            // Can't propagate if no more hops
-            // Return local result
-            if (((ExecutionStateIMPL) state).noMoreHops()) {
-                return result;
-            }
-            // Propagate the request to neighbours and update the result
-            this.logMessage("Directional Propagation not ended\n");
-            return this.directionalPropagation(state, request, result);
-        }
-
-        // Return the final result
-        return result;
-
-    }
-
-    private QueryResultI directionalPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
-            throws Exception {
-        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-        while (it.hasNext()) {
-            NodeInfoI neighbour = it.next();
-            this.logMessage("propagation " + neighbour.nodeIdentifier());
-            if (state.getDirections()
-                    .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
-                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                this.logMessage("successfully\n");
-                if (nodePort != null) {
-                    ExecutionStateI newState = new ExecutionStateIMPL(state);
-                    newState.incrementHops();
-                    RequestContinuationI continuation = new RequestContinuationIMPL(
-                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
-                    QueryResultI res = nodePort.execute(continuation);
-                    ((QueryResultIMPL) result).update(res);
-                }
-            }
-        }
-        return result;
-    }
-
-    private QueryResultI floodingPropagation(ExecutionStateI state, RequestI request, QueryResultI result)
-            throws Exception {
-        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-        while (it.hasNext()) {
-            NodeInfoI neighbour = it.next();
-            if (state.withinMaximalDistance(neighbour.nodePosition())) {
-                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                if (nodePort != null) {
-                    double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
-                            - processingNode.getPosition().distance(neighbour.nodePosition());
-                    ExecutionStateIMPL newState = new ExecutionStateIMPL(state);
-                    newState.updateMaxDistance(newMaximalDistance);
-                    // Create new continuation
-                    RequestContinuationI continuation = new RequestContinuationIMPL(
-                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
-                    // Execute the continuation
-                    QueryResultI res = nodePort.execute(continuation);
-                    // Update the result
-                    ((QueryResultIMPL) result).update(res);
-                }
-            }
-        }
-        return result;
+        return this.nodePlugin.execute(request);
     }
 
     @Override
     public void executeAsync(RequestI request) throws Exception {
-        if (request == null) {
-            throw new Exception("request is null");
-        }
-
-        if (request.getQueryCode() == null) {
-            throw new Exception("Query is null");
-        }
-
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(request.requestURI())) {
-                this.logMessage("Request URI: " + request.requestURI() + " already executed");
-                return;
-            }
-            this.requestURIs.add(request.requestURI());
-        }
-
-        this.logMessage("received async request, URI: " + request.requestURI());
-
-        AbstractQuery query = (AbstractQuery) request.getQueryCode();
-        ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
-
-        QueryResultI result = query.eval(state);
-
-        if (!state.isContinuationSet()) {
-            this.logMessage("No continuation set");
-            returnResultToClient(request, result); // return the result to the client
-        } else if (state.isFlooding()) {
-            // Propagate the request to neighbours and update the result
-            this.floodingPropagationAsync(state, request);
-        } else if (state.isDirectional()) {
-            // Can't propagate if no more hops
-            // Return local result
-            if (((ExecutionStateIMPL) state).noMoreHops()) {
-                this.logMessage("No more hops");
-                returnResultToClient(request, result); // return the result to the client
-                return;
-            }
-            // Propagate the request to neighbours and update the result
-            this.directionalPropagationAsync(state, request);
-        }
-
-        // every node will return the result to the client after executing the request
-        // and propagating it to the neighbours
-        returnResultToClient(request, result); // return the result to the client
-    }
-
-    private synchronized void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
-        this.doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
-                ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
-                ClientRequestResult.class.getCanonicalName());
-        this.logMessage("Sending result to client URI: " + requestURIs);
-        this.requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
-        this.doPortDisconnection(this.requestResultOutboundPort.getClientPortURI());
-    }
-
-    private void directionalPropagationAsync(ExecutionStateI state, RequestI request)
-            throws Exception {
-        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-        while (it.hasNext()) {
-            NodeInfoI neighbour = it.next();
-            if (state.getDirections()
-                    .contains(processingNode.getPosition().directionFrom(neighbour.nodePosition()))) {
-                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                if (nodePort != null) {
-                    ExecutionStateI newState = new ExecutionStateIMPL(state);
-                    newState.incrementHops();
-                    RequestContinuationI continuation = new RequestContinuationIMPL(
-                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
-                    nodePort.executeAsync(continuation);
-                }
-            }
-        }
-    }
-
-    private void floodingPropagationAsync(ExecutionStateI state, RequestI request)
-            throws Exception {
-        Iterator<NodeInfoI> it = new HashSet<>(neighbours).iterator();
-        while (it.hasNext()) {
-            NodeInfoI neighbour = it.next();
-            this.logMessage("propagation " + neighbour.nodeIdentifier());
-            if (state.withinMaximalDistance(neighbour.nodePosition())) {
-                SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
-                if (nodePort != null) {
-                    double newMaximalDistance = ((ExecutionStateIMPL) state).getMaxDistance()
-                            - processingNode.getPosition().distance(neighbour.nodePosition());
-                    ExecutionStateIMPL newState = new ExecutionStateIMPL(state);
-                    newState.updateMaxDistance(newMaximalDistance);
-
-                    RequestContinuationI continuation = new RequestContinuationIMPL(
-                            request.requestURI(), request.getQueryCode(), request.isAsynchronous(),
-                            request.clientConnectionInfo(), newState);
-                    nodePort.executeAsync(continuation);
-                }
-            }
-        }
+        this.nodePlugin.executeAsync(request);
     }
 
     @Override
     public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
-        if (requestContinuation == null) {
-            throw new Exception("request is null");
-        }
-
-        if (requestContinuation.getQueryCode() == null) {
-            throw new Exception("Query is null");
-        }
-
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(requestContinuation.requestURI())) {
-                this.logMessage("Request URI: " + requestContinuation.requestURI() + " already executed");
-                return;
-            }
-            this.requestURIs.add(requestContinuation.requestURI());
-        }
-
-        this.logMessage("received async request, URI: " + requestContinuation.requestURI() + " Time: " + Instant.now());
-
-        AbstractQuery query = (AbstractQuery) requestContinuation.getQueryCode();
-        ExecutionStateI state = ((RequestContinuationIMPL) requestContinuation).getExecutionState();
-        QueryResultI result;
-        ((ExecutionStateIMPL) state).updateProcessingNode(this.processingNode);
-        result = query.eval(state);
-        if (state.isFlooding()) {
-            // Propagate the request to neighbours and update the result
-            this.floodingPropagationAsync(state, requestContinuation);
-        } else if (state.isDirectional()) {
-            // Can't propagate if no more hops
-            // Return local result
-            if (((ExecutionStateIMPL) state).noMoreHops()) {
-                this.logMessage("No more hops");
-                returnResultToClient(requestContinuation, result); // return the result to the client if no more hops
-                                                                   // and return
-                return;
-            }
-            // Propagate the request to neighbours and update the result
-            this.directionalPropagationAsync(state, requestContinuation);
-        }
-
-        // every node will return the result to the client after executing the request
-        // and propagating it to the neighbours
-        returnResultToClient(requestContinuation, result); // return the result to the client
+        this.nodePlugin.executeAsync(requestContinuation);
     }
 }

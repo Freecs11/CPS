@@ -1,40 +1,4 @@
-1714400577085|starting client component.
-1714400577122|Client component waiting.......
-1714400581953|Waiting 10098000000 ns before starting the client component.
-1714400592054|Client  component starting...
-1714400596072|Async request sent to node node4 with URI req2 at 2024-04-29T14:23:16.072534500Z
-1714400596074|Gathered size : 2 for request with URI req1
-1714400596076|Received result for request with URI req2 at 2024-04-29T14:23:16.076534200Z
-1714400596076|SYNC Query result, sent at : 2024-04-29T14:23:16.075535300Z , URI : req1 : 
-Gathered Sensors:--->| ↓ 
-  |--- **************************
-SensorDataIMP [nodeIdentifier=urinode4
- sensorIdentifier=humidity
- value=22.0]
-
-  |--- **************************
-SensorDataIMP [nodeIdentifier=urinode4
- sensorIdentifier=temperature
- value=21.0]
-
-
-1714400597057|Gathered size : 2 for request with URI req3
-1714400597057|SYNC Query result, sent at : 2024-04-29T14:23:17.057889700Z , URI : req3 : 
-Gathered Sensors:--->| ↓ 
-  |--- **************************
-SensorDataIMP [nodeIdentifier=urinode4
- sensorIdentifier=humidity
- value=22.0]
-
-  |--- **************************
-SensorDataIMP [nodeIdentifier=urinode4
- sensorIdentifier=temperature
- value=21.0]
-
-
-1714400597552|Async request sent to node node4 with URI req4 at 2024-04-29T14:23:17.552965500Z
-1714400597553|Received result for request with URI req4 at 2024-04-29T14:23:17.553858400Z
-1714400598054|Async request sent to node node4 with URI req8 at 2024-04-29T14:23:18.054659100Z
-1714400598055|Async request sent to node node4 with URI req7 at 2024-04-29T14:23:18.055560500Z
-1714400598056|Received result for request with URI req8 at 2024-04-29T14:23:18.055560500Z
-1714400598057|Received result for request with URI req7 at 2024-04-29T14:23:18.057559900Z
+1714406089554|starting client component.
+1714406089592|Client component waiting.......
+1714406094182|Waiting 10100000000 ns before starting the client component.
+1714406104296|Client  component starting...
