@@ -771,6 +771,7 @@ public class NodeComponent extends AbstractComponent
 
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
+
         QueryResultI result = query.eval(state);
 
         if (!state.isContinuationSet()) {

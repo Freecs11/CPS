@@ -9,8 +9,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import bcm.CVM;
-
 // Cette classe permet d'effectuer des tests d'intégration avec JUnit
 public class IntegrationTests {
 

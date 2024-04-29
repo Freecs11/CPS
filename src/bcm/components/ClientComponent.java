@@ -1,11 +1,8 @@
 package bcm.components;
 
-import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -42,13 +39,11 @@ import query.ast.BooleanQuery;
 import query.ast.ConditionalExprBooleanExpr;
 import query.ast.ConstantRand;
 import query.ast.DirectionContinuation;
-import query.ast.EmptyContinuation;
 import query.ast.EqualConditionalExpr;
 import query.ast.FinalDirections;
 import query.ast.FinalGather;
 import query.ast.FloodingContinuation;
 import query.ast.GatherQuery;
-import query.ast.OrBooleanExpr;
 import query.ast.RecursiveDirections;
 import query.ast.RecursiveGather;
 import query.ast.RelativeBase;
