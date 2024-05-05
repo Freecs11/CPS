@@ -2,25 +2,10 @@ package bcm.components;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import bcm.CVM;
-import bcm.connectors.ClientRequestResult;
-import bcm.connectors.RegistryConnector;
-import bcm.connectors.SensorNodeConnector;
 import bcm.plugin.NodePlugin;
-import bcm.ports.RegistrationOutboundPort;
-import bcm.ports.RequestResultOutboundPort;
-import bcm.ports.RequestingInboundPort;
-import bcm.ports.SensorNodeP2PInboundPort;
-import bcm.ports.SensorNodeP2POutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -28,41 +13,26 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
-import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
-import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PImplI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingImplI;
-import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
-import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
-import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
 import fr.sorbonne_u.exceptions.PreconditionException;
 import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
 import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
-import implementation.EndPointDescIMPL;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
-import implementation.QueryResultIMPL;
-import implementation.RequestContinuationIMPL;
-import implementation.request.ExecutionStateIMPL;
-import implementation.request.ProcessingNodeIMPL;
-import query.abstraction.AbstractQuery;
 
 @OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
-// @RequiredInterfaces(required = { RegistrationCI.class, SensorNodeP2PCI.class,
-// ClocksServerCI.class,
-// RequestResultCI.class })
+@RequiredInterfaces(required = { ClocksServerCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
 
@@ -133,7 +103,7 @@ public class NodeComponent extends AbstractComponent
                 registryInboundPortURI,
                 nodeInfo,
                 sensorData);
-        this.nodePlugin.setPluginURI(AbstractInboundPort.generatePortURI());
+        this.nodePlugin.setPluginURI(AbstractOutboundPort.generatePortURI());
         this.installPlugin(nodePlugin);
 
         AbstractComponent.checkImplementationInvariant(this);
@@ -187,7 +157,7 @@ public class NodeComponent extends AbstractComponent
                 registryInboundPortURI,
                 nodeInfo,
                 sensorData);
-        this.nodePlugin.setPluginURI(AbstractInboundPort.generatePortURI());
+        this.nodePlugin.setPluginURI(AbstractOutboundPort.generatePortURI());
         this.installPlugin(nodePlugin);
         AbstractComponent.checkImplementationInvariant(this);
         AbstractComponent.checkInvariant(this);
@@ -225,8 +195,11 @@ public class NodeComponent extends AbstractComponent
     public synchronized void execute() throws Exception {
         // ------CONNECTION TO THE CLOCK SERVER------
 
+        this.logMessage("first line of execute() in NodeComponent");
+
         ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
                 AbstractOutboundPort.generatePortURI(), this);
+        this.logMessage("Node component connecting to the clock server");
         clockPort.publishPort();
         this.doPortConnection(
                 clockPort.getPortURI(),
@@ -236,6 +209,8 @@ public class NodeComponent extends AbstractComponent
         this.doPortDisconnection(clockPort.getPortURI());
         clockPort.unpublishPort();
         clockPort.destroyPort();
+
+        this.logMessage("Node component connected to the clock server");
 
         // ----------------- DELAYED STARTUP -----------------
         this.logMessage("Node component waiting.......");
@@ -270,6 +245,8 @@ public class NodeComponent extends AbstractComponent
         this.logMessage("stopping node component : " + this.nodeURI);
         // ----- NO CALL TO SERVICES IN FINALISE -----
 
+        this.nodePlugin.finalise();
+
         // if (this.RegistrationOutboundPort.connected()) {
         // this.doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
         // }
@@ -296,6 +273,7 @@ public class NodeComponent extends AbstractComponent
     public synchronized void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
+            // this.nodePlugin.uninstall();
             // if (this.requestingInboundPort.isPublished())
             // this.requestingInboundPort.unpublishPort();
             // if (this.sensorNodeP2PInboundPort.isPublished())

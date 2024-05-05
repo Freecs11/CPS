@@ -150,7 +150,7 @@ public class CVM extends AbstractCVM {
                 // create the client component
                 this.uriClientURI = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                                 new Object[] { CLIENT_COMPONENT_URI, LOOKUP_IN_BOUND_PORT_URI,
-                                                REG_START_INSTANT.plusSeconds(100L), 10, 10
+                                                REG_START_INSTANT.plusSeconds(100L), 10, 10, "client1"
                                 });
 
                 // ---------------------------------------------------------------------

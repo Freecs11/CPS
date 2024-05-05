@@ -4,9 +4,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import bcm.connectors.ClientRequestResult;
 import bcm.connectors.RegistryConnector;
@@ -16,12 +17,13 @@ import bcm.ports.RequestResultOutboundPort;
 import bcm.ports.RequestingInboundPort;
 import bcm.ports.SensorNodeP2PInboundPort;
 import bcm.ports.SensorNodeP2POutboundPort;
-import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import fr.sorbonne_u.cps.sensor_network.interfaces.BCM4JavaEndPointDescriptorI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
+import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
@@ -33,12 +35,8 @@ import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.ProcessingNodeI;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import implementation.EndPointDescIMPL;
-import fr.sorbonne_u.cps.sensor_network.interfaces.EndPointDescriptorI;
 import implementation.NodeInfoIMPL;
-import implementation.PositionIMPL;
 import implementation.QueryResultIMPL;
 import implementation.RequestContinuationIMPL;
 import implementation.request.ExecutionStateIMPL;
@@ -100,14 +98,15 @@ public class NodePlugin
     public void installOn(ComponentI owner) throws Exception {
         super.installOn(owner);
         System.err.println("NodePlugin installed on " + owner);
-    }
 
-    @Override
-    public void initialise() throws Exception {
         this.addRequiredInterface(RegistrationCI.class);
         this.addRequiredInterface(SensorNodeP2PCI.class);
         this.addRequiredInterface(RequestingCI.class);
         this.addRequiredInterface(RequestResultCI.class);
+    }
+
+    @Override
+    public void initialise() throws Exception {
         this.requestingInboundPort = new RequestingInboundPort(this.getOwner());
         this.requestingInboundPort.publishPort();
         this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(this.getOwner());
@@ -142,23 +141,35 @@ public class NodePlugin
     @Override
     public void finalise() throws Exception {
         // MEC FAIS LE
-        // if (this.requestingInboundPort.connected()) {
-        // this.getOwner().doPortDisconnection(this.requestingInboundPort.getPortURI());
-        // }
-        // if (this.sensorNodeP2PInboundPort.connected()) {
-        // this.getOwner().doPortDisconnection(this.sensorNodeP2PInboundPort.getPortURI());
-        // }
-        // if (this.RegistrationOutboundPort.connected()) {
-        // this.getOwner().doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
-        // }
+        if (this.RegistrationOutboundPort.connected()) {
+            this.getOwner().doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
+        }
+        if (this.RegistrationOutboundPort.isPublished())
+            this.RegistrationOutboundPort.unpublishPort();
+        for (SensorNodeP2POutboundPort p2poutboundPort : this.nodeInfoToP2POutboundPortMap.values()) {
+            if (p2poutboundPort.connected()) {
+                this.getOwner().doPortDisconnection(p2poutboundPort.getPortURI());
+            }
+            if (p2poutboundPort.isPublished())
+                p2poutboundPort.unpublishPort();
+        }
+
+        if (this.requestResultOutboundPort.connected()) {
+            this.getOwner().doPortDisconnection(this.requestResultOutboundPort.getPortURI());
+
+        }
+        if (this.requestResultOutboundPort.isPublished())
+            this.requestResultOutboundPort.unpublishPort();
+
         super.finalise();
     }
 
     @Override
     public void uninstall() throws Exception {
-        this.requestingInboundPort.unpublishPort();
-        this.sensorNodeP2PInboundPort.unpublishPort();
-        this.RegistrationOutboundPort.unpublishPort();
+        if (requestingInboundPort.isPublished())
+            this.requestingInboundPort.unpublishPort();
+        if (sensorNodeP2PInboundPort.isPublished())
+            this.sensorNodeP2PInboundPort.unpublishPort();
         super.uninstall();
     }
 
