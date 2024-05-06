@@ -194,6 +194,11 @@ public class ClientComponent extends AbstractComponent {
 
         @Override
         public synchronized void shutdown() throws ComponentShutdownException {
+                try {
+                        this.plugin.uninstall();
+                } catch (Exception e) {
+                        throw new ComponentShutdownException(e);
+                }
                 super.shutdown();
         }
 

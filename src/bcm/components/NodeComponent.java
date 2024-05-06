@@ -31,7 +31,6 @@ import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 
-@OfferedInterfaces(offered = { RequestingCI.class, SensorNodeP2PCI.class })
 @RequiredInterfaces(required = { ClocksServerCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
@@ -273,7 +272,7 @@ public class NodeComponent extends AbstractComponent
     public synchronized void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
-            // this.nodePlugin.uninstall();
+            this.nodePlugin.uninstall();
             // if (this.requestingInboundPort.isPublished())
             // this.requestingInboundPort.unpublishPort();
             // if (this.sensorNodeP2PInboundPort.isPublished())

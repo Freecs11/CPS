@@ -103,6 +103,8 @@ public class NodePlugin
         this.addRequiredInterface(SensorNodeP2PCI.class);
         this.addRequiredInterface(RequestingCI.class);
         this.addRequiredInterface(RequestResultCI.class);
+        this.addOfferedInterface(RequestingCI.class);
+        this.addOfferedInterface(SensorNodeP2PCI.class);
     }
 
     @Override
