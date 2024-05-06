@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
+import bcm.DistributedCVM;
 import bcm.plugin.ClientPlugin;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -98,14 +99,14 @@ public class ClientComponent extends AbstractComponent {
                                 clockPort.getPortURI(),
                                 ClocksServer.STANDARD_INBOUNDPORT_URI,
                                 ClocksServerConnector.class.getCanonicalName());
-                this.clock = clockPort.getClock(CVM.CLOCK_URI);
+                this.clock = clockPort.getClock(DistributedCVM.CLOCK_URI);
                 this.doPortDisconnection(clockPort.getPortURI());
                 clockPort.unpublishPort();
                 clockPort.destroyPort();
+                
 
-                // --------- Wait until the clock is started ------------
-                this.logMessage("Client component waiting.......");
-                this.clock.waitUntilStart(); // wait until the clock is started
+                this.clock.waitUntilStart();
+                
 
                 long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
                 this.logMessage("Waiting " + delayTilStart + " ns before starting the client component.");

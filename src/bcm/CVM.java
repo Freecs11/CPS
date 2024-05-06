@@ -43,6 +43,45 @@ public class CVM extends AbstractCVM {
 
         protected String uriRegisterURI;
 
+        /**
+         * Calculate the grid size for a given number of nodes.
+         * 
+         * @param desiredNodes the number of nodes to place on the grid
+         * @return the grid size that can accommodate the desired number of nodes, to be
+         *         used for the buildmap method
+         */
+        public static int calculateGridSize(int desiredNodes) {
+                // Minimum grid size starts at 1x1
+                int gridSize = 1;
+
+                while (true) {
+                        int nodesCount = 0;
+                        int nodeId = 1;
+
+                        // Calculate nodes for a given grid size
+                        for (int y = 1; y <= gridSize; y++) {
+                                if (y % 2 != 0) { // Odd rows
+                                        for (int x = 1; x <= gridSize; x += 2) {
+                                                nodeId++;
+                                        }
+                                } else { // Even rows
+                                        for (int x = 2; x <= gridSize; x += 2) {
+                                                nodeId++;
+                                        }
+                                }
+                        }
+
+                        nodesCount = nodeId - 1; // Correct the last increment
+
+                        // Check if we have enough nodes
+                        if (nodesCount >= desiredNodes) {
+                                return gridSize; // Return the current grid size
+                        }
+
+                        gridSize++; // Increment grid size and try again
+                }
+        }
+
         public static ArrayList<NodeComponentInfo> buildMap(int gridSize) {
                 ArrayList<NodeComponentInfo> nodes = new ArrayList<>();
                 int nodeId = 1;
@@ -102,12 +141,14 @@ public class CVM extends AbstractCVM {
                                                 10 });
 
                 // create the node components
-                ArrayList<NodeComponentInfo> nodes = buildMap(5);
+                int desiredNumberNodes = 13;
+                int gridSize = calculateGridSize(desiredNumberNodes);
+                ArrayList<NodeComponentInfo> nodes = buildMap(gridSize);
                 int i = 0;
 
                 List<List<Double>> valuesList = new ArrayList<>();
 
-                for (int j = 0; j < 14; j++) {
+                for (int j = 0; j < desiredNumberNodes + 1; j++) {
                         List<Double> values = new ArrayList<>();
                         values.add(10 * j + 1.0);
                         values.add(10 * j + 2.0);
@@ -143,7 +184,6 @@ public class CVM extends AbstractCVM {
                         assert this.isDeployedComponent(uri);
                         this.toggleTracing(uri);
                         this.toggleLogging(uri);
-                        i += 5;
                         // }
                 }
 

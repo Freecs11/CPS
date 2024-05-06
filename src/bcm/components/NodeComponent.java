@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
+import bcm.DistributedCVM;
 import bcm.plugin.NodePlugin;
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -18,9 +18,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestContinuationI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
-import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI;
 import fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PImplI;
-import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingImplI;
 import fr.sorbonne_u.exceptions.PreconditionException;
 import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
@@ -204,18 +202,16 @@ public class NodeComponent extends AbstractComponent
                 clockPort.getPortURI(),
                 ClocksServer.STANDARD_INBOUNDPORT_URI,
                 ClocksServerConnector.class.getCanonicalName());
-        this.clock = clockPort.getClock(CVM.CLOCK_URI);
+        this.clock = clockPort.getClock(DistributedCVM.CLOCK_URI);
         this.doPortDisconnection(clockPort.getPortURI());
         clockPort.unpublishPort();
         clockPort.destroyPort();
 
         this.logMessage("Node component connected to the clock server");
 
-        // ----------------- DELAYED STARTUP -----------------
-        this.logMessage("Node component waiting.......");
-        // print the current time and the start time
-        this.clock.waitUntilStart(); // wait until the start time
-        this.logMessage("Node component starting.......");
+        this.clock.waitUntilStart();
+
+        // ------REGISTERING THE NODE------
 
         long delayRegister = this.clock.nanoDelayUntilInstant(this.startInstant);
         this.scheduleTask(

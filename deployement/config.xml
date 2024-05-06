@@ -1,0 +1,36 @@
+<deployment>
+    <hosts>
+    <host name="localhost"
+            dir="C:/Users/Freecs/Desktop/M1/CPS/cps_repo/cps_project/CPS/deployement/"/>
+    </hosts>
+    <cyclicBarrier   hostname="localhost" port="55253"/>
+    <globalRegistry  hostname="localhost" port="55252"/>
+    <rmiRegistryPort no="55999"/>
+    <jvms2hostnames>
+    <jvm2hostname jvmuri="registry-jvm"
+        rmiRegistryCreator="true" 
+        hostname="localhost"
+        mainclass="bcm.DistributedCVM"/>
+    <jvm2hostname jvmuri="cluster-jvm1"
+        rmiRegistryCreator="false"
+        hostname="localhost"
+        mainclass="bcm.DistributedCVM"/>
+    <jvm2hostname jvmuri="cluster-jvm2"
+        rmiRegistryCreator="false"
+        hostname="localhost"
+        mainclass="bcm.DistributedCVM"/>
+<!--     
+        <jvm2hostname jvmuri="cluster-jvm3"
+        rmiRegistryCreator="false"
+        hostname="localhost"
+        mainclass="bcm.DistributedCVM"/>
+    <jvm2hostname jvmuri="cluster-jvm4"
+        rmiRegistryCreator="false"
+        hostname="localhost"
+        mainclass="bcm.DistributedCVM"/>
+    <jvm2hostname jvmuri="cluster-jvm5"
+        rmiRegistryCreator="false"
+        hostname="localhost"
+        mainclass="bcm.DistributedCVM"/> -->
+    </jvms2hostnames>
+</deployment>
