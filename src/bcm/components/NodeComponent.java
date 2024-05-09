@@ -202,7 +202,7 @@ public class NodeComponent extends AbstractComponent
                 clockPort.getPortURI(),
                 ClocksServer.STANDARD_INBOUNDPORT_URI,
                 ClocksServerConnector.class.getCanonicalName());
-        this.clock = clockPort.getClock(DistributedCVM.CLOCK_URI);
+        this.clock = clockPort.getClock(CVM.CLOCK_URI);
         this.doPortDisconnection(clockPort.getPortURI());
         clockPort.unpublishPort();
         clockPort.destroyPort();

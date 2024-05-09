@@ -1,6 +1,12 @@
 package bcm.components;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
@@ -13,6 +19,7 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
+import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
 import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
 import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
@@ -48,29 +55,40 @@ public class ClientComponent extends AbstractComponent {
         // ---------Async timeout , the time to wait for the results to be gathered and
         // combined---------
         private long asyncTimeout = TimeUnit.SECONDS.toNanos(30L);
+        // -----Hash map to store queries and target nodes---------
+        private Map<String, List<QueryI>> queries;
+        // -----List of intervals to wait before sending the requests---------
+        private List<Long> intervals;
 
-        protected ClientComponent(String uri, String registryInboundPortURI,
-                        int nbThreads, int nbSchedulableThreads, String clientIdentifer) throws Exception {
-                super(uri, nbThreads, nbSchedulableThreads);
+        private Map<String, Long> syncResults = new HashMap<>();
+        private Map<String, Long> asyncResults = new HashMap<>();
 
-                // ---------Init the plugin---------
-                this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer);
-                this.plugin.setPluginURI(AbstractOutboundPort.generatePortURI());
-                this.installPlugin(plugin);
+        // protected ClientComponent(String uri, String registryInboundPortURI,
+        // int nbThreads, int nbSchedulableThreads, String clientIdentifer) throws
+        // Exception {
+        // super(uri, nbThreads, nbSchedulableThreads);
 
-                this.getTracer().setTitle("Client Component");
-                this.getTracer().setRelativePosition(1, 1);
-                AbstractComponent.checkImplementationInvariant(this);
-                AbstractComponent.checkInvariant(this);
-        }
+        // // ---------Init the plugin---------
+        // this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer);
+        // this.plugin.setPluginURI(AbstractOutboundPort.generatePortURI());
+        // this.installPlugin(plugin);
+
+        // this.getTracer().setTitle("Client Component");
+        // this.getTracer().setRelativePosition(1, 1);
+        // AbstractComponent.checkImplementationInvariant(this);
+        // AbstractComponent.checkInvariant(this);
+        // }
 
         protected ClientComponent(String uri, String registryInboundPortURI, Instant startInstant,
                         int nbThreads,
-                        int nbSchedulableThreads, String clientIdentifer) throws Exception {
+                        int nbSchedulableThreads, String clientIdentifer,
+                        Map<String, List<QueryI>> queries,
+                        List<Long> intervals) throws Exception {
                 super(uri, nbThreads, nbSchedulableThreads);
 
                 this.startInstant = startInstant;
-
+                this.queries = queries;
+                this.intervals = intervals;
                 // ---------Init the plugin---------
                 this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer);
                 this.plugin.setPluginURI(AbstractOutboundPort.generatePortURI());
@@ -99,14 +117,12 @@ public class ClientComponent extends AbstractComponent {
                                 clockPort.getPortURI(),
                                 ClocksServer.STANDARD_INBOUNDPORT_URI,
                                 ClocksServerConnector.class.getCanonicalName());
-                this.clock = clockPort.getClock(DistributedCVM.CLOCK_URI);
+                this.clock = clockPort.getClock(CVM.CLOCK_URI);
                 this.doPortDisconnection(clockPort.getPortURI());
                 clockPort.unpublishPort();
                 clockPort.destroyPort();
-                
 
                 this.clock.waitUntilStart();
-                
 
                 long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
                 this.logMessage("Waiting " + delayTilStart + " ns before starting the client component.");
@@ -114,71 +130,32 @@ public class ClientComponent extends AbstractComponent {
                                 nil -> {
                                         this.logMessage("Client " + " component starting...");
                                 }, delayTilStart, TimeUnit.NANOSECONDS);
-
-                // ------------------- Gather Query Test 1 : Flooding continuation , Sync
-                // Request , ===> Result : 26 sensors
-                // ----------------------
-                GatherQuery query = new GatherQuery(
-                                new RecursiveGather("temperature",
-                                                new FinalGather("humidity")),
-                                new FloodingContinuation(new RelativeBase(), 45.0));
-                String nodeIdentifier = "node4";
-                long delayTilRequest2 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-                this.plugin.executeSyncRequest("req1", query, nodeIdentifier, delayTilRequest2);
-
-                // -------------------Gather Query Test 2 : flooding continuation , Async
-                // Request , ===> Result : 26 sensors
-                // -------------------
-                long delayTilRequest3 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(40L));
-                this.plugin.executeAsyncRequest("req2", query, nodeIdentifier, delayTilRequest3, this.asyncTimeout);
-
-                // -------------------Gather Query Test 3 : direction continuation , Sync
-                // Request , ===> Result : 16 sensors
-                // -------------------
-                GatherQuery query2 = new GatherQuery(
-                                new RecursiveGather("temperature",
-                                                new FinalGather("humidity")),
-                                new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
-                                                new FinalDirections(Direction.NE))));
-
-                long delayTilRequest4 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(50L));
-                this.plugin.executeSyncRequest("req3", query2, nodeIdentifier, delayTilRequest4);
-
-                // -------------------Gather Query Test 4 : direction continuation , Async
-                // Request
-                // -------------------
-                long delayTilRequest5 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(55L));
-                this.plugin.executeAsyncRequest("req4", query2, nodeIdentifier, delayTilRequest5, this.asyncTimeout);
-
-                // launch 2 async requests with at the same time
-                // we launch the previous gather requests ( flooding and directionnal)
-                long delayTilRequest8 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
-                this.plugin.executeAsyncRequest("req7", query, nodeIdentifier, delayTilRequest8, this.asyncTimeout);
-                long delayTilRequest9 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(60L));
-                this.plugin.executeAsyncRequest("req8", query2, nodeIdentifier, delayTilRequest9, this.asyncTimeout);
-
-                // just a little
-                boolean req = true;
-                if (req) {
-                        return;
+                long elapsedTime = 0l;
+                for (Long interval : this.intervals) {
+                        for (Entry<String, List<QueryI>> entry : this.queries.entrySet()) {
+                                String nodeID = entry.getKey();
+                                for (QueryI query : entry.getValue()) {
+                                        delayTilStart += interval;
+                                        Instant instantBefore = this.clock.currentInstant();
+                                        String requestURI = "req" + instantBefore.toString();
+                                        this.asyncResults.put(requestURI, instantBefore.toEpochMilli());
+                                        this.plugin.executeAsyncRequest(
+                                                        requestURI, query,
+                                                        nodeID,
+                                                        delayTilStart, this.asyncTimeout);
+                                        instantBefore = this.clock.currentInstant();
+                                        requestURI = "req" + instantBefore.toString();
+                                        this.syncResults.put(requestURI, instantBefore.toEpochMilli());
+                                        this.plugin.executeSyncRequest(requestURI, query, nodeID, delayTilStart);
+                                        // System.err.println("RequestURI: " + requestURI + " Query: " +
+                                        // query.toString()
+                                        // + " NodeID: " + nodeID + " Interval: " + delayTilStart);
+                                        Instant instantAfter = this.clock.currentInstant();
+                                        elapsedTime = instantAfter.toEpochMilli() - instantBefore.toEpochMilli();
+                                        this.syncResults.put(requestURI, elapsedTime);
+                                }
+                        }
                 }
-                // ------------------- Boolean Query Test 1 : Flooding continuation , Sync
-                // Request
-                // -------------------
-                BooleanQuery query3 = new BooleanQuery(
-                                new ConditionalExprBooleanExpr(
-                                                new EqualConditionalExpr(new SensorRand("humidity"),
-                                                                new ConstantRand(70.0))),
-                                new FloodingContinuation(new RelativeBase(), 45.0));
-
-                long delayTilRequest6 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(70L));
-                this.plugin.executeSyncRequest("req5", query3, nodeIdentifier, delayTilRequest6);
-
-                // ------------------- Boolean Query Test 2 : Flooding continuation , Async
-                // Request
-                // -------------------
-                long delayTilRequest7 = this.clock.nanoDelayUntilInstant(this.startInstant.plusSeconds(72L));
-                this.plugin.executeAsyncRequest("req6", query3, nodeIdentifier, delayTilRequest7, this.asyncTimeout);
 
         }
 
@@ -187,6 +164,14 @@ public class ClientComponent extends AbstractComponent {
                 this.plugin.finalise();
                 super.finalise();
                 try {
+                        FileWriter testResults = new FileWriter(
+                                        new File("testResults" + this.reflectionInboundPortURI + ".csv"));
+                        testResults.write("RequestURI,SyncTime,AsyncTime\n");
+                        for (Entry<String, Long> entry : this.syncResults.entrySet()) {
+                                testResults.write(entry.getKey() + "," + entry.getValue() + ","
+                                                + this.asyncResults.get(entry.getKey()) + "\n");
+                        }
+                        testResults.close();
                         this.printExecutionLogOnFile("logRegistry");
                 } catch (Exception e) {
                         e.printStackTrace();
@@ -210,5 +195,8 @@ public class ClientComponent extends AbstractComponent {
 
         public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
                 this.plugin.acceptRequestResult(requestURI, result);
+                long elapsedTime = this.clock.currentInstant().toEpochMilli()
+                                - this.asyncResults.get(requestURI);
+                this.asyncResults.put(requestURI, elapsedTime);
         }
 }
