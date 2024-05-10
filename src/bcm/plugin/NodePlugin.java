@@ -571,6 +571,7 @@ public class NodePlugin
         this.getOwner().doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
                 ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
                 ClientRequestResult.class.getCanonicalName());
+        
         this.logMessage("Sending result to client URI: " + requestURIs);
         this.requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
         this.getOwner().doPortDisconnection(this.requestResultOutboundPort.getClientPortURI());
