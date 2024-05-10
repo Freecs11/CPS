@@ -1,62 +1,62 @@
-1715022795697|DCVM Cyclic Barrier up and running!
-1715022813274|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022813283|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022820998|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022821000|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022824873|All connected!
-1715022824883|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022824884|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022824884|DCVM Cyclic Barrier releases 3 sites.
-1715022824896|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022824897|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022824936|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022824937|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022824983|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022824984|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022824984|DCVM Cyclic Barrier releases 3 sites.
-1715022826419|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022826436|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022833942|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022833943|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022834753|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022834755|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022834755|DCVM Cyclic Barrier releases 3 sites.
-1715022834758|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022834758|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022834759|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022834759|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022834813|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022834814|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022834814|DCVM Cyclic Barrier releases 3 sites.
-1715022834868|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022834868|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022834896|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022834904|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022834932|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022834933|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022834933|DCVM Cyclic Barrier releases 3 sites.
-1715022920000|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022920005|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022920014|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022920016|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022920062|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022920063|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022920063|DCVM Cyclic Barrier releases 3 sites.
-1715022920323|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022920324|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022923183|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022923183|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022923503|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022923505|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022923505|DCVM Cyclic Barrier releases 3 sites.
-1715022923866|DCVM Cyclic Barrier accepts: registry-jvm localhost 59924
-1715022923867|DCVM Cyclic Barrier has received 1 out of 3 expected.
-1715022925624|DCVM Cyclic Barrier accepts: cluster-jvm2 localhost 53956
-1715022925625|DCVM Cyclic Barrier has received 2 out of 3 expected.
-1715022925812|DCVM Cyclic Barrier accepts: cluster-jvm1 localhost 39226
-1715022925813|DCVM Cyclic Barrier has received 3 out of 3 expected.
-1715022925813|DCVM Cyclic Barrier releases 3 sites.
-1715022925818|DCVMCyclicBarrier.run() finished.
-1715022925818|DCVMCyclicBarrier.run() finished.
-1715022925818|DCVMCyclicBarrier.run() finished.
-1715022925819|DCVM Cyclic Barrier shuts down!
+1715348319246|DCVM Cyclic Barrier up and running!
+1715348321054|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348321055|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348325939|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348325939|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348325957|All connected!
+1715348325966|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348325967|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348325967|DCVM Cyclic Barrier releases 3 sites.
+1715348325972|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348325976|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348326143|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348326143|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348326147|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348326147|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348326147|DCVM Cyclic Barrier releases 3 sites.
+1715348326358|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348326358|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348368532|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348368534|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348368545|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348368546|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348368546|DCVM Cyclic Barrier releases 3 sites.
+1715348368552|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348368552|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348368552|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348368552|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348368553|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348368553|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348368553|DCVM Cyclic Barrier releases 3 sites.
+1715348368556|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348368556|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348368557|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348368558|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348368560|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348368560|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348368560|DCVM Cyclic Barrier releases 3 sites.
+1715348443565|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348443565|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348443565|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348443568|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348443568|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348443571|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348443571|DCVM Cyclic Barrier releases 3 sites.
+1715348443577|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348443579|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348443585|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348443586|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348443589|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348443589|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348443589|DCVM Cyclic Barrier releases 3 sites.
+1715348443594|DCVM Cyclic Barrier accepts: registryjvm localhost 53618
+1715348443595|DCVM Cyclic Barrier has received 1 out of 3 expected.
+1715348443595|DCVM Cyclic Barrier accepts: clusterjvm2 localhost 53632
+1715348443596|DCVM Cyclic Barrier has received 2 out of 3 expected.
+1715348443597|DCVM Cyclic Barrier accepts: clusterjvm1 localhost 53631
+1715348443598|DCVM Cyclic Barrier has received 3 out of 3 expected.
+1715348443598|DCVM Cyclic Barrier releases 3 sites.
+1715348443603|DCVMCyclicBarrier.run() finished.
+1715348443604|DCVMCyclicBarrier.run() finished.
+1715348443605|DCVMCyclicBarrier.run() finished.
+1715348443605|DCVM Cyclic Barrier shuts down!

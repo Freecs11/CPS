@@ -3,7 +3,6 @@ package bcm.components;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.time.Instant;
@@ -14,14 +13,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import bcm.CVM;
-import bcm.DistributedCVM;
 import bcm.plugin.ClientPlugin;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
 import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
@@ -29,19 +26,6 @@ import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
-import query.ast.BooleanQuery;
-import query.ast.ConditionalExprBooleanExpr;
-import query.ast.ConstantRand;
-import query.ast.DirectionContinuation;
-import query.ast.EqualConditionalExpr;
-import query.ast.FinalDirections;
-import query.ast.FinalGather;
-import query.ast.FloodingContinuation;
-import query.ast.GatherQuery;
-import query.ast.RecursiveDirections;
-import query.ast.RecursiveGather;
-import query.ast.RelativeBase;
-import query.ast.SensorRand;
 
 @RequiredInterfaces(required = { ClocksServerCI.class })
 public class ClientComponent extends AbstractComponent {
