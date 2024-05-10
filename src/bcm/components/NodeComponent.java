@@ -210,6 +210,16 @@ public class NodeComponent extends AbstractComponent
         this.logMessage("Node component connected to the clock server");
 
         this.clock.waitUntilStart();
+        // ----------------- DELAYED STARTUP -----------------
+
+        this.logMessage("Node component waiting.......");
+        long delayTilStart = this.clock.nanoDelayUntilInstant(this.startInstant);
+        // on bloque le thread courant jusqu'à ce que le client soit prêt à démarrer (
+        // on utilisant l'instant de démarrage calculé précédemment)
+        this.wait(TimeUnit.NANOSECONDS.toMillis(delayTilStart));
+        // print the current time and the start time
+        // this.clock.waitUntilStart(); // wait until the start time
+        this.logMessage("Node component starting.......");
 
         // ------REGISTERING THE NODE------
 
