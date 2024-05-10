@@ -8,4 +8,5 @@ import query.interfaces.IEval;
 public abstract class AbstractQuery implements QueryI, IEval {
     @Override
     public abstract QueryResultI eval(ExecutionStateI context);
+
 }

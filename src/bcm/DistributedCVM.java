@@ -2,6 +2,7 @@ package bcm;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -13,8 +14,10 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
 import fr.sorbonne_u.components.helpers.CVMDebugModes;
 import fr.sorbonne_u.cps.sensor_network.interfaces.SensorDataI;
+import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
 import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import implementation.SensorDataIMPL;
+import tests.Queries;
 import utils.NodeComponentInfo;
 
 public class DistributedCVM
@@ -46,7 +49,6 @@ public class DistributedCVM
     protected static String CLUSTER_JVM4_URI = "cluster-jvm4";
     protected static String CLUSTER_JVM5_URI = "cluster-jvm5";
     protected static String REGISTRY_JVM_URI = "registry-jvm";
-
 
     protected String uriRegisterURI;
 
@@ -218,7 +220,7 @@ public class DistributedCVM
                             LOOKUP_IN_BOUND_PORT_URI,
                             REGISTER_IN_BOUND_PORT_URI,
                             "registeryPoolURI",
-                            nodes.size() });
+                            50 });
             this.toggleTracing(uriRegisterURI);
             this.toggleLogging(uriRegisterURI);
 
@@ -255,6 +257,8 @@ public class DistributedCVM
 
             }
 
+            HashMap<String, List<QueryI>> queriesClient = new HashMap<>();
+            queriesClient.put("node4", Queries.queries1);
             // Create the client
             String uriClientURI1 = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                     new Object[] {
@@ -262,7 +266,9 @@ public class DistributedCVM
                             LOOKUP_IN_BOUND_PORT_URI,
                             REG_START_INSTANT.plusSeconds(150L),
                             nodes.size(), nodes.size(),
-                            "client1"
+                            "client1",
+                            queriesClient,
+                            false
                     });
             this.toggleTracing(uriClientURI1);
             this.toggleLogging(uriClientURI1);
@@ -444,7 +450,7 @@ public class DistributedCVM
     public static void main(String[] args) {
         try {
             DistributedCVM dda = new DistributedCVM(args);
-            dda.startStandardLifeCycle(85000L);
+            dda.startStandardLifeCycle(75000L);
             Thread.sleep(10000L);
             System.exit(0);
         } catch (Exception e) {

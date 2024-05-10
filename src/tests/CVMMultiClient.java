@@ -1,5 +1,9 @@
 package tests;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.nio.channels.FileChannel;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,19 +134,23 @@ public class CVMMultiClient extends AbstractCVM {
                 });
 
         // ---------------------------------------------------------------------
+        // clean up CSV files
+        // ---------------------------------------------------------------------
+        this.cleanUpFiles();
+        // ---------------------------------------------------------------------
         // Creation phase
         // ---------------------------------------------------------------------
         // Register is starting directly with no link to the clock
         this.uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                 new Object[] {
                         REGISTER_COMPONENT_URI,
-                        1, 0,
+                        50, 50,
                         LOOKUP_IN_BOUND_PORT_URI,
                         REGISTER_IN_BOUND_PORT_URI,
                         "registeryPoolURI",
-                        10 });
+                        50 });
         // create the node components
-        int desiredNumberNodes = 10;
+        int desiredNumberNodes = 50;
         int gridSize = calculateGridSize(desiredNumberNodes);
         ArrayList<NodeComponentInfo> nodes = buildMap(gridSize);
         int i = 0;
@@ -157,9 +165,9 @@ public class CVMMultiClient extends AbstractCVM {
                             node.getRange(),
                             REGISTER_IN_BOUND_PORT_URI,
                             data,
-                            REG_START_INSTANT.plusSeconds(5L + i),
-                            nodes.size(),
-                            nodes.size(),
+                            REG_START_INSTANT.plusSeconds(1L + i),
+                            desiredNumberNodes * 2,
+                            desiredNumberNodes * 2,
                             "syncRequestPool_" + node.getName(),
                             "asyncRequestPool_" + node.getName(),
                             "syncContPool_" + node.getName(),
@@ -174,14 +182,21 @@ public class CVMMultiClient extends AbstractCVM {
             i++;
         }
         // Query
-        HashMap<String, List<QueryI>> queries = new HashMap<>();
-        queries.put("node4", Queries.queries);
+        // HashMap<String, List<QueryI>> queries = new HashMap<>();
+        // queries.put("node4", Queries.queries);
         List<Long> intervals = new ArrayList<>();
+        intervals.add(100L);
+        intervals.add(90L);
         intervals.add(80L);
         intervals.add(70L);
         intervals.add(60L);
         intervals.add(50L);
         intervals.add(40L);
+        intervals.add(30L);
+        intervals.add(20L);
+
+        // HashMap<String, List<QueryI>> queriesClient = new HashMap<>();
+        // queriesClient.put("node4", Queries.queries1);
 
         // create the client component
         // this.uriClientURI =
@@ -190,10 +205,17 @@ public class CVMMultiClient extends AbstractCVM {
         // REG_START_INSTANT.plusSeconds(100L), 10, 10, "client1"
         // });
         for (int j = 0; j < 5; j++) {
+            int randNode = (int) (Math.random() * (nodes.size() / 2));
+            HashMap<String, List<QueryI>> queriesClient = new HashMap<>();
+            queriesClient.put("node" + randNode, Queries.queries1);
 
             String uri = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                     new Object[] { CLIENT_COMPONENT_URI + (j + 1), LOOKUP_IN_BOUND_PORT_URI,
-                            REG_START_INSTANT.plusSeconds(100L), 10, 10, "client" + (j + 1), queries, intervals
+                            REG_START_INSTANT.plusSeconds(150L + nodes.size()), desiredNumberNodes * 3,
+                            desiredNumberNodes * 3, "client" + (j + 1),
+                            queriesClient,
+                            intervals,
+                            true
                     });
             assert this.isDeployedComponent(uri);
             this.toggleTracing(uri);
@@ -242,6 +264,20 @@ public class CVMMultiClient extends AbstractCVM {
         return data;
     }
 
+    private void cleanUpFiles() {
+        // clean up the testResult.csv file
+        // need to flush the file and then write the header
+        // RequestURI,StartTime,EndTime,Interval,Duration
+        File file = new File("testResults.csv");
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write("RequestURI,StartTime,EndTime,Interval,Duration\n");
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void finalise() throws Exception {
 
@@ -258,8 +294,8 @@ public class CVMMultiClient extends AbstractCVM {
     public static void main(String[] args) {
         try {
             CVMMultiClient cvm = new CVMMultiClient();
-            cvm.startStandardLifeCycle(50000L);
-            Thread.sleep(10000L);
+            cvm.startStandardLifeCycle(150000L);
+            Thread.sleep(150L);
             System.exit(0);
         } catch (Exception e) {
             throw new RuntimeException(e);
