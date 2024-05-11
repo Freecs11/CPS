@@ -68,7 +68,7 @@ public class NodeComponent extends AbstractComponent
             String asyncContPoolUri) throws Exception {
         // we mainly use our own pool of threads, we use bcm's pool of threads only
         // for connections
-        super(uri, 100, 100);
+        super(uri, nbSyncThreads, nbAsyncThreads);
 
         assert uri != null : new PreconditionException("uri can't be null!");
         assert registryInboundPortURI != null : new PreconditionException("registryInboundPortURI can't be null!");
@@ -123,7 +123,7 @@ public class NodeComponent extends AbstractComponent
             String asyncContPoolUri) throws Exception {
         // we mainly use our own pool of threads, we use bcm's pool of threads only
         // for connections
-        super(AbstractInboundPort.generatePortURI(), 100, 100);
+        super(AbstractInboundPort.generatePortURI(), nbSyncThreads, nbAsyncThreads);
         assert this.reflectionInboundPortURI != null : new PreconditionException("generated uri can't be null!");
         assert registryInboundPortURI != null : new PreconditionException("registryInboundPortURI can't be null!");
         assert nodeId != null : new PreconditionException("nodeId can't be null!");

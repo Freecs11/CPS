@@ -36,9 +36,13 @@ public class CVMThreadTest extends AbstractCVM {
     protected static final String REGISTER_IN_BOUND_PORT_URI = "register-inbound-port";
     protected static final String LOOKUP_IN_BOUND_PORT_URI = "lookup_inbound-port";
     protected static final String CLIENTS_OUT_BOUND_PORT_URI = "client-outbound-port";
+    private int nbThreads;
+    private String filename;
 
-    public CVMThreadTest() throws Exception {
+    public CVMThreadTest(int nbThreads) throws Exception {
         super();
+        this.nbThreads = nbThreads;
+        this.filename = "testResults" + nbThreads + "T.csv";
     }
 
     protected String clockURI;
@@ -164,8 +168,8 @@ public class CVMThreadTest extends AbstractCVM {
                             REGISTER_IN_BOUND_PORT_URI,
                             data,
                             REG_START_INSTANT.plusSeconds(5L + i),
-                            10,
-                            10,
+                            nbThreads,
+                            nbThreads,
                             "syncRequestPool_" + node.getName(),
                             "asyncRequestPool_" + node.getName(),
                             "syncContPool_" + node.getName(),
@@ -189,9 +193,9 @@ public class CVMThreadTest extends AbstractCVM {
         // intervals.add(70L);
         // intervals.add(60L);
         // intervals.add(50L);
-        // intervals.add(40L);
+         intervals.add(40L);
         // intervals.add(30L);
-        intervals.add(20L);
+//        intervals.add(20L);
 
         // HashMap<String, List<QueryI>> queriesClient = new HashMap<>();
         // queriesClient.put("node4", Queries.queries1);
@@ -204,7 +208,7 @@ public class CVMThreadTest extends AbstractCVM {
         // });
         int queryPick = 1;
         List<QueryI> queries500 = new ArrayList<>();
-        for (int j = 0; j < 20; j++) {
+        for (int j = 0; j < 10; j++) {
             if (queryPick % 2 == 0) {
                 queries500.add(Queries.query6);
             } else {
@@ -225,7 +229,8 @@ public class CVMThreadTest extends AbstractCVM {
                             desiredNumberNodes, "client" + (j + 1),
                             queriesClient,
                             intervals,
-                            true
+                            true,
+                            filename
                     });
             assert this.isDeployedComponent(uri);
             this.toggleTracing(uri);
@@ -278,7 +283,7 @@ public class CVMThreadTest extends AbstractCVM {
         // clean up the testResult.csv file
         // need to flush the file and then write the header
         // RequestURI,StartTime,EndTime,Interval,Duration
-        File file = new File("testResults.csv");
+        File file = new File(this.filename);
         try {
             FileWriter writer = new FileWriter(file);
             writer.write("RequestURI,StartTime,EndTime,Interval,Duration\n");
@@ -303,8 +308,9 @@ public class CVMThreadTest extends AbstractCVM {
 
     public static void main(String[] args) {
         try {
-            CVMThreadTest cvm = new CVMThreadTest();
-            cvm.startStandardLifeCycle(100000L);
+            
+            CVMThreadTest cvm = new CVMThreadTest(50);
+            cvm.startStandardLifeCycle(120000L);
             Thread.sleep(150L);
             System.exit(0);
         } catch (Exception e) {

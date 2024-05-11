@@ -3,8 +3,11 @@ package bcm.components;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +52,7 @@ public class ClientComponent extends AbstractComponent {
         private List<Long> intervals;
 
         private Map<String, QueryMetrics> queryMetrics = new HashMap<>();
-
+        private String filename;
         private boolean TESTMODE;
 
         protected ClientComponent(String uri, String registryInboundPortURI, Instant startInstant,
@@ -57,12 +60,14 @@ public class ClientComponent extends AbstractComponent {
                         int nbSchedulableThreads, String clientIdentifer,
                         Map<String, List<QueryI>> queries,
                         List<Long> intervals,
-                        boolean isTestMode) throws Exception {
+                        boolean isTestMode,
+                        String filename) throws Exception {
                 super(uri, nbThreads, nbSchedulableThreads);
                 this.TESTMODE = isTestMode;
                 this.startInstant = startInstant;
                 this.queries = queries;
                 this.intervals = intervals;
+                this.filename = filename;
                 // ---------Init the plugin---------
                 this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer);
                 this.plugin.setPluginURI(AbstractOutboundPort.generatePortURI());
@@ -101,9 +106,12 @@ public class ClientComponent extends AbstractComponent {
                 }
 
                 if (this.TESTMODE) {
-                        this.logMessage("queryList received: " + queries.toString() + " intervals: "
-                                        + intervals.toString());
+                        // this.logMessage("queryList received: " + queries.toString() + " intervals: "
+                        // + intervals.toString());
                         for (Long interval : intervals) {
+                                // long currentDelay = this.clock
+                                // .nanoDelayUntilInstant(
+                                // startInstant.plusSeconds(interval));
                                 for (Map.Entry<String, List<QueryI>> entry : queries.entrySet()) {
                                         for (QueryI query : entry.getValue()) {
                                                 final String nodeID = entry.getKey();
@@ -166,22 +174,37 @@ public class ClientComponent extends AbstractComponent {
         }
 
         private void storeTestResults() throws Exception {
-                File file = new File("testResults.csv");
-                try (FileWriter testResults = new FileWriter(file, true); // Open in append mode
-                                FileChannel channel = new FileOutputStream(file, true).getChannel()) {
-                        // Try acquiring the lock without blocking
-                        try (FileLock lock = channel.tryLock()) {
-                                if (lock != null) {
-                                        for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
-                                                QueryMetrics metrics = entry.getValue();
-                                                testResults.write(entry.getKey() + "," + metrics.startTime + ","
-                                                                + metrics.endTime + "," +
-                                                                metrics.interval + "," + metrics.duration + "\n");
-                                        }
-                                } else {
-                                        System.err.println("Could not lock the file for writing: testResults.csv");
+                File file = new File(filename);
+                if (!file.exists()) {
+                        file.createNewFile();
+                }
+
+                try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+                                FileChannel channel = randomAccessFile.getChannel()) {
+                        // Acquire the lock
+                        try (FileLock lock = channel.lock()) {
+                                // Move to the end of the file to append data
+                                randomAccessFile.seek(randomAccessFile.length());
+
+                                // If file length is 0, write headers
+                                if (randomAccessFile.length() == 0) {
+                                        randomAccessFile.writeBytes("RequestURI,StartTime,EndTime,Interval,Duration\n");
                                 }
+
+                                // Write each entry to the file
+                                for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
+                                        QueryMetrics metrics = entry.getValue();
+                                        String data = String.format("%s,%d,%d,%d,%d\n",
+                                                        entry.getKey(), metrics.startTime, metrics.endTime,
+                                                        metrics.interval, metrics.duration);
+                                        randomAccessFile.writeBytes(data);
+                                }
+                        } catch (OverlappingFileLockException e) {
+                                System.err.println(
+                                                "File is already locked in this thread or virtual machine: testResults.csv");
                         }
+                } catch (IOException e) {
+                        System.err.println("Failed to write to file: " + e.getMessage());
                 }
         }
 
