@@ -29,6 +29,7 @@ import fr.sorbonne_u.utils.aclocks.ClocksServer;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
+import utils.QueryMetrics;
 
 @RequiredInterfaces(required = { ClocksServerCI.class })
 public class ClientComponent extends AbstractComponent {
@@ -51,7 +52,7 @@ public class ClientComponent extends AbstractComponent {
         // -----List of intervals to wait before sending the requests---------
         private List<Long> intervals;
 
-        private Map<String, QueryMetrics> queryMetrics = new HashMap<>();
+        public Map<String, QueryMetrics> queryMetrics = new HashMap<>();
         private String filename;
         private boolean TESTMODE;
 
@@ -119,17 +120,20 @@ public class ClientComponent extends AbstractComponent {
                                                                 .nanoDelayUntilInstant(
                                                                                 startInstant.plusSeconds(interval));
                                                 String requestURI = generateRequestURI(Instant.now());
-                                                long startTime = System.nanoTime();
+
                                                 try {
-                                                        plugin.executeAsyncRequest(requestURI, query, nodeID,
-                                                                        currentDelay, asyncTimeout);
+                                                        // plugin.executeAsyncRequest(requestURI, query, nodeID,
+                                                        // currentDelay, asyncTimeout);
+                                                        plugin.executeSyncRequest(requestURI, query, nodeID,
+                                                                        currentDelay);
                                                 } catch (Exception e) {
                                                         logError(e);
                                                 }
-                                                queryMetrics.put(requestURI,
-                                                                new QueryMetrics(startTime + currentDelay,
-                                                                                startTime + currentDelay + asyncTimeout,
-                                                                                interval, 0));
+                                                // queryMetrics.put(requestURI,
+                                                // new QueryMetrics(startTime,
+                                                // startTime + asyncTimeout / 1000000,
+                                                // interval, 0));
+
                                         }
                                 }
                         }
@@ -194,10 +198,14 @@ public class ClientComponent extends AbstractComponent {
                                 // Write each entry to the file
                                 for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
                                         QueryMetrics metrics = entry.getValue();
-                                        String data = String.format("%s,%d,%d,%d,%d\n",
-                                                        entry.getKey(), metrics.startTime, metrics.endTime,
-                                                        metrics.interval, metrics.duration);
-                                        randomAccessFile.writeBytes(data);
+                                        StringBuilder data = new StringBuilder();
+                                        data.append(entry.getKey()).append(",");
+                                        data.append(metrics.getStartTime()).append(",");
+                                        data.append(metrics.getEndTime()).append(",");
+                                        data.append(metrics.getInterval()).append(",");
+                                        data.append(metrics.getDuration()).append("\n");
+
+                                        randomAccessFile.writeBytes(data.toString());
                                 }
                         } catch (OverlappingFileLockException e) {
                                 System.err.println(
@@ -219,19 +227,20 @@ public class ClientComponent extends AbstractComponent {
         public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
                 this.plugin.acceptRequestResult(requestURI, result);
 
-                if (this.TESTMODE) {
-                        long endTime = System.nanoTime();
-                        QueryMetrics metrics = queryMetrics.get(requestURI);
-                        this.logMessage("Request " + requestURI + " , endTime: " + endTime + " , registered endTime: "
-                                        + metrics.endTime);
+                // if (this.TESTMODE) {
+                // long endTime = this.clock.currentInstant().toEpochMilli();
+                // QueryMetrics metrics = queryMetrics.get(requestURI);
+                // this.logMessage("Request " + requestURI + " , endTime: " + endTime + " ,
+                // registered endTime: "
+                // + metrics.endTime);
 
-                        // si le temps de la récéoption du résultat est inférieur au temps de fin (
-                        // temps que le client regroupe les résultats)
-                        if (endTime < metrics.endTime) {
-                                metrics.duration = endTime - metrics.startTime;
-                                queryMetrics.put(requestURI, metrics);
-                        }
-                }
+                // // si le temps de la récéoption du résultat est inférieur au temps de fin (
+                // // temps que le client regroupe les résultats)
+                // if (endTime < metrics.endTime) {
+                // metrics.duration = endTime - metrics.startTime;
+                // queryMetrics.put(requestURI, metrics);
+                // }
+                // }
         }
 
         @Override
@@ -260,19 +269,5 @@ public class ClientComponent extends AbstractComponent {
         @Override
         public synchronized void shutdownNow() throws ComponentShutdownException {
                 super.shutdown();
-        }
-
-        private class QueryMetrics {
-                long startTime;
-                long endTime;
-                long interval;
-                long duration;
-
-                QueryMetrics(long startTime, long endTime, long interval, long duration) {
-                        this.startTime = startTime;
-                        this.endTime = endTime;
-                        this.interval = interval;
-                        this.duration = duration;
-                }
         }
 }

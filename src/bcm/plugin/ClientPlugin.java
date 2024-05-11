@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import bcm.components.ClientComponent;
 import bcm.connectors.LookUpRegistryConnector;
 import bcm.connectors.RequestingConnector;
 import bcm.ports.LookupOutboundPort;
@@ -26,6 +27,7 @@ import implementation.ConnectionInfoImpl;
 import implementation.EndPointDescIMPL;
 import implementation.QueryResultIMPL;
 import implementation.RequestIMPL;
+import utils.QueryMetrics;
 
 public class ClientPlugin
                 extends AbstractPlugin {
@@ -101,6 +103,7 @@ public class ClientPlugin
          * @param delay   the delay to wait before sending the request
          */
         public void executeSyncRequest(String requestURI, QueryI query, String nodeId, long delay) {
+
                 this.getOwner().scheduleTask(
                                 new AbstractTask() {
                                         @Override
@@ -126,8 +129,15 @@ public class ClientPlugin
                                                                         ((EndPointDescIMPL) nodeInfo.endPointInfo())
                                                                                         .getInboundPortURI(),
                                                                         RequestingConnector.class.getCanonicalName());
+                                                        QueryMetrics metric = new QueryMetrics(System.nanoTime(), 0l,
+                                                                        0l, 0l);
+                                                        metric.setStartTime(System.nanoTime());
                                                         QueryResultI res = clientRequestingOutboundPort
                                                                         .execute(request);
+                                                        metric.setEndTime(System.nanoTime());
+                                                        metric.setDuration(metric.getEndTime() - metric.getStartTime());
+                                                        ((ClientComponent) ClientPlugin.this.getOwner()).queryMetrics
+                                                                        .put(requestURI, metric);
                                                         if (res.isGatherRequest()) {
                                                                 ClientPlugin.this.getOwner()
                                                                                 .logMessage("Gathered size : " + res

@@ -193,9 +193,9 @@ public class CVMThreadTest extends AbstractCVM {
         // intervals.add(70L);
         // intervals.add(60L);
         // intervals.add(50L);
-         intervals.add(40L);
+        intervals.add(40L);
         // intervals.add(30L);
-//        intervals.add(20L);
+        // intervals.add(20L);
 
         // HashMap<String, List<QueryI>> queriesClient = new HashMap<>();
         // queriesClient.put("node4", Queries.queries1);
@@ -208,7 +208,7 @@ public class CVMThreadTest extends AbstractCVM {
         // });
         int queryPick = 1;
         List<QueryI> queries500 = new ArrayList<>();
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < 1; j++) {
             if (queryPick % 2 == 0) {
                 queries500.add(Queries.query6);
             } else {
@@ -308,9 +308,10 @@ public class CVMThreadTest extends AbstractCVM {
 
     public static void main(String[] args) {
         try {
-            
-            CVMThreadTest cvm = new CVMThreadTest(50);
-            cvm.startStandardLifeCycle(120000L);
+            int nbThreads = Integer.parseInt(args[0]);
+            long waitTime = Long.parseLong(args[1]);
+            CVMThreadTest cvm = new CVMThreadTest(nbThreads);
+            cvm.startStandardLifeCycle(waitTime);
             Thread.sleep(150L);
             System.exit(0);
         } catch (Exception e) {
