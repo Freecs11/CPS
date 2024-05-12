@@ -208,7 +208,7 @@ public class CVMThreadTest extends AbstractCVM {
         // });
         int queryPick = 1;
         List<QueryI> queries500 = new ArrayList<>();
-        for (int j = 0; j < 200; j++) {
+        for (int j = 0; j < 400; j++) {
             // if (queryPick % 2 == 0) {
             // queries500.add(Queries.query6);
             // } else {
