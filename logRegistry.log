@@ -1,3 +1,6403 @@
-1715532040202|starting client component.
-1715532042446|Waiting 2774428571 ns before starting the client component.
-1715532045224|Client  component starting...
+1715541810534|starting client component.
+1715541817596|Waiting 2871428571 ns before starting the client component.
+1715541820481|Client  component starting...
+1715541821625|Gathered size : 12 for request with URI req2024-05-12T19:23:40.496539400Z0.13455141414385474
+1715541821625|SYNC Query result, sent at : 2024-05-12T19:23:41.625248200Z , URI : req2024-05-12T19:23:40.496539400Z0.13455141414385474 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821640|Gathered size : 12 for request with URI req2024-05-12T19:23:40.495550800Z0.9796027794062778
+1715541821641|SYNC Query result, sent at : 2024-05-12T19:23:41.641810200Z , URI : req2024-05-12T19:23:40.495550800Z0.9796027794062778 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821667|Gathered size : 12 for request with URI req2024-05-12T19:23:40.504051200Z0.7602642689915617
+1715541821667|SYNC Query result, sent at : 2024-05-12T19:23:41.667849400Z , URI : req2024-05-12T19:23:40.504051200Z0.7602642689915617 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821680|Gathered size : 12 for request with URI req2024-05-12T19:23:40.484018700Z0.5913243561578381
+1715541821680|SYNC Query result, sent at : 2024-05-12T19:23:41.680719700Z , URI : req2024-05-12T19:23:40.484018700Z0.5913243561578381 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821687|Gathered size : 12 for request with URI req2024-05-12T19:23:40.489524600Z0.6217222219493398
+1715541821687|SYNC Query result, sent at : 2024-05-12T19:23:41.687713700Z , URI : req2024-05-12T19:23:40.489524600Z0.6217222219493398 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821691|Gathered size : 12 for request with URI req2024-05-12T19:23:40.486015700Z3.9666382186143156E-4
+1715541821691|SYNC Query result, sent at : 2024-05-12T19:23:41.691260500Z , URI : req2024-05-12T19:23:40.486015700Z3.9666382186143156E-4 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821692|Gathered size : 12 for request with URI req2024-05-12T19:23:40.480020600Z0.005274132453154001
+1715541821693|SYNC Query result, sent at : 2024-05-12T19:23:41.692259500Z , URI : req2024-05-12T19:23:40.480020600Z0.005274132453154001 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821706|Gathered size : 12 for request with URI req2024-05-12T19:23:40.505051Z0.2916206631487851
+1715541821706|SYNC Query result, sent at : 2024-05-12T19:23:41.706817200Z , URI : req2024-05-12T19:23:40.505051Z0.2916206631487851 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821707|Gathered size : 12 for request with URI req2024-05-12T19:23:40.492546200Z0.3018295788879862
+1715541821707|SYNC Query result, sent at : 2024-05-12T19:23:41.707821600Z , URI : req2024-05-12T19:23:40.492546200Z0.3018295788879862 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821745|Gathered size : 12 for request with URI req2024-05-12T19:23:40.524106400Z0.6897445978299342
+1715541821746|SYNC Query result, sent at : 2024-05-12T19:23:41.746579800Z , URI : req2024-05-12T19:23:40.524106400Z0.6897445978299342 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821858|Gathered size : 12 for request with URI req2024-05-12T19:23:40.479008300Z0.6682965497700337
+1715541821859|SYNC Query result, sent at : 2024-05-12T19:23:41.858569200Z , URI : req2024-05-12T19:23:40.479008300Z0.6682965497700337 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821866|Gathered size : 12 for request with URI req2024-05-12T19:23:40.522105900Z0.7956196318358247
+1715541821866|SYNC Query result, sent at : 2024-05-12T19:23:41.866655600Z , URI : req2024-05-12T19:23:40.522105900Z0.7956196318358247 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821868|Gathered size : 12 for request with URI req2024-05-12T19:23:40.499041700Z0.058091903320105054
+1715541821868|SYNC Query result, sent at : 2024-05-12T19:23:41.868648500Z , URI : req2024-05-12T19:23:40.499041700Z0.058091903320105054 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821914|Gathered size : 12 for request with URI req2024-05-12T19:23:40.525106300Z0.5253091218114659
+1715541821915|SYNC Query result, sent at : 2024-05-12T19:23:41.915348500Z , URI : req2024-05-12T19:23:40.525106300Z0.5253091218114659 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821918|Gathered size : 12 for request with URI req2024-05-12T19:23:40.499041700Z0.6214063916353282
+1715541821918|SYNC Query result, sent at : 2024-05-12T19:23:41.918855100Z , URI : req2024-05-12T19:23:40.499041700Z0.6214063916353282 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821930|Gathered size : 12 for request with URI req2024-05-12T19:23:40.501049600Z0.08257805706087051
+1715541821930|SYNC Query result, sent at : 2024-05-12T19:23:41.930394Z , URI : req2024-05-12T19:23:40.501049600Z0.08257805706087051 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541821983|Gathered size : 12 for request with URI req2024-05-12T19:23:40.503052100Z0.15482228143971022
+1715541821983|SYNC Query result, sent at : 2024-05-12T19:23:41.983715200Z , URI : req2024-05-12T19:23:40.503052100Z0.15482228143971022 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822027|Gathered size : 12 for request with URI req2024-05-12T19:23:40.500050900Z0.03995246255096918
+1715541822028|SYNC Query result, sent at : 2024-05-12T19:23:42.028560100Z , URI : req2024-05-12T19:23:40.500050900Z0.03995246255096918 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822030|Gathered size : 12 for request with URI req2024-05-12T19:23:40.505051Z0.944663940485396
+1715541822031|SYNC Query result, sent at : 2024-05-12T19:23:42.031776700Z , URI : req2024-05-12T19:23:40.505051Z0.944663940485396 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822032|Gathered size : 12 for request with URI req2024-05-12T19:23:40.481013900Z0.1170208650179454
+1715541822032|SYNC Query result, sent at : 2024-05-12T19:23:42.032775600Z , URI : req2024-05-12T19:23:40.481013900Z0.1170208650179454 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822071|Gathered size : 12 for request with URI req2024-05-12T19:23:40.523107Z0.6383562506534775
+1715541822072|SYNC Query result, sent at : 2024-05-12T19:23:42.072590900Z , URI : req2024-05-12T19:23:40.523107Z0.6383562506534775 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822073|Gathered size : 12 for request with URI req2024-05-12T19:23:40.506050800Z0.23859741485590302
+1715541822073|SYNC Query result, sent at : 2024-05-12T19:23:42.073804200Z , URI : req2024-05-12T19:23:40.506050800Z0.23859741485590302 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822093|Gathered size : 12 for request with URI req2024-05-12T19:23:40.483016100Z0.4060380307583098
+1715541822093|SYNC Query result, sent at : 2024-05-12T19:23:42.093853500Z , URI : req2024-05-12T19:23:40.483016100Z0.4060380307583098 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822100|Gathered size : 12 for request with URI req2024-05-12T19:23:40.481013900Z0.3836768090515231
+1715541822101|SYNC Query result, sent at : 2024-05-12T19:23:42.101404400Z , URI : req2024-05-12T19:23:40.481013900Z0.3836768090515231 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822106|Gathered size : 12 for request with URI req2024-05-12T19:23:40.502050400Z0.7345874670624117
+1715541822106|SYNC Query result, sent at : 2024-05-12T19:23:42.106396200Z , URI : req2024-05-12T19:23:40.502050400Z0.7345874670624117 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822109|Gathered size : 12 for request with URI req2024-05-12T19:23:40.521098Z0.10773750392678638
+1715541822109|SYNC Query result, sent at : 2024-05-12T19:23:42.109928200Z , URI : req2024-05-12T19:23:40.521098Z0.10773750392678638 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822111|Gathered size : 12 for request with URI req2024-05-12T19:23:40.504051200Z0.5674849667117238
+1715541822112|SYNC Query result, sent at : 2024-05-12T19:23:42.112936800Z , URI : req2024-05-12T19:23:40.504051200Z0.5674849667117238 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822157|Gathered size : 12 for request with URI req2024-05-12T19:23:40.491531Z0.50420873006426
+1715541822157|SYNC Query result, sent at : 2024-05-12T19:23:42.157022400Z , URI : req2024-05-12T19:23:40.491531Z0.50420873006426 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822300|Gathered size : 12 for request with URI req2024-05-12T19:23:40.520098900Z0.0715953627199204
+1715541822300|SYNC Query result, sent at : 2024-05-12T19:23:42.300974700Z , URI : req2024-05-12T19:23:40.520098900Z0.0715953627199204 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822414|Gathered size : 12 for request with URI req2024-05-12T19:23:40.487017300Z0.23513798967242006
+1715541822415|SYNC Query result, sent at : 2024-05-12T19:23:42.414933700Z , URI : req2024-05-12T19:23:40.487017300Z0.23513798967242006 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822416|Gathered size : 12 for request with URI req2024-05-12T19:23:40.489524600Z0.190264105297846
+1715541822416|SYNC Query result, sent at : 2024-05-12T19:23:42.416934400Z , URI : req2024-05-12T19:23:40.489524600Z0.190264105297846 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822454|Gathered size : 12 for request with URI req2024-05-12T19:23:40.479008300Z0.9495859335738926
+1715541822455|SYNC Query result, sent at : 2024-05-12T19:23:42.454013600Z , URI : req2024-05-12T19:23:40.479008300Z0.9495859335738926 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822464|Gathered size : 12 for request with URI req2024-05-12T19:23:40.481013900Z0.9449586835170207
+1715541822464|SYNC Query result, sent at : 2024-05-12T19:23:42.464535400Z , URI : req2024-05-12T19:23:40.481013900Z0.9449586835170207 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822490|Gathered size : 12 for request with URI req2024-05-12T19:23:40.479008300Z0.05413467319745402
+1715541822490|SYNC Query result, sent at : 2024-05-12T19:23:42.490571300Z , URI : req2024-05-12T19:23:40.479008300Z0.05413467319745402 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822492|Gathered size : 12 for request with URI req2024-05-12T19:23:40.482013700Z0.523296573023832
+1715541822492|SYNC Query result, sent at : 2024-05-12T19:23:42.492884800Z , URI : req2024-05-12T19:23:40.482013700Z0.523296573023832 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822493|Gathered size : 12 for request with URI req2024-05-12T19:23:40.481013900Z0.3620048598919273
+1715541822493|SYNC Query result, sent at : 2024-05-12T19:23:42.493391900Z , URI : req2024-05-12T19:23:40.481013900Z0.3620048598919273 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822548|Gathered size : 12 for request with URI req2024-05-12T19:23:40.490532400Z0.13080977422417828
+1715541822548|SYNC Query result, sent at : 2024-05-12T19:23:42.548706500Z , URI : req2024-05-12T19:23:40.490532400Z0.13080977422417828 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822553|Gathered size : 12 for request with URI req2024-05-12T19:23:40.516578900Z0.39885387667381944
+1715541822553|SYNC Query result, sent at : 2024-05-12T19:23:42.553713300Z , URI : req2024-05-12T19:23:40.516578900Z0.39885387667381944 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822555|Gathered size : 12 for request with URI req2024-05-12T19:23:40.515580Z0.6909939827782003
+1715541822555|SYNC Query result, sent at : 2024-05-12T19:23:42.555741Z , URI : req2024-05-12T19:23:40.515580Z0.6909939827782003 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822558|Gathered size : 12 for request with URI req2024-05-12T19:23:40.514579200Z0.8984716641983148
+1715541822558|SYNC Query result, sent at : 2024-05-12T19:23:42.558715Z , URI : req2024-05-12T19:23:40.514579200Z0.8984716641983148 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822564|Gathered size : 12 for request with URI req2024-05-12T19:23:40.476517Z0.7939478799040642
+1715541822564|SYNC Query result, sent at : 2024-05-12T19:23:42.564814100Z , URI : req2024-05-12T19:23:40.476517Z0.7939478799040642 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822565|Gathered size : 12 for request with URI req2024-05-12T19:23:40.525106300Z0.903557809133695
+1715541822565|SYNC Query result, sent at : 2024-05-12T19:23:42.565791700Z , URI : req2024-05-12T19:23:40.525106300Z0.903557809133695 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822567|Gathered size : 12 for request with URI req2024-05-12T19:23:40.501049600Z0.7538052997196619
+1715541822568|SYNC Query result, sent at : 2024-05-12T19:23:42.568792700Z , URI : req2024-05-12T19:23:40.501049600Z0.7538052997196619 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822571|Gathered size : 12 for request with URI req2024-05-12T19:23:40.486015700Z0.647204430930886
+1715541822571|SYNC Query result, sent at : 2024-05-12T19:23:42.571321400Z , URI : req2024-05-12T19:23:40.486015700Z0.647204430930886 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822572|Gathered size : 12 for request with URI req2024-05-12T19:23:40.520098900Z0.977172239120659
+1715541822572|SYNC Query result, sent at : 2024-05-12T19:23:42.572903400Z , URI : req2024-05-12T19:23:40.520098900Z0.977172239120659 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822572|Gathered size : 12 for request with URI req2024-05-12T19:23:40.472515400Z0.9736608809780517
+1715541822572|SYNC Query result, sent at : 2024-05-12T19:23:42.572903400Z , URI : req2024-05-12T19:23:40.472515400Z0.9736608809780517 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822586|Gathered size : 12 for request with URI req2024-05-12T19:23:40.491531Z0.8141866017430921
+1715541822586|SYNC Query result, sent at : 2024-05-12T19:23:42.586351900Z , URI : req2024-05-12T19:23:40.491531Z0.8141866017430921 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822608|Gathered size : 12 for request with URI req2024-05-12T19:23:40.474514900Z0.93103335501587
+1715541822608|SYNC Query result, sent at : 2024-05-12T19:23:42.608826700Z , URI : req2024-05-12T19:23:40.474514900Z0.93103335501587 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822610|Gathered size : 12 for request with URI req2024-05-12T19:23:40.517602700Z0.7298065365044016
+1715541822610|SYNC Query result, sent at : 2024-05-12T19:23:42.610774900Z , URI : req2024-05-12T19:23:40.517602700Z0.7298065365044016 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822610|Gathered size : 12 for request with URI req2024-05-12T19:23:40.493532200Z0.6054514879238823
+1715541822610|SYNC Query result, sent at : 2024-05-12T19:23:42.610774900Z , URI : req2024-05-12T19:23:40.493532200Z0.6054514879238823 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822612|Gathered size : 12 for request with URI req2024-05-12T19:23:40.519088600Z0.8665410182673269
+1715541822612|SYNC Query result, sent at : 2024-05-12T19:23:42.612781900Z , URI : req2024-05-12T19:23:40.519088600Z0.8665410182673269 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822624|Gathered size : 12 for request with URI req2024-05-12T19:23:40.491531Z0.9842310544795885
+1715541822624|SYNC Query result, sent at : 2024-05-12T19:23:42.624034900Z , URI : req2024-05-12T19:23:40.491531Z0.9842310544795885 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822645|Gathered size : 12 for request with URI req2024-05-12T19:23:40.503052100Z0.4606417802004119
+1715541822645|SYNC Query result, sent at : 2024-05-12T19:23:42.645954200Z , URI : req2024-05-12T19:23:40.503052100Z0.4606417802004119 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541822784|Gathered size : 12 for request with URI req2024-05-12T19:23:40.497533Z0.5609136330652722
+1715541822784|SYNC Query result, sent at : 2024-05-12T19:23:42.784646400Z , URI : req2024-05-12T19:23:40.497533Z0.5609136330652722 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823507|Gathered size : 12 for request with URI req2024-05-12T19:23:40.477502100Z0.2020692994950143
+1715541823507|SYNC Query result, sent at : 2024-05-12T19:23:43.507518200Z , URI : req2024-05-12T19:23:40.477502100Z0.2020692994950143 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823514|Gathered size : 12 for request with URI req2024-05-12T19:23:40.521098Z0.22728913448151222
+1715541823515|SYNC Query result, sent at : 2024-05-12T19:23:43.514813800Z , URI : req2024-05-12T19:23:40.521098Z0.22728913448151222 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823519|Gathered size : 12 for request with URI req2024-05-12T19:23:40.512579600Z0.005321590476248916
+1715541823519|SYNC Query result, sent at : 2024-05-12T19:23:43.519902100Z , URI : req2024-05-12T19:23:40.512579600Z0.005321590476248916 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823524|Gathered size : 12 for request with URI req2024-05-12T19:23:40.509579800Z0.5765181256433292
+1715541823524|SYNC Query result, sent at : 2024-05-12T19:23:43.524918900Z , URI : req2024-05-12T19:23:40.509579800Z0.5765181256433292 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823528|Gathered size : 12 for request with URI req2024-05-12T19:23:40.507051400Z0.3260441699320895
+1715541823528|SYNC Query result, sent at : 2024-05-12T19:23:43.528901100Z , URI : req2024-05-12T19:23:40.507051400Z0.3260441699320895 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823528|Gathered size : 12 for request with URI req2024-05-12T19:23:40.475500600Z0.20175145988234633
+1715541823528|SYNC Query result, sent at : 2024-05-12T19:23:43.528901100Z , URI : req2024-05-12T19:23:40.475500600Z0.20175145988234633 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823531|Gathered size : 12 for request with URI req2024-05-12T19:23:40.502050400Z0.9806856758107787
+1715541823531|SYNC Query result, sent at : 2024-05-12T19:23:43.531268500Z , URI : req2024-05-12T19:23:40.502050400Z0.9806856758107787 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823540|Gathered size : 12 for request with URI req2024-05-12T19:23:40.484018700Z0.9811761972230565
+1715541823541|SYNC Query result, sent at : 2024-05-12T19:23:43.541821400Z , URI : req2024-05-12T19:23:40.484018700Z0.9811761972230565 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823558|Gathered size : 12 for request with URI req2024-05-12T19:23:40.482013700Z0.18653162612170393
+1715541823559|SYNC Query result, sent at : 2024-05-12T19:23:43.559855300Z , URI : req2024-05-12T19:23:40.482013700Z0.18653162612170393 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823566|Gathered size : 12 for request with URI req2024-05-12T19:23:40.496539400Z0.34880874086958824
+1715541823566|SYNC Query result, sent at : 2024-05-12T19:23:43.566863500Z , URI : req2024-05-12T19:23:40.496539400Z0.34880874086958824 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823567|Gathered size : 12 for request with URI req2024-05-12T19:23:40.488014800Z0.639575523287796
+1715541823567|SYNC Query result, sent at : 2024-05-12T19:23:43.567863200Z , URI : req2024-05-12T19:23:40.488014800Z0.639575523287796 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823568|Gathered size : 12 for request with URI req2024-05-12T19:23:40.474514900Z0.6295581037076792
+1715541823568|SYNC Query result, sent at : 2024-05-12T19:23:43.568861200Z , URI : req2024-05-12T19:23:40.474514900Z0.6295581037076792 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823569|Gathered size : 12 for request with URI req2024-05-12T19:23:40.522105900Z0.06260193120474455
+1715541823569|Gathered size : 12 for request with URI req2024-05-12T19:23:40.486015700Z0.7693956968412433
+1715541823569|SYNC Query result, sent at : 2024-05-12T19:23:43.569368200Z , URI : req2024-05-12T19:23:40.486015700Z0.7693956968412433 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823569|Gathered size : 12 for request with URI req2024-05-12T19:23:40.511579100Z0.0436569402447915
+1715541823569|SYNC Query result, sent at : 2024-05-12T19:23:43.569368200Z , URI : req2024-05-12T19:23:40.522105900Z0.06260193120474455 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823570|Gathered size : 12 for request with URI req2024-05-12T19:23:40.488014800Z0.5872859489768549
+1715541823570|SYNC Query result, sent at : 2024-05-12T19:23:43.569368200Z , URI : req2024-05-12T19:23:40.511579100Z0.0436569402447915 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823570|Gathered size : 12 for request with URI req2024-05-12T19:23:40.506050800Z0.9615136391857858
+1715541823570|SYNC Query result, sent at : 2024-05-12T19:23:43.570375300Z , URI : req2024-05-12T19:23:40.506050800Z0.9615136391857858 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823571|Gathered size : 12 for request with URI req2024-05-12T19:23:40.497533Z0.9019314151762621
+1715541823571|SYNC Query result, sent at : 2024-05-12T19:23:43.571383100Z , URI : req2024-05-12T19:23:40.497533Z0.9019314151762621 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823571|SYNC Query result, sent at : 2024-05-12T19:23:43.570375300Z , URI : req2024-05-12T19:23:40.488014800Z0.5872859489768549 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823571|Gathered size : 12 for request with URI req2024-05-12T19:23:40.475500600Z0.749888884945081
+1715541823571|SYNC Query result, sent at : 2024-05-12T19:23:43.571383100Z , URI : req2024-05-12T19:23:40.475500600Z0.749888884945081 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823572|Gathered size : 12 for request with URI req2024-05-12T19:23:40.517602700Z0.033880497680040644
+1715541823572|SYNC Query result, sent at : 2024-05-12T19:23:43.572382100Z , URI : req2024-05-12T19:23:40.517602700Z0.033880497680040644 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823575|Gathered size : 12 for request with URI req2024-05-12T19:23:40.500050900Z0.6234283518336287
+1715541823575|SYNC Query result, sent at : 2024-05-12T19:23:43.575903200Z , URI : req2024-05-12T19:23:40.500050900Z0.6234283518336287 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823576|Gathered size : 12 for request with URI req2024-05-12T19:23:40.477502100Z0.31578073987838606
+1715541823576|SYNC Query result, sent at : 2024-05-12T19:23:43.576902200Z , URI : req2024-05-12T19:23:40.477502100Z0.31578073987838606 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823577|Gathered size : 12 for request with URI req2024-05-12T19:23:40.468721Z0.6141334843816818
+1715541823577|SYNC Query result, sent at : 2024-05-12T19:23:43.577903400Z , URI : req2024-05-12T19:23:40.468721Z0.6141334843816818 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823591|Gathered size : 12 for request with URI req2024-05-12T19:23:40.526105200Z0.9957583859626771
+1715541823591|SYNC Query result, sent at : 2024-05-12T19:23:43.591002Z , URI : req2024-05-12T19:23:40.526105200Z0.9957583859626771 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823635|Gathered size : 12 for request with URI req2024-05-12T19:23:40.512579600Z0.18671284602018168
+1715541823635|SYNC Query result, sent at : 2024-05-12T19:23:43.635667800Z , URI : req2024-05-12T19:23:40.512579600Z0.18671284602018168 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823639|Gathered size : 12 for request with URI req2024-05-12T19:23:40.509579800Z0.5604985078907626
+1715541823653|SYNC Query result, sent at : 2024-05-12T19:23:43.639179300Z , URI : req2024-05-12T19:23:40.509579800Z0.5604985078907626 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823654|Gathered size : 12 for request with URI req2024-05-12T19:23:40.490532400Z0.7944559707007655
+1715541823654|SYNC Query result, sent at : 2024-05-12T19:23:43.654721300Z , URI : req2024-05-12T19:23:40.490532400Z0.7944559707007655 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823702|Gathered size : 12 for request with URI req2024-05-12T19:23:40.497533Z0.27456721336103196
+1715541823703|SYNC Query result, sent at : 2024-05-12T19:23:43.703180Z , URI : req2024-05-12T19:23:40.497533Z0.27456721336103196 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823706|Gathered size : 12 for request with URI req2024-05-12T19:23:40.510602600Z0.060766649540401674
+1715541823706|SYNC Query result, sent at : 2024-05-12T19:23:43.706182200Z , URI : req2024-05-12T19:23:40.510602600Z0.060766649540401674 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823716|Gathered size : 12 for request with URI req2024-05-12T19:23:40.494532500Z0.0077305218030443434
+1715541823716|SYNC Query result, sent at : 2024-05-12T19:23:43.716719700Z , URI : req2024-05-12T19:23:40.494532500Z0.0077305218030443434 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823727|Gathered size : 12 for request with URI req2024-05-12T19:23:40.492546200Z0.02739421851752355
+1715541823728|SYNC Query result, sent at : 2024-05-12T19:23:43.728557400Z , URI : req2024-05-12T19:23:40.492546200Z0.02739421851752355 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823802|Gathered size : 12 for request with URI req2024-05-12T19:23:40.474514900Z0.05815095987226515
+1715541823802|SYNC Query result, sent at : 2024-05-12T19:23:43.802738700Z , URI : req2024-05-12T19:23:40.474514900Z0.05815095987226515 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823844|Gathered size : 12 for request with URI req2024-05-12T19:23:40.477502100Z0.9742798440284954
+1715541823844|SYNC Query result, sent at : 2024-05-12T19:23:43.844203200Z , URI : req2024-05-12T19:23:40.477502100Z0.9742798440284954 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823845|Gathered size : 12 for request with URI req2024-05-12T19:23:40.471515700Z0.1539628977214701
+1715541823845|SYNC Query result, sent at : 2024-05-12T19:23:43.845186200Z , URI : req2024-05-12T19:23:40.471515700Z0.1539628977214701 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823856|Gathered size : 12 for request with URI req2024-05-12T19:23:40.507051400Z0.8666067141902402
+1715541823856|SYNC Query result, sent at : 2024-05-12T19:23:43.856706300Z , URI : req2024-05-12T19:23:40.507051400Z0.8666067141902402 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823858|Gathered size : 12 for request with URI req2024-05-12T19:23:40.495550800Z0.3061042352238659
+1715541823858|SYNC Query result, sent at : 2024-05-12T19:23:43.858703300Z , URI : req2024-05-12T19:23:40.495550800Z0.3061042352238659 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823858|Gathered size : 12 for request with URI req2024-05-12T19:23:40.493532200Z0.12771466905046136
+1715541823860|SYNC Query result, sent at : 2024-05-12T19:23:43.858703300Z , URI : req2024-05-12T19:23:40.493532200Z0.12771466905046136 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823860|Gathered size : 12 for request with URI req2024-05-12T19:23:40.508633300Z0.8841633449339376
+1715541823860|SYNC Query result, sent at : 2024-05-12T19:23:43.860167800Z , URI : req2024-05-12T19:23:40.508633300Z0.8841633449339376 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823870|Gathered size : 12 for request with URI req2024-05-12T19:23:40.518581300Z0.8721507453860426
+1715541823870|SYNC Query result, sent at : 2024-05-12T19:23:43.870726600Z , URI : req2024-05-12T19:23:40.518581300Z0.8721507453860426 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823871|Gathered size : 12 for request with URI req2024-05-12T19:23:40.474514900Z0.20291731222772813
+1715541823872|SYNC Query result, sent at : 2024-05-12T19:23:43.872723900Z , URI : req2024-05-12T19:23:40.474514900Z0.20291731222772813 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823874|Gathered size : 12 for request with URI req2024-05-12T19:23:40.516578900Z0.746526058519026
+1715541823874|Gathered size : 12 for request with URI req2024-05-12T19:23:40.512579600Z0.5562167857958222
+1715541823875|SYNC Query result, sent at : 2024-05-12T19:23:43.874240600Z , URI : req2024-05-12T19:23:40.516578900Z0.746526058519026 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823875|SYNC Query result, sent at : 2024-05-12T19:23:43.875260800Z , URI : req2024-05-12T19:23:40.512579600Z0.5562167857958222 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823875|Gathered size : 12 for request with URI req2024-05-12T19:23:40.477502100Z0.6942308608121959
+1715541823876|SYNC Query result, sent at : 2024-05-12T19:23:43.875260800Z , URI : req2024-05-12T19:23:40.477502100Z0.6942308608121959 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823878|Gathered size : 12 for request with URI req2024-05-12T19:23:40.476517Z0.7971467326529649
+1715541823878|SYNC Query result, sent at : 2024-05-12T19:23:43.878782400Z , URI : req2024-05-12T19:23:40.476517Z0.7971467326529649 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823881|Gathered size : 12 for request with URI req2024-05-12T19:23:40.513579800Z0.14900774940794126
+1715541823881|SYNC Query result, sent at : 2024-05-12T19:23:43.881792600Z , URI : req2024-05-12T19:23:40.513579800Z0.14900774940794126 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+
+1715541823883|Gathered size : 12 for request with URI req2024-05-12T19:23:40.477502100Z0.5803408227668456
+1715541823883|SYNC Query result, sent at : 2024-05-12T19:23:43.883793400Z , URI : req2024-05-12T19:23:40.477502100Z0.5803408227668456 : 
+Gathered Sensors:--->| ↓ 
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=humidity
+ value=32.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode4
+ sensorIdentifier=temperature
+ value=31.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=humidity
+ value=142.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode15
+ sensorIdentifier=temperature
+ value=141.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=humidity
+ value=92.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode10
+ sensorIdentifier=temperature
+ value=91.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=humidity
+ value=192.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode20
+ sensorIdentifier=temperature
+ value=191.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=humidity
+ value=82.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode9
+ sensorIdentifier=temperature
+ value=81.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=humidity
+ value=42.0]
+
+  |--- **************************
+SensorDataIMP [nodeIdentifier=urinode5
+ sensorIdentifier=temperature
+ value=41.0]
+
+

@@ -8,7 +8,6 @@ import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +32,6 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
-import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
 import implementation.ConnectionInfoImpl;
 import implementation.EndPointDescIMPL;
 import implementation.QueryResultIMPL;
@@ -52,27 +50,26 @@ import utils.QueryMetrics;
  */
 public class ClientPlugin
                 extends AbstractPlugin {
-
+        // Inbound port to accept the results of the requests
         protected RequestResultInboundPort clientRequestResultInboundPort;
-
-        protected LookupOutboundPort LookupOutboundPort;
+        // URI of the registry inbound port
         protected String registryInboundPortURI;
-
-        public final String clientIdentifer;
-        private boolean TESTMODE;
+        // Identifier of the client
+        private final String clientIdentifer;
+        // Map to store the results of the requests
         private ConcurrentMap<String, List<QueryResultI>> resultsMap;
-
-        public ConcurrentMap<String, QueryMetrics> queryMetrics;
-
+        // Testing stuff
+        private boolean TESTMODE;
+        private ConcurrentMap<String, QueryMetrics> queryMetrics;
         private final String filename;
 
         /**
          * Constructor of the client plugin
          * 
-         * @param registryInboundPortURI
-         * @param clientIdentifer
-         * @param TESTMODE
-         * @param filename
+         * @param registryInboundPortURI the URI of the registry inbound port
+         * @param clientIdentifer        the identifier of the client
+         * @param TESTMODE               the mode of the client
+         * @param filename               the name of the file to store the test results
          */
         public ClientPlugin(String registryInboundPortURI, String clientIdentifer,
                         boolean TESTMODE,
@@ -149,23 +146,32 @@ public class ClientPlugin
                                         @Override
                                         public void run() {
                                                 try {
-                                                        LookupOutboundPort LookupOutboundPort = new LookupOutboundPort(
+                                                        // Connect to the registry
+                                                        LookupOutboundPort lookupOutboundPort = new LookupOutboundPort(
                                                                         AbstractPort.generatePortURI(),
                                                                         ClientPlugin.this.getOwner());
-                                                        LookupOutboundPort.publishPort();
+                                                        lookupOutboundPort.publishPort();
 
                                                         ClientPlugin.this.getOwner().doPortConnection(
-                                                                        LookupOutboundPort.getPortURI(),
+                                                                        lookupOutboundPort.getPortURI(),
                                                                         registryInboundPortURI,
                                                                         LookUpRegistryConnector.class
                                                                                         .getCanonicalName());
-                                                        ConnectionInfoI nodeInfo = LookupOutboundPort
+                                                        // Find the node to send the request to
+                                                        ConnectionInfoI nodeInfo = lookupOutboundPort
                                                                         .findByIdentifier(nodeId);
+
+                                                        // Connect to the node
                                                         RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
                                                                         AbstractPort.generatePortURI(),
                                                                         ClientPlugin.this.getOwner());
                                                         clientRequestingOutboundPort.publishPort();
-
+                                                        ClientPlugin.this.getOwner().doPortConnection(
+                                                                        clientRequestingOutboundPort.getPortURI(),
+                                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo())
+                                                                                        .getInboundPortURI(),
+                                                                        RequestingConnector.class.getCanonicalName());
+                                                        // Create the request
                                                         RequestI request = new RequestIMPL(requestURI, query, false,
                                                                         new ConnectionInfoImpl(
                                                                                         ClientPlugin.this.clientIdentifer,
@@ -173,24 +179,21 @@ public class ClientPlugin
                                                                                                         clientRequestingOutboundPort
                                                                                                                         .getPortURI(),
                                                                                                         RequestingCI.class)));
-
-                                                        ClientPlugin.this.getOwner().doPortConnection(
-                                                                        clientRequestingOutboundPort.getPortURI(),
-                                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo())
-                                                                                        .getInboundPortURI(),
-                                                                        RequestingConnector.class.getCanonicalName());
+                                                        // Metrics testing stuff
                                                         QueryMetrics metric = new QueryMetrics(0L, 0L,
                                                                         0L, 0L, 0);
                                                         long ti = ((ClientComponent) ClientPlugin.this.getOwner()).clock
                                                                         .currentInstant().toEpochMilli();
                                                         metric.setStartTime(ti);
+                                                        // Execute the request
                                                         QueryResultI res = clientRequestingOutboundPort
                                                                         .execute(request);
+                                                        // Time the request execution
                                                         long tf = ((ClientComponent) ClientPlugin.this.getOwner()).clock
                                                                         .currentInstant().toEpochMilli();
                                                         metric.setEndTime(tf);
                                                         metric.setDuration(metric.getEndTime() - metric.getStartTime());
-
+                                                        // Logging the results
                                                         if (res.isGatherRequest()) {
                                                                 ClientPlugin.this.getOwner()
                                                                                 .logMessage("Gathered size : " + res
@@ -211,13 +214,15 @@ public class ClientPlugin
                                                                                         + request.requestURI()
                                                                                         + " : "
                                                                                         + res.toString());
+                                                        // Store the metrics
                                                         ClientPlugin.this.queryMetrics.put(requestURI, metric);
+                                                        // Disconnect from the node and clean up ports
                                                         ClientPlugin.this.getOwner().doPortDisconnection(
                                                                         clientRequestingOutboundPort.getPortURI());
                                                         clientRequestingOutboundPort.unpublishPort();
                                                         clientRequestingOutboundPort.destroyPort();
-                                                        LookupOutboundPort.unpublishPort();
-                                                        LookupOutboundPort.destroyPort();
+                                                        lookupOutboundPort.unpublishPort();
+                                                        lookupOutboundPort.destroyPort();
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -242,24 +247,30 @@ public class ClientPlugin
                                         @Override
                                         public void run() {
                                                 try {
-                                                        LookupOutboundPort LookupOutboundPort = new LookupOutboundPort(
+                                                        // Connect to the registry
+                                                        LookupOutboundPort lookupOutboundPort = new LookupOutboundPort(
                                                                         AbstractPort.generatePortURI(),
                                                                         ClientPlugin.this.getOwner());
-                                                        LookupOutboundPort.publishPort();
+                                                        lookupOutboundPort.publishPort();
 
                                                         ClientPlugin.this.getOwner().doPortConnection(
-                                                                        LookupOutboundPort.getPortURI(),
+                                                                        lookupOutboundPort.getPortURI(),
                                                                         registryInboundPortURI,
                                                                         LookUpRegistryConnector.class
                                                                                         .getCanonicalName());
-
-                                                        ConnectionInfoI nodeInfo = LookupOutboundPort
+                                                        // Find the node to send the request to
+                                                        ConnectionInfoI nodeInfo = lookupOutboundPort
                                                                         .findByIdentifier(nodeId);
                                                         RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
                                                                         AbstractPort.generatePortURI(),
                                                                         ClientPlugin.this.getOwner());
                                                         clientRequestingOutboundPort.publishPort();
-
+                                                        ClientPlugin.this.getOwner().doPortConnection(
+                                                                        clientRequestingOutboundPort.getPortURI(),
+                                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo())
+                                                                                        .getInboundPortURI(),
+                                                                        RequestingConnector.class.getCanonicalName());
+                                                        // Create the request
                                                         RequestI request = new RequestIMPL(requestURI, query, true,
                                                                         new ConnectionInfoImpl(
                                                                                         ClientPlugin.this.clientIdentifer,
@@ -267,20 +278,18 @@ public class ClientPlugin
                                                                                                         ClientPlugin.this.clientRequestResultInboundPort
                                                                                                                         .getPortURI(),
                                                                                                         RequestResultCI.class)));
-
-                                                        ClientPlugin.this.getOwner().doPortConnection(
-                                                                        clientRequestingOutboundPort.getPortURI(),
-                                                                        ((EndPointDescIMPL) nodeInfo.endPointInfo())
-                                                                                        .getInboundPortURI(),
-                                                                        RequestingConnector.class.getCanonicalName());
-
                                                         ClientPlugin.this.resultsMap.put(request.requestURI(),
                                                                         new ArrayList<>());
+                                                        // metrics testing stuff
                                                         long ti = ((ClientComponent) ClientPlugin.this.getOwner()).clock
                                                                         .currentInstant().toEpochMilli();
                                                         QueryMetrics metric = new QueryMetrics(0L, 0L, 0L, 0L, 0);
                                                         metric.setStartTime(ti);
+                                                        // End time the start time + the delay of the task + the timeout
+                                                        // of collecting the results so we can measure the duration of
+                                                        // the request after in the acceptRequestResult method
                                                         metric.setEndTime(ti + delay + asyncTimeout);
+                                                        // Execute the request
                                                         clientRequestingOutboundPort.executeAsync(request);
 
                                                         ClientPlugin.this.getOwner()
@@ -288,14 +297,15 @@ public class ClientPlugin
                                                                                         + nodeId + " with URI "
                                                                                         + request.requestURI()
                                                                                         + " at " + Instant.now());
-
+                                                        // store the metrics
                                                         ClientPlugin.this.queryMetrics.put(requestURI, metric);
+                                                        // Disconnect from the node and clean up ports
                                                         ClientPlugin.this.getOwner().doPortDisconnection(
                                                                         clientRequestingOutboundPort.getPortURI());
                                                         clientRequestingOutboundPort.unpublishPort();
                                                         clientRequestingOutboundPort.destroyPort();
-                                                        LookupOutboundPort.unpublishPort();
-                                                        LookupOutboundPort.destroyPort();
+                                                        lookupOutboundPort.unpublishPort();
+                                                        lookupOutboundPort.destroyPort();
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -310,6 +320,7 @@ public class ClientPlugin
                                         @Override
                                         public void run() {
                                                 try {
+                                                        // Get the results of the request after the timeout
                                                         List<QueryResultI> results = ClientPlugin.this.resultsMap
                                                                         .get(requestURI);
 
@@ -318,6 +329,8 @@ public class ClientPlugin
                                                         }
                                                         int size = results.size();
                                                         QueryResultI result = results.get(0);
+                                                        // Remove the first result from the list
+                                                        // and update the first result with the other results
                                                         results.remove(0);
                                                         if (!results.isEmpty()) {
                                                                 for (QueryResultI res : results) {
@@ -341,6 +354,8 @@ public class ClientPlugin
                                                                                                 + requestURI
                                                                                                 + " : "
                                                                                                 + result.toString());
+                                                                // Remove the request from the results map
+                                                                // to not accept more results
                                                                 ClientPlugin.this.resultsMap
                                                                                 .remove(requestURI);
                                                                 QueryMetrics metric = ClientPlugin.this.queryMetrics
@@ -371,11 +386,12 @@ public class ClientPlugin
                         this.resultsMap.get(requestURI).add(result);
                         // metrics
                         QueryMetrics metric = this.queryMetrics.get(requestURI);
+                        // We only record the end time of the last result received
+                        // if the result arrives before the timeout of the async request
                         long ti = ((ClientComponent) ClientPlugin.this.getOwner()).clock.currentInstant()
                                         .toEpochMilli();
                         if (metric != null && ti < metric.getEndTime()) {
                                 metric.setDuration(ti - metric.getStartTime());
-                                // this.queryMetrics.put(requestURI, metric);
                         }
                 } else {
                         System.out.println("No request with URI " + requestURI + " found.");

@@ -26,23 +26,23 @@ public class Queries {
         // Request , ===> we're testing the system under pressure with a query that will
         // do the collection of all sensors in the network
         // ----------------------
-        static GatherQuery query1 = new GatherQuery(
+        public static GatherQuery query1 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new FloodingContinuation(new RelativeBase(), 1505.0));
-        static GatherQuery query2 = new GatherQuery(
+        public static GatherQuery query2 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new FloodingContinuation(new RelativeBase(), 1505.0));
-        static GatherQuery query3 = new GatherQuery(
+        public static GatherQuery query3 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new FloodingContinuation(new RelativeBase(), 1505.0));
-        static GatherQuery query4 = new GatherQuery(
+        public static GatherQuery query4 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new FloodingContinuation(new RelativeBase(), 1505.0));
-        static GatherQuery query5 = new GatherQuery(
+        public static GatherQuery query5 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new FloodingContinuation(new RelativeBase(), 1505.0));
@@ -52,7 +52,7 @@ public class Queries {
         // -------------------Gather Query Test 3 : direction continuation , Sync
         // Request , ===> Result : 16 sensors
         // -------------------
-        static GatherQuery query6 = new GatherQuery(
+        public static GatherQuery query6 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new DirectionContinuation(3, new RecursiveDirections(Direction.SE,
@@ -64,7 +64,7 @@ public class Queries {
         // ------------------- Boolean Query Test 1 : Flooding continuation , Sync
         // Request
         // -------------------
-        static GatherQuery query7 = new GatherQuery(
+        public static GatherQuery query7 = new GatherQuery(
                         new RecursiveGather("temperature",
                                         new FinalGather("humidity")),
                         new FloodingContinuation(new RelativeBase(), 4505.0));

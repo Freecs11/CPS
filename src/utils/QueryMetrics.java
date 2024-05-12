@@ -1,5 +1,14 @@
 package utils;
 
+/**
+ * <p>
+ * <strong> Description </strong>
+ * </p>
+ * <p>
+ * The class <code>QueryMetrics</code> is a props class that contains the
+ * metrics of a query.
+ * </p>
+ */
 public class QueryMetrics {
     protected long startTime;
     protected long endTime;
@@ -7,6 +16,15 @@ public class QueryMetrics {
     protected long duration;
     protected int nbSensors;
 
+    /**
+     * Constructor of the QueryMetrics
+     * 
+     * @param startTime
+     * @param endTime
+     * @param interval
+     * @param duration
+     * @param nbSensors
+     */
     public QueryMetrics(long startTime, long endTime, long interval, long duration, int nbSensors) {
         this.startTime = startTime;
         this.endTime = endTime;
