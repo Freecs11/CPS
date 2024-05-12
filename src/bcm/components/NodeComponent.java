@@ -177,7 +177,7 @@ public class NodeComponent extends AbstractComponent
     }
 
     @Override
-    public synchronized void start() throws ComponentStartException {
+    public void start() throws ComponentStartException {
         try {
             this.logMessage("Starting " + this.nodeURI);
         } catch (Exception e) {
@@ -189,7 +189,7 @@ public class NodeComponent extends AbstractComponent
     }
 
     @Override
-    public synchronized void execute() throws Exception {
+    public void execute() throws Exception {
         // ------CONNECTION TO THE CLOCK SERVER------
 
         this.logMessage("first line of execute() in NodeComponent");
@@ -248,7 +248,7 @@ public class NodeComponent extends AbstractComponent
     }
 
     @Override
-    public synchronized void finalise() throws Exception {
+    public void finalise() throws Exception {
         this.logMessage("stopping node component : " + this.nodeURI);
         // ----- NO CALL TO SERVICES IN FINALISE -----
 
@@ -277,7 +277,7 @@ public class NodeComponent extends AbstractComponent
     }
 
     @Override
-    public synchronized void shutdown() throws ComponentShutdownException {
+    public void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
             this.nodePlugin.uninstall();
@@ -293,7 +293,7 @@ public class NodeComponent extends AbstractComponent
     }
 
     @Override
-    public synchronized void shutdownNow() throws ComponentShutdownException {
+    public void shutdownNow() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
             // if (this.requestingInboundPort.isPublished())

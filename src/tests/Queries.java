@@ -64,11 +64,10 @@ public class Queries {
         // ------------------- Boolean Query Test 1 : Flooding continuation , Sync
         // Request
         // -------------------
-        static BooleanQuery query7 = new BooleanQuery(
-                        new ConditionalExprBooleanExpr(
-                                        new EqualConditionalExpr(new SensorRand("humidity"),
-                                                        new ConstantRand(70.0))),
-                        new FloodingContinuation(new RelativeBase(), 45.0));
+        static GatherQuery query7 = new GatherQuery(
+                        new RecursiveGather("temperature",
+                                        new FinalGather("humidity")),
+                        new FloodingContinuation(new RelativeBase(), 4505.0));
 
         // all are the same
         // query , a gather with flooding continuation to test the system under pressure

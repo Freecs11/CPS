@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import bcm.CVM;
 import bcm.plugin.ClientPlugin;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.AbstractPort;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
@@ -38,7 +39,7 @@ public class ClientComponent extends AbstractComponent {
         protected long startAfter;
 
         // --------- clock and start instant---------
-        protected AcceleratedClock clock;
+        public AcceleratedClock clock;
         protected Instant startInstant;
 
         // ---------plugin---------
@@ -46,7 +47,7 @@ public class ClientComponent extends AbstractComponent {
 
         // ---------Async timeout , the time to wait for the results to be gathered and
         // combined---------
-        private long asyncTimeout = TimeUnit.SECONDS.toNanos(30L);
+        private long asyncTimeout = TimeUnit.SECONDS.toNanos(20L);
         // -----Hash map to store queries and target nodes---------
         private Map<String, List<QueryI>> queries;
         // -----List of intervals to wait before sending the requests---------
@@ -70,8 +71,8 @@ public class ClientComponent extends AbstractComponent {
                 this.intervals = intervals;
                 this.filename = filename;
                 // ---------Init the plugin---------
-                this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer);
-                this.plugin.setPluginURI(AbstractOutboundPort.generatePortURI());
+                this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer, filename);
+                this.plugin.setPluginURI(AbstractPort.generatePortURI());
                 this.installPlugin(plugin);
 
                 this.getTracer().setTitle("Client Component");
@@ -124,8 +125,8 @@ public class ClientComponent extends AbstractComponent {
                                                 try {
                                                         // plugin.executeAsyncRequest(requestURI, query, nodeID,
                                                         // currentDelay, asyncTimeout);
-                                                        plugin.executeSyncRequest(requestURI, query, nodeID,
-                                                                        currentDelay);
+                                                        plugin.executeAsyncRequest(requestURI, query, nodeID,
+                                                                        currentDelay, asyncTimeout);
                                                 } catch (Exception e) {
                                                         logError(e);
                                                 }
@@ -245,11 +246,11 @@ public class ClientComponent extends AbstractComponent {
 
         @Override
         public synchronized void finalise() throws Exception {
-                this.plugin.finalise();
+                // this.plugin.finalise();
                 super.finalise();
                 if (this.TESTMODE)
                         try {
-                                storeTestResults();
+                                // storeTestResults();
                                 this.printExecutionLogOnFile("logRegistry");
                         } catch (Exception e) {
                                 e.printStackTrace();

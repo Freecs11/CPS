@@ -24,7 +24,7 @@ import utils.NodeComponentInfo;
 
 public class CVMMultiClient extends AbstractCVM {
     public static final String CLOCK_URI = "CLOCK-SERVER";
-    protected static final long TIME_TO_START = 6000L;
+    protected static final long TIME_TO_START = 7000L;
     protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
             System.currentTimeMillis() + TIME_TO_START);
     public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
@@ -211,8 +211,10 @@ public class CVMMultiClient extends AbstractCVM {
 
             String uri = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                     new Object[] { CLIENT_COMPONENT_URI + (j + 1), LOOKUP_IN_BOUND_PORT_URI,
-                            REG_START_INSTANT.plusSeconds(150L + nodes.size()), desiredNumberNodes * 3,
-                            desiredNumberNodes * 3, "client" + (j + 1),
+                            REG_START_INSTANT.plusSeconds(150L + nodes.size()),
+                            desiredNumberNodes,
+                            desiredNumberNodes,
+                            "client" + (j + 1),
                             queriesClient,
                             intervals,
                             true

@@ -5,12 +5,14 @@ public class QueryMetrics {
     protected long endTime;
     protected long interval;
     protected long duration;
+    protected int nbSensors;
 
-    public QueryMetrics(long startTime, long endTime, long interval, long duration) {
+    public QueryMetrics(long startTime, long endTime, long interval, long duration, int nbSensors) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.interval = interval;
         this.duration = duration;
+        this.nbSensors = nbSensors;
     }
 
     public long getStartTime() {
@@ -29,6 +31,10 @@ public class QueryMetrics {
         return duration;
     }
 
+    public int getNbSensors() {
+        return nbSensors;
+    }
+
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
@@ -43,6 +49,10 @@ public class QueryMetrics {
 
     public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public void setNbSensors(int nbSensors) {
+        this.nbSensors = nbSensors;
     }
 
     public String toString() {

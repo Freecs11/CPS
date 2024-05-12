@@ -1,9 +1,18 @@
 package bcm.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.OverlappingFileLockException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import bcm.components.ClientComponent;
@@ -14,6 +23,7 @@ import bcm.ports.RequestResultInboundPort;
 import bcm.ports.RequestingOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent.AbstractTask;
 import fr.sorbonne_u.components.AbstractPlugin;
+import fr.sorbonne_u.components.AbstractPort;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
@@ -23,6 +33,7 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 import fr.sorbonne_u.cps.sensor_network.requests.interfaces.QueryI;
+import fr.sorbonne_u.utils.aclocks.AcceleratedClock;
 import implementation.ConnectionInfoImpl;
 import implementation.EndPointDescIMPL;
 import implementation.QueryResultIMPL;
@@ -39,12 +50,19 @@ public class ClientPlugin
 
         public final String clientIdentifer;
 
-        private ConcurrentHashMap<String, List<QueryResultI>> resultsMap;
+        private ConcurrentMap<String, List<QueryResultI>> resultsMap;
 
-        public ClientPlugin(String registryInboundPortURI, String clientIdentifer) {
+        public ConcurrentMap<String, QueryMetrics> queryMetrics;
+
+        private final String filename;
+
+        public ClientPlugin(String registryInboundPortURI, String clientIdentifer,
+                        String filename) {
                 this.registryInboundPortURI = registryInboundPortURI;
                 this.clientIdentifer = clientIdentifer;
+                this.filename = filename;
                 this.resultsMap = new ConcurrentHashMap<>();
+                this.queryMetrics = new ConcurrentHashMap<>();
         }
 
         @Override
@@ -58,15 +76,15 @@ public class ClientPlugin
         @Override
         public void initialise() throws Exception {
                 // ---------Init the ports---------
-                this.LookupOutboundPort = new LookupOutboundPort(
-                                AbstractOutboundPort.generatePortURI(),
-                                this.getOwner());
-                this.LookupOutboundPort.publishPort();
+                // this.LookupOutboundPort = new LookupOutboundPort(
+                // AbstractOutboundPort.generatePortURI(),
+                // this.getOwner());
+                // this.LookupOutboundPort.publishPort();
 
-                this.getOwner().doPortConnection(
-                                this.LookupOutboundPort.getPortURI(),
-                                this.registryInboundPortURI,
-                                LookUpRegistryConnector.class.getCanonicalName());
+                // this.getOwner().doPortConnection(
+                // this.LookupOutboundPort.getPortURI(),
+                // this.registryInboundPortURI,
+                // LookUpRegistryConnector.class.getCanonicalName());
 
                 this.clientRequestResultInboundPort = new RequestResultInboundPort(
                                 AbstractOutboundPort.generatePortURI(),
@@ -78,10 +96,12 @@ public class ClientPlugin
 
         @Override
         public void finalise() throws Exception {
-                if (this.LookupOutboundPort.connected())
-                        this.getOwner().doPortDisconnection(this.LookupOutboundPort.getPortURI());
-                if (this.LookupOutboundPort.isPublished())
-                        this.LookupOutboundPort.unpublishPort();
+                // if (this.LookupOutboundPort.connected())
+                // this.getOwner().doPortDisconnection(this.LookupOutboundPort.getPortURI());
+                // if (this.LookupOutboundPort.isPublished())
+                // this.LookupOutboundPort.unpublishPort();
+
+                storeTestResults();
                 super.finalise();
         }
 
@@ -91,6 +111,47 @@ public class ClientPlugin
                         this.clientRequestResultInboundPort.unpublishPort();
 
                 super.uninstall();
+        }
+
+        private void storeTestResults() throws Exception {
+                File file = new File(filename);
+                if (!file.exists()) {
+                        file.createNewFile();
+                }
+
+                try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+                                FileChannel channel = randomAccessFile.getChannel()) {
+                        // Acquire the lock
+                        try (FileLock lock = channel.lock()) {
+                                // Move to the end of the file to append data
+                                randomAccessFile.seek(randomAccessFile.length());
+
+                                // If file length is 0, write headers
+                                if (randomAccessFile.length() == 0) {
+                                        randomAccessFile.writeBytes(
+                                                        "RequestURI,StartTime,EndTime,Interval,Duration,nbSensors\n");
+                                }
+
+                                // Write each entry to the file
+                                for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
+                                        QueryMetrics metrics = entry.getValue();
+                                        StringBuilder data = new StringBuilder();
+                                        data.append(entry.getKey()).append(",");
+                                        data.append(metrics.getStartTime()).append(",");
+                                        data.append(metrics.getEndTime()).append(",");
+                                        data.append(metrics.getInterval()).append(",");
+                                        data.append(metrics.getDuration()).append(",");
+                                        data.append(metrics.getNbSensors()).append("\n");
+
+                                        randomAccessFile.writeBytes(data.toString());
+                                }
+                        } catch (OverlappingFileLockException e) {
+                                System.err.println(
+                                                "File is already locked in this thread or virtual machine: testResults.csv");
+                        }
+                } catch (IOException e) {
+                        System.err.println("Failed to write to file: " + e.getMessage());
+                }
         }
 
         // --------- Methodes du plugin ---------
@@ -109,10 +170,20 @@ public class ClientPlugin
                                         @Override
                                         public void run() {
                                                 try {
-                                                        ConnectionInfoI nodeInfo = ClientPlugin.this.LookupOutboundPort
+                                                        LookupOutboundPort LookupOutboundPort = new LookupOutboundPort(
+                                                                        AbstractPort.generatePortURI(),
+                                                                        ClientPlugin.this.getOwner());
+                                                        LookupOutboundPort.publishPort();
+
+                                                        ClientPlugin.this.getOwner().doPortConnection(
+                                                                        LookupOutboundPort.getPortURI(),
+                                                                        registryInboundPortURI,
+                                                                        LookUpRegistryConnector.class
+                                                                                        .getCanonicalName());
+                                                        ConnectionInfoI nodeInfo = LookupOutboundPort
                                                                         .findByIdentifier(nodeId);
                                                         RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
-                                                                        AbstractOutboundPort.generatePortURI(),
+                                                                        AbstractPort.generatePortURI(),
                                                                         ClientPlugin.this.getOwner());
                                                         clientRequestingOutboundPort.publishPort();
 
@@ -129,15 +200,17 @@ public class ClientPlugin
                                                                         ((EndPointDescIMPL) nodeInfo.endPointInfo())
                                                                                         .getInboundPortURI(),
                                                                         RequestingConnector.class.getCanonicalName());
-                                                        QueryMetrics metric = new QueryMetrics(System.nanoTime(), 0l,
-                                                                        0l, 0l);
-                                                        metric.setStartTime(System.nanoTime());
+                                                        QueryMetrics metric = new QueryMetrics(0L, 0L,
+                                                                        0L, 0L, 0);
+                                                        long ti = ((ClientComponent) ClientPlugin.this.getOwner()).clock
+                                                                        .currentInstant().toEpochMilli();
+                                                        metric.setStartTime(ti);
                                                         QueryResultI res = clientRequestingOutboundPort
                                                                         .execute(request);
-                                                        metric.setEndTime(System.nanoTime());
+                                                        long tf = ((ClientComponent) ClientPlugin.this.getOwner()).clock
+                                                                        .currentInstant().toEpochMilli();
+                                                        metric.setEndTime(tf);
                                                         metric.setDuration(metric.getEndTime() - metric.getStartTime());
-                                                        ((ClientComponent) ClientPlugin.this.getOwner()).queryMetrics
-                                                                        .put(requestURI, metric);
                                                         if (res.isGatherRequest()) {
                                                                 ClientPlugin.this.getOwner()
                                                                                 .logMessage("Gathered size : " + res
@@ -145,7 +218,6 @@ public class ClientPlugin
                                                                                                 .size()
                                                                                                 + " for request with URI "
                                                                                                 + request.requestURI());
-
                                                         } else if (res.isBooleanRequest()) {
                                                                 ClientPlugin.this.getOwner()
                                                                                 .logMessage("Floading size : " + res
@@ -163,6 +235,9 @@ public class ClientPlugin
                                                                         clientRequestingOutboundPort.getPortURI());
                                                         clientRequestingOutboundPort.unpublishPort();
                                                         clientRequestingOutboundPort.destroyPort();
+                                                        LookupOutboundPort.unpublishPort();
+                                                        LookupOutboundPort.destroyPort();
+                                                        ClientPlugin.this.queryMetrics.put(requestURI, metric);
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -187,14 +262,21 @@ public class ClientPlugin
                                         @Override
                                         public void run() {
                                                 try {
-                                                        // implementation of
-                                                        // connectionInfo
-                                                        // System.err.println("NodeInfo: " + nodeInfo.nodeIdentifier());
+                                                        LookupOutboundPort LookupOutboundPort = new LookupOutboundPort(
+                                                                        AbstractPort.generatePortURI(),
+                                                                        ClientPlugin.this.getOwner());
+                                                        LookupOutboundPort.publishPort();
 
-                                                        ConnectionInfoI nodeInfo = ClientPlugin.this.LookupOutboundPort
+                                                        ClientPlugin.this.getOwner().doPortConnection(
+                                                                        LookupOutboundPort.getPortURI(),
+                                                                        registryInboundPortURI,
+                                                                        LookUpRegistryConnector.class
+                                                                                        .getCanonicalName());
+
+                                                        ConnectionInfoI nodeInfo = LookupOutboundPort
                                                                         .findByIdentifier(nodeId);
                                                         RequestingOutboundPort clientRequestingOutboundPort = new RequestingOutboundPort(
-                                                                        AbstractOutboundPort.generatePortURI(),
+                                                                        AbstractPort.generatePortURI(),
                                                                         ClientPlugin.this.getOwner());
                                                         clientRequestingOutboundPort.publishPort();
 
@@ -214,17 +296,26 @@ public class ClientPlugin
 
                                                         ClientPlugin.this.resultsMap.put(request.requestURI(),
                                                                         new ArrayList<>());
+                                                        long ti = ((ClientComponent) ClientPlugin.this.getOwner()).clock
+                                                                        .currentInstant().toEpochMilli();
+                                                        QueryMetrics metric = new QueryMetrics(0L, 0L, 0L, 0L, 0);
+                                                        metric.setStartTime(ti);
+                                                        metric.setEndTime(ti + delay + asyncTimeout);
                                                         clientRequestingOutboundPort.executeAsync(request);
+
                                                         ClientPlugin.this.getOwner()
                                                                         .logMessage("Async request sent to node "
                                                                                         + nodeId + " with URI "
                                                                                         + request.requestURI()
                                                                                         + " at " + Instant.now());
 
+                                                        ClientPlugin.this.queryMetrics.put(requestURI, metric);
                                                         ClientPlugin.this.getOwner().doPortDisconnection(
                                                                         clientRequestingOutboundPort.getPortURI());
                                                         clientRequestingOutboundPort.unpublishPort();
                                                         clientRequestingOutboundPort.destroyPort();
+                                                        LookupOutboundPort.unpublishPort();
+                                                        LookupOutboundPort.destroyPort();
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -241,9 +332,11 @@ public class ClientPlugin
                                                 try {
                                                         List<QueryResultI> results = ClientPlugin.this.resultsMap
                                                                         .get(requestURI);
+                                                        
                                                         if (results == null || results.isEmpty()) {
                                                                 return;
                                                         }
+                                                        int size = results.size();
                                                         QueryResultI result = results.get(0);
                                                         results.remove(0);
                                                         if (!results.isEmpty()) {
@@ -270,6 +363,11 @@ public class ClientPlugin
                                                                                                 + result.toString());
                                                                 ClientPlugin.this.resultsMap
                                                                                 .remove(requestURI);
+                                                                QueryMetrics metric = ClientPlugin.this.queryMetrics
+                                                                                .get(requestURI);
+                                                                metric.setNbSensors(size);
+                                                                ClientPlugin.this.queryMetrics.put(requestURI, metric);
+
                                                         }
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
@@ -284,6 +382,14 @@ public class ClientPlugin
                 if (this.resultsMap.containsKey(requestURI)) {
                         // we add the result to the list of results for this request URI
                         this.resultsMap.get(requestURI).add(result);
+                        // metrics
+                        QueryMetrics metric = this.queryMetrics.get(requestURI);
+                        long ti = ((ClientComponent) ClientPlugin.this.getOwner()).clock.currentInstant()
+                                        .toEpochMilli();
+                        if (metric != null && ti < metric.getEndTime()) {
+                                metric.setDuration(ti - metric.getStartTime());
+                                // this.queryMetrics.put(requestURI, metric);
+                        }
                 } else {
                         System.out.println("No request with URI " + requestURI + " found.");
                 }

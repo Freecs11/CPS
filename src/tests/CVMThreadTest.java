@@ -22,11 +22,11 @@ import utils.NodeComponentInfo;
 
 public class CVMThreadTest extends AbstractCVM {
     public static final String CLOCK_URI = "CLOCK-SERVER";
-    protected static final long TIME_TO_START = 6000L;
+    protected static final long TIME_TO_START = 7000L;
     protected static final long unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(
             System.currentTimeMillis() + TIME_TO_START);
     public static final Instant CLOCK_START_INSTANT = Instant.parse("2024-01-31T09:00:00.00Z");
-    protected static final double accelerationFactor = 10.0;
+    protected static final double accelerationFactor = 70.0;
     public static final Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(1L);
 
     /** URI of the consumer component (convenience). */
@@ -150,7 +150,7 @@ public class CVMThreadTest extends AbstractCVM {
                         LOOKUP_IN_BOUND_PORT_URI,
                         REGISTER_IN_BOUND_PORT_URI,
                         "registeryPoolURI",
-                        50 });
+                        100 });
         // create the node components
         int desiredNumberNodes = 50;
         int gridSize = calculateGridSize(desiredNumberNodes);
@@ -191,9 +191,9 @@ public class CVMThreadTest extends AbstractCVM {
         // intervals.add(90L);
         // intervals.add(80L);
         // intervals.add(70L);
-        // intervals.add(60L);
+        intervals.add(60L);
         // intervals.add(50L);
-        intervals.add(40L);
+        // intervals.add(40L);
         // intervals.add(30L);
         // intervals.add(20L);
 
@@ -208,19 +208,20 @@ public class CVMThreadTest extends AbstractCVM {
         // });
         int queryPick = 1;
         List<QueryI> queries500 = new ArrayList<>();
-        for (int j = 0; j < 1; j++) {
-            if (queryPick % 2 == 0) {
-                queries500.add(Queries.query6);
-            } else {
-                queries500.add(Queries.query7);
-            }
-            queryPick++;
+        for (int j = 0; j < 200; j++) {
+            // if (queryPick % 2 == 0) {
+            // queries500.add(Queries.query6);
+            // } else {
+            queries500.add(Queries.query7);
+            // }
+            // The code is incrementing the variable `queryPick` by 1.
+            // queryPick++;
         }
 
         for (int j = 0; j < 5; j++) {
             int randNode = (int) (Math.random() * (nodes.size() / 2));
             HashMap<String, List<QueryI>> queriesClient = new HashMap<>();
-            queriesClient.put("node" + randNode, queries500);
+            queriesClient.put("node4", queries500);
 
             String uri = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                     new Object[] { CLIENT_COMPONENT_URI + (j + 1), LOOKUP_IN_BOUND_PORT_URI,

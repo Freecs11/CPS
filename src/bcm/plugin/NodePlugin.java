@@ -18,6 +18,7 @@ import bcm.ports.RequestingInboundPort;
 import bcm.ports.SensorNodeP2PInboundPort;
 import bcm.ports.SensorNodeP2POutboundPort;
 import fr.sorbonne_u.components.AbstractPlugin;
+import fr.sorbonne_u.components.AbstractPort;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
@@ -58,12 +59,13 @@ public class NodePlugin
 
     protected RequestingInboundPort requestingInboundPort;
     protected SensorNodeP2PInboundPort sensorNodeP2PInboundPort;
-    protected RegistrationOutboundPort RegistrationOutboundPort;
-    protected RequestResultOutboundPort requestResultOutboundPort;
+    // protected RegistrationOutboundPort RegistrationOutboundPort;
+    // protected RequestResultOutboundPort requestResultOutboundPort;
 
     protected String registerInboundPortURI;
 
     private final ReadWriteLock neigboursLock = new ReentrantReadWriteLock();
+    private final ReadWriteLock requestURIsLock = new ReentrantReadWriteLock();
 
     public NodePlugin(String registerInboundPortURI, NodeInfoI nodeInfo,
             ArrayList<SensorDataI> sensorData)
@@ -113,10 +115,12 @@ public class NodePlugin
         this.requestingInboundPort.publishPort();
         this.sensorNodeP2PInboundPort = new SensorNodeP2PInboundPort(this.getOwner());
         this.sensorNodeP2PInboundPort.publishPort();
-        this.RegistrationOutboundPort = new RegistrationOutboundPort(this.getOwner());
-        this.RegistrationOutboundPort.publishPort();
-        this.requestResultOutboundPort = new RequestResultOutboundPort(this.getOwner());
-        this.requestResultOutboundPort.publishPort();
+        // this.RegistrationOutboundPort = new
+        // RegistrationOutboundPort(this.getOwner());
+        // this.RegistrationOutboundPort.publishPort();
+        // this.requestResultOutboundPort = new
+        // RequestResultOutboundPort(this.getOwner());
+        // this.requestResultOutboundPort.publishPort();
 
         // initialisation d'endpoint et p2pendpoint
         EndPointDescriptorI p2pendpoint = new EndPointDescIMPL(this.sensorNodeP2PInboundPort.getPortURI(),
@@ -133,21 +137,21 @@ public class NodePlugin
         this.neighbours = new HashSet<>();
         this.requestURIs = new HashSet<>();
         this.nodeInfoToP2POutboundPortMap = new ConcurrentHashMap<>();
-        this.getOwner().doPortConnection(
-                this.RegistrationOutboundPort.getPortURI(),
-                this.registerInboundPortURI,
-                RegistryConnector.class.getCanonicalName());
+        // this.getOwner().doPortConnection(
+        // this.RegistrationOutboundPort.getPortURI(),
+        // this.registerInboundPortURI,
+        // RegistryConnector.class.getCanonicalName());
         super.initialise();
     }
 
     @Override
     public void finalise() throws Exception {
         // MEC FAIS LE
-        if (this.RegistrationOutboundPort.connected()) {
-            this.getOwner().doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
-        }
-        if (this.RegistrationOutboundPort.isPublished())
-            this.RegistrationOutboundPort.unpublishPort();
+        // if (this.RegistrationOutboundPort.connected()) {
+        // this.getOwner().doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
+        // }
+        // if (this.RegistrationOutboundPort.isPublished())
+        // this.RegistrationOutboundPort.unpublishPort();
         for (SensorNodeP2POutboundPort p2poutboundPort : this.nodeInfoToP2POutboundPortMap.values()) {
             if (p2poutboundPort.connected()) {
                 this.getOwner().doPortDisconnection(p2poutboundPort.getPortURI());
@@ -156,12 +160,12 @@ public class NodePlugin
                 p2poutboundPort.unpublishPort();
         }
 
-        if (this.requestResultOutboundPort.connected()) {
-            this.getOwner().doPortDisconnection(this.requestResultOutboundPort.getPortURI());
+        // if (this.requestResultOutboundPort.connected()) {
+        // this.getOwner().doPortDisconnection(this.requestResultOutboundPort.getPortURI());
 
-        }
-        if (this.requestResultOutboundPort.isPublished())
-            this.requestResultOutboundPort.unpublishPort();
+        // }
+        // if (this.requestResultOutboundPort.isPublished())
+        // this.requestResultOutboundPort.unpublishPort();
 
         super.finalise();
     }
@@ -199,13 +203,13 @@ public class NodePlugin
                 SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
                         AbstractOutboundPort.generatePortURI(), this.getOwner());
                 newPort.publishPort();
-                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                // this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                 this.getOwner().doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
                         SensorNodeConnector.class.getCanonicalName());
                 newPort.ask4Connection(this.nodeInfo);
 
-                this.addNeighbour(newNeighbour);
+                this.addNeighbour(newNeighbour, newPort);
 
                 this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
                 this.printNeighbours();
@@ -219,13 +223,13 @@ public class NodePlugin
                     SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
                             AbstractOutboundPort.generatePortURI(), this.getOwner());
                     newPort.publishPort();
-                    this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                    // this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                     this.getOwner().doPortConnection(newPort.getPortURI(),
                             ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
                             SensorNodeConnector.class.getCanonicalName());
                     newPort.ask4Connection(this.nodeInfo);
 
-                    this.addNeighbour(newNeighbour);
+                    this.addNeighbour(newNeighbour, newPort);
 
                     this.logMessage("ask4Connection: " + newNeighbour.nodeIdentifier() + " connected");
                     this.logMessage("Disconnecting neighbour in the same direction: "
@@ -249,6 +253,12 @@ public class NodePlugin
 
     public void ask4Disconnection(NodeInfoI neighbour) {
         try {
+
+            RegistrationOutboundPort RegistrationOutboundPort = new RegistrationOutboundPort(this.getOwner());
+            RegistrationOutboundPort.publishPort();
+            this.getOwner().doPortConnection(RegistrationOutboundPort.getPortURI(), this.registerInboundPortURI,
+                    RegistryConnector.class.getCanonicalName());
+
             SensorNodeP2POutboundPort nodePort = this.nodeInfoToP2POutboundPortMap.get(neighbour);
             if (nodePort == null) {
                 this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " not connected");
@@ -259,24 +269,25 @@ public class NodePlugin
 
             this.removeNeighbour(neighbour);
 
-            this.nodeInfoToP2POutboundPortMap.remove(neighbour);
+            // this.nodeInfoToP2POutboundPortMap.remove(neighbour);
             this.getOwner().doPortDisconnection(nodePort.getPortURI());
             nodePort.unpublishPort();
+            nodePort.destroyPort();
 
             // ----- Find new in the same direction if possible -----
-            NodeInfoI newNeighbour = this.RegistrationOutboundPort.findNewNeighbour(this.nodeInfo,
+            NodeInfoI newNeighbour = RegistrationOutboundPort.findNewNeighbour(this.nodeInfo,
                     directionOfNeighbour);
             if (newNeighbour != null && newNeighbour.nodeIdentifier() != neighbour.nodeIdentifier()) {
                 SensorNodeP2POutboundPort newPort = new SensorNodeP2POutboundPort(
                         AbstractOutboundPort.generatePortURI(), this.getOwner());
                 newPort.publishPort();
-                this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
+                // this.nodeInfoToP2POutboundPortMap.put(newNeighbour, newPort);
                 this.getOwner().doPortConnection(newPort.getPortURI(),
                         ((BCM4JavaEndPointDescriptorI) newNeighbour.p2pEndPointInfo()).getInboundPortURI(),
                         SensorNodeConnector.class.getCanonicalName());
                 newPort.ask4Connection(this.nodeInfo);
 
-                this.addNeighbour(newNeighbour);
+                this.addNeighbour(newNeighbour, newPort);
 
                 this.logMessage("ask4Disconnection: " + neighbour.nodeIdentifier() + " disconnected");
                 this.logMessage("Found new neighbour in direction " + directionOfNeighbour + " : "
@@ -289,6 +300,10 @@ public class NodePlugin
             this.logMessage("Neighbours after disconnection: -->@;" + neighbour.nodeIdentifier() + " disconnected");
             this.logMessage("<Neighbours after disconnection: -->@;" + printNeighbours());
 
+            this.getOwner().doPortDisconnection(RegistrationOutboundPort.getPortURI());
+            RegistrationOutboundPort.unpublishPort();
+            RegistrationOutboundPort.destroyPort();
+
         } catch (Exception e) {
             System.err.println("Error in ask4Disconnection " + e.getMessage());
             e.printStackTrace();
@@ -296,10 +311,11 @@ public class NodePlugin
         // }
     }
 
-    public void addNeighbour(NodeInfoI neighbour) {
+    public void addNeighbour(NodeInfoI neighbour, SensorNodeP2POutboundPort p2poutboundP) {
         neigboursLock.writeLock().lock();
         try {
             neighbours.add(neighbour);
+            nodeInfoToP2POutboundPortMap.put(neighbour, p2poutboundP);
         } finally {
             neigboursLock.writeLock().unlock();
         }
@@ -309,6 +325,7 @@ public class NodePlugin
         neigboursLock.writeLock().lock();
         try {
             neighbours.remove(neighbour);
+            nodeInfoToP2POutboundPortMap.remove(neighbour);
         } finally {
             neigboursLock.writeLock().unlock();
         }
@@ -330,7 +347,7 @@ public class NodePlugin
             while (it.hasNext()) {
                 NodeInfoI neighbour = it.next();
                 SensorNodeP2POutboundPort p2poutboundP = new SensorNodeP2POutboundPort(
-                        AbstractOutboundPort.generatePortURI(),
+                        AbstractPort.generatePortURI(),
                         this.getOwner());
                 p2poutboundP.publishPort();
                 this.getOwner().doPortConnection(p2poutboundP.getPortURI(),
@@ -350,6 +367,10 @@ public class NodePlugin
 
     public void registerNode() throws Exception {
         try {
+            RegistrationOutboundPort RegistrationOutboundPort = new RegistrationOutboundPort(this.getOwner());
+            RegistrationOutboundPort.publishPort();
+            this.getOwner().doPortConnection(RegistrationOutboundPort.getPortURI(), this.registerInboundPortURI,
+                    RegistryConnector.class.getCanonicalName());
             // ----------------- REGISTRATION -----------------
             this.neighbours = RegistrationOutboundPort.register(nodeInfo);
             ((ProcessingNodeIMPL) this.processingNode).setNeighbors(neighbours);
@@ -359,6 +380,9 @@ public class NodePlugin
             this.getOwner().logMessage("Connecting to all the neighbours received from the registry at Time : "
                     + Instant.now() + " .....................");
             this.connect2Neighbours();
+            this.getOwner().doPortDisconnection(RegistrationOutboundPort.getPortURI());
+            RegistrationOutboundPort.unpublishPort();
+            RegistrationOutboundPort.destroyPort();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -381,13 +405,15 @@ public class NodePlugin
             throw new Exception("Query is null");
         }
 
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(request.requestURI())) {
-                this.logMessage("Request URI: " + request.requestURI() + " already executed");
-                return new QueryResultIMPL();
-            }
-            this.requestURIs.add(request.requestURI());
+        requestURIsLock.writeLock().lock();
+        // synchronized (this.requestURIs) {
+        if (this.requestURIs.contains(request.requestURI())) {
+            this.logMessage("Request URI: " + request.requestURI() + " already executed");
+            return new QueryResultIMPL();
         }
+        this.requestURIs.add(request.requestURI());
+        // }
+        requestURIsLock.writeLock().unlock();
 
         ExecutionStateI state = ((RequestContinuationIMPL) request).getExecutionState();
         if (state == null) {
@@ -438,13 +464,14 @@ public class NodePlugin
             throw new Exception("Query is null");
         }
 
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(request.requestURI())) {
-                this.logMessage("Request URI: " + request.requestURI() + " already executed");
-                return new QueryResultIMPL();
-            }
-            this.requestURIs.add(request.requestURI());
+        requestURIsLock.writeLock().lock();
+        if (this.requestURIs.contains(request.requestURI())) {
+            this.logMessage("Request URI: " + request.requestURI() + " already executed");
+            return new QueryResultIMPL();
         }
+        this.requestURIs.add(request.requestURI());
+        // }
+        requestURIsLock.writeLock().unlock();
 
         AbstractQuery query = (AbstractQuery) request.getQueryCode();
         ExecutionStateI state = new ExecutionStateIMPL(this.processingNode);
@@ -529,13 +556,14 @@ public class NodePlugin
             throw new Exception("Query is null");
         }
 
-        synchronized (this.requestURIs) {
-            if (this.requestURIs.contains(request.requestURI())) {
-                this.logMessage("Request URI: " + request.requestURI() + " already executed");
-                return;
-            }
-            this.requestURIs.add(request.requestURI());
+        requestURIsLock.writeLock().lock();
+        if (this.requestURIs.contains(request.requestURI())) {
+            this.logMessage("Request URI: " + request.requestURI() + " already executed");
+            return;
         }
+        this.requestURIs.add(request.requestURI());
+        // }
+        requestURIsLock.writeLock().unlock();
 
         this.logMessage("received async request, URI: " + request.requestURI());
 
@@ -567,15 +595,20 @@ public class NodePlugin
         returnResultToClient(request, result); // return the result to the client
     }
 
-    private synchronized void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
-        this.getOwner().doPortConnection(this.requestResultOutboundPort.getClientPortURI(),
+    private void returnResultToClient(RequestI request, QueryResultI result) throws Exception {
+        RequestResultOutboundPort requestResultOutboundPort = new RequestResultOutboundPort(this.getOwner());
+        requestResultOutboundPort.publishPort();
+
+        this.getOwner().doPortConnection(requestResultOutboundPort.getClientPortURI(),
                 ((BCM4JavaEndPointDescriptorI) request.clientConnectionInfo().endPointInfo()).getInboundPortURI(),
                 ClientRequestResult.class.getCanonicalName());
-        synchronized (this.requestURIs) {
-            this.logMessage("Sending result to client URI: " + requestURIs);
-        }
-        this.requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
-        this.getOwner().doPortDisconnection(this.requestResultOutboundPort.getClientPortURI());
+        // synchronized (this.requestURIs) {
+        // this.logMessage("Sending result to client URI: " + requestURIs);
+        // }
+        requestResultOutboundPort.acceptRequestResult(request.requestURI(), result);
+        this.getOwner().doPortDisconnection(requestResultOutboundPort.getClientPortURI());
+        requestResultOutboundPort.unpublishPort();
+        requestResultOutboundPort.destroyPort();
     }
 
     private void directionalPropagationAsync(ExecutionStateI state, RequestI request)
