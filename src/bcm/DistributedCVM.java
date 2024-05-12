@@ -20,9 +20,24 @@ import implementation.SensorDataIMPL;
 import tests.Queries;
 import utils.NodeComponentInfo;
 
+/**
+ * The class <code>DistributedCVM</code> deploys the whole system on multiple
+ * JVMs.
+ * 
+ * 
+ * <p>
+ * Problem
+ * </p>
+ * this class doesn't work as expected, the nodes are not created in the right
+ * JVMs, but we have difficulties to establish communication between the JVMs
+ * we get a connection Timeout exception when we try to connect to the registry
+ * 
+ */
 public class DistributedCVM
         extends AbstractDistributedCVM {
 
+    // ---------------------------------------------------------------------
+    // Clock component specific constants
     public static final String CLOCK_URI = "CLOCK-SERVER_REP";
     protected long TIME_TO_START;
     protected long unixEpochStartTimeInNanos;
@@ -30,30 +45,24 @@ public class DistributedCVM
     protected double accelerationFactor;
     protected Instant REG_START_INSTANT = CLOCK_START_INSTANT.plusSeconds(5L);
 
-    protected final int NB_NODES = 10;
-    protected final int NB_CLIENTS = 1;
-
-    /** URI of the consumer component (convenience). */
-    protected static final String CLIENT_COMPONENT_URI = "client-URI";
-    protected static final String REGISTER_COMPONENT_URI = "register-URI";
-
+    // Inbound port URI for the registry component
     protected static final String REGISTER_IN_BOUND_PORT_URI = "register-inbound-port";
     protected static final String LOOKUP_IN_BOUND_PORT_URI = "lookup_inbound-port";
-    protected static final String CLIENTS_OUT_BOUND_PORT_URI = "client-outbound-port";
 
     // ---------JVM uris -------------
     // 5 JVMs ( 1 client , 10 nodes in each JVM) + 1 JVM for the registry
-    protected static String CLUSTER_JVM1_URI = "cluster-jvm1";
-    protected static String CLUSTER_JVM2_URI = "cluster-jvm2";
-    protected static String CLUSTER_JVM3_URI = "cluster-jvm3";
-    protected static String CLUSTER_JVM4_URI = "cluster-jvm4";
-    protected static String CLUSTER_JVM5_URI = "cluster-jvm5";
-    protected static String REGISTRY_JVM_URI = "registry-jvm";
+    protected static String CLUSTER_JVM1_URI = "clusterjvm1";
+    protected static String CLUSTER_JVM2_URI = "clusterjvm2";
+    protected static String CLUSTER_JVM3_URI = "clusterjvm3";
+    protected static String CLUSTER_JVM4_URI = "clusterjvm4";
+    protected static String CLUSTER_JVM5_URI = "clusterjvm5";
+    protected static String REGISTRY_JVM_URI = "registryjvm";
 
-    protected String uriRegisterURI;
+    private String filename; // the name of the file to write the results to
 
     public DistributedCVM(String[] args) throws Exception {
         super(args);
+        this.filename = "testResultsDistributed.csv";
     }
 
     /**
@@ -64,7 +73,6 @@ public class DistributedCVM
      *         used for the buildmap method
      */
     public static int calculateGridSize(int desiredNodes) {
-        // Minimum grid size starts at 1x1
         int gridSize = 1;
 
         while (true) {
@@ -86,9 +94,8 @@ public class DistributedCVM
 
             nodesCount = nodeId - 1; // Correct the last increment
 
-            // Check if we have enough nodes
             if (nodesCount >= desiredNodes) {
-                return gridSize; // Return the current grid size
+                return gridSize;
             }
 
             gridSize++; // Increment grid size and try again
@@ -96,7 +103,8 @@ public class DistributedCVM
     }
 
     /**
-     * Documentation a faire
+     * Build a map of nodes for a given grid size.
+     * it will follow the pattern in the subject example
      * 
      * @param gridSize
      * @return
@@ -122,42 +130,43 @@ public class DistributedCVM
         return nodes;
     }
 
-    // /**
-    // * @see fr.sorbonne_u.components.cvm.AbstractDistributedCVM#initialise()
-    // */
-    // @Override
-    // public void initialise() throws Exception {
-    // super.initialise();
-    //
-    // String[] jvmURIs = this.configurationParameters.getJvmURIs();
-    // boolean clusterJVM1_URI_OK = false;
-    // boolean clusterJVM2_URI_OK = false;
-    // boolean clusterJVM3_URI_OK = false;
-    // boolean clusterJVM4_URI_OK = false;
-    // boolean clusterJVM5_URI_OK = false;
-    // boolean registryJVM_URI_OK = false;
-    // for (int i = 0; i < jvmURIs.length
-    // && (!clusterJVM1_URI_OK || !clusterJVM2_URI_OK || !clusterJVM3_URI_OK ||
-    // !clusterJVM4_URI_OK
-    // || !clusterJVM5_URI_OK || !registryJVM_URI_OK); i++) {
-    // if (jvmURIs[i].equals(CLUSTER_JVM1_URI)) {
-    // clusterJVM1_URI_OK = true;
-    // } else if (jvmURIs[i].equals(CLUSTER_JVM2_URI)) {
-    // clusterJVM2_URI_OK = true;
-    // } else if (jvmURIs[i].equals(CLUSTER_JVM3_URI)) {
-    // clusterJVM3_URI_OK = true;
-    // } else if (jvmURIs[i].equals(CLUSTER_JVM4_URI)) {
-    // clusterJVM4_URI_OK = true;
-    // } else if (jvmURIs[i].equals(CLUSTER_JVM5_URI)) {
-    // clusterJVM5_URI_OK = true;
-    // } else if (jvmURIs[i].equals(REGISTRY_JVM_URI)) {
-    // registryJVM_URI_OK = true;
-    // }
-    // }
-    // assert clusterJVM1_URI_OK && clusterJVM2_URI_OK && clusterJVM3_URI_OK &&
-    // clusterJVM4_URI_OK
-    // && clusterJVM5_URI_OK && registryJVM_URI_OK;
-    // }
+    /**
+     * @see fr.sorbonne_u.components.cvm.AbstractDistributedCVM#initialise()
+     * @throws Exception
+     */
+    @Override
+    public void initialise() throws Exception {
+        super.initialise();
+
+        String[] jvmURIs = this.configurationParameters.getJvmURIs();
+        boolean clusterJVM1_URI_OK = false;
+        boolean clusterJVM2_URI_OK = false;
+        boolean clusterJVM3_URI_OK = false;
+        boolean clusterJVM4_URI_OK = false;
+        boolean clusterJVM5_URI_OK = false;
+        boolean registryJVM_URI_OK = false;
+        for (int i = 0; i < jvmURIs.length
+                && (!clusterJVM1_URI_OK || !clusterJVM2_URI_OK || !clusterJVM3_URI_OK ||
+                        !clusterJVM4_URI_OK
+                        || !clusterJVM5_URI_OK || !registryJVM_URI_OK); i++) {
+            if (jvmURIs[i].equals(CLUSTER_JVM1_URI)) {
+                clusterJVM1_URI_OK = true;
+            } else if (jvmURIs[i].equals(CLUSTER_JVM2_URI)) {
+                clusterJVM2_URI_OK = true;
+            } else if (jvmURIs[i].equals(CLUSTER_JVM3_URI)) {
+                clusterJVM3_URI_OK = true;
+            } else if (jvmURIs[i].equals(CLUSTER_JVM4_URI)) {
+                clusterJVM4_URI_OK = true;
+            } else if (jvmURIs[i].equals(CLUSTER_JVM5_URI)) {
+                clusterJVM5_URI_OK = true;
+            } else if (jvmURIs[i].equals(REGISTRY_JVM_URI)) {
+                registryJVM_URI_OK = true;
+            }
+        }
+        assert clusterJVM1_URI_OK && clusterJVM2_URI_OK && clusterJVM3_URI_OK &&
+                clusterJVM4_URI_OK
+                && clusterJVM5_URI_OK && registryJVM_URI_OK;
+    }
 
     /**
      * 
@@ -196,14 +205,20 @@ public class DistributedCVM
         int gridSize = calculateGridSize(desiredTotalNodes);
         ArrayList<NodeComponentInfo> nodes = buildMap(gridSize);
         List<List<Double>> valuesList = createValuesList(desiredTotalNodes);
-        int index = 0;
+        int index = 0; // index to use in the values list ( used to separate the values for each jvm)
+
+        // we could add more intervals if we want to test the system with different
+        // intervals
+        List<Long> intervals = new ArrayList<>();
+        intervals.add(60L);
 
         // JVM 1 ( regitery) , we also use the registery JVM to host the clock server
         if (thisJVMURI.equals(REGISTRY_JVM_URI)) {
-            TIME_TO_START = 1000L;
+            TIME_TO_START = 2000L;
             unixEpochStartTimeInNanos = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis() + TIME_TO_START);
-            accelerationFactor = 10.0;
+            accelerationFactor = 60.0;
 
+            // Create the clock server
             AbstractComponent.createComponent(ClocksServer.class.getCanonicalName(),
                     new Object[] {
                             CLOCK_URI,
@@ -213,9 +228,8 @@ public class DistributedCVM
                     });
 
             // Register is starting directly with no link to the clock
-            AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
+            String uriRegisterURI = AbstractComponent.createComponent(RegistryComponent.class.getCanonicalName(),
                     new Object[] {
-                            REGISTER_COMPONENT_URI,
                             1, 0,
                             LOOKUP_IN_BOUND_PORT_URI,
                             REGISTER_IN_BOUND_PORT_URI,
@@ -223,23 +237,16 @@ public class DistributedCVM
                             50 });
             this.toggleTracing(uriRegisterURI);
             this.toggleLogging(uriRegisterURI);
-
         }
+
         // JVM 2
-        // we're gonna use a simple approach , first we create the map of the nodes (
-        // 50) then we just take 10 nodes for each JVM
-        // and we create the nodes and the client
-
-        else if (AbstractCVM.getThisJVMURI().equals(CLUSTER_JVM1_URI)) {
-
+        else if (thisJVMURI.equals(CLUSTER_JVM1_URI)) {
             // Create the nodes
             for (int i = 0; i < 10; i++) {
                 NodeComponentInfo node = nodes.get(i);
                 ArrayList<SensorDataI> data = createSensorDataForNode(node, valuesList, index);
-                String uriNode = "uri" + node.getName();
                 String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                        new Object[] {
-                                uriNode, node.getName(), node.getX(),
+                        new Object[] { node.getName(), node.getX(),
                                 node.getY(),
                                 node.getRange(),
                                 REGISTER_IN_BOUND_PORT_URI,
@@ -262,28 +269,27 @@ public class DistributedCVM
             // Create the client
             String uriClientURI1 = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
                     new Object[] {
-                            CLIENT_COMPONENT_URI + "1",
                             LOOKUP_IN_BOUND_PORT_URI,
                             REG_START_INSTANT.plusSeconds(150L),
                             nodes.size(), nodes.size(),
                             "client1",
                             queriesClient,
-                            false
+                            intervals,
+                            false,
+                            filename
                     });
             this.toggleTracing(uriClientURI1);
             this.toggleLogging(uriClientURI1);
         }
 
-        else if (AbstractCVM.getThisJVMURI().equals(CLUSTER_JVM2_URI)) {
-
-            // Create the nodes
+        // JVM 3
+        else if (thisJVMURI.equals(CLUSTER_JVM2_URI)) {
             for (int i = 10; i < 20; i++) {
                 NodeComponentInfo node = nodes.get(i);
                 ArrayList<SensorDataI> data = createSensorDataForNode(node, valuesList, index);
-                String uriNode = "uri" + node.getName();
                 String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                        new Object[] {
-                                uriNode, node.getName(), node.getX(), node.getY(),
+                        new Object[] { node.getName(),
+                                node.getX(), node.getY(),
                                 node.getRange(),
                                 REGISTER_IN_BOUND_PORT_URI,
                                 data,
@@ -299,27 +305,30 @@ public class DistributedCVM
                 index++;
             }
 
-            // Create the client
-            // AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
-            // new Object[] {
-            // CLIENT_COMPONENT_URI + "2",
-            // LOOKUP_IN_BOUND_PORT_URI,
-            // REG_START_INSTANT.plusSeconds(100L),
-            // nodes.size(), nodes.size(),
-            // "client2"
-            // });
+            HashMap<String, List<QueryI>> queriesClient2 = new HashMap<>();
+            queriesClient2.put("node14", Queries.queries2);
+            String uriClientURI2 = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
+                    new Object[] {
+                            LOOKUP_IN_BOUND_PORT_URI,
+                            REG_START_INSTANT.plusSeconds(150L),
+                            nodes.size(), nodes.size(),
+                            "client2",
+                            queriesClient2,
+                            intervals,
+                            false,
+                            filename
+                    });
+            this.toggleTracing(uriClientURI2);
+            this.toggleLogging(uriClientURI2);
         }
 
-        if (AbstractCVM.getThisJVMURI().equals(CLUSTER_JVM3_URI)) {
+        if (thisJVMURI.equals(CLUSTER_JVM3_URI)) {
 
-            // Create the nodes
             for (int i = 20; i < 30; i++) {
                 NodeComponentInfo node = nodes.get(i);
                 ArrayList<SensorDataI> data = createSensorDataForNode(node, valuesList, index);
-                String uriNode = "uri" + node.getName();
                 String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                        new Object[] {
-                                uriNode, node.getName(), node.getX(), node.getY(),
+                        new Object[] { node.getName(), node.getX(), node.getY(),
                                 node.getRange(),
                                 REGISTER_IN_BOUND_PORT_URI,
                                 data,
@@ -336,26 +345,29 @@ public class DistributedCVM
             }
 
             // Create the client
-            // AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
-            // new Object[] {
-            // CLIENT_COMPONENT_URI + "3",
-            // LOOKUP_IN_BOUND_PORT_URI,
-            // REG_START_INSTANT.plusSeconds(100L),
-            // nodes.size(), nodes.size(),
-            // "client3"
-            // });
+            HashMap<String, List<QueryI>> queriesClient3 = new HashMap<>();
+            queriesClient3.put("node24", Queries.queries3);
+            String uriClientURI3 = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
+                    new Object[] {
+                            LOOKUP_IN_BOUND_PORT_URI,
+                            REG_START_INSTANT.plusSeconds(150L),
+                            nodes.size(), nodes.size(),
+                            "client3",
+                            queriesClient3,
+                            intervals,
+                            false,
+                            filename
+                    });
+            this.toggleTracing(uriClientURI3);
+            this.toggleLogging(uriClientURI3);
         }
 
-        if (AbstractCVM.getThisJVMURI().equals(CLUSTER_JVM4_URI)) {
-
-            // Create the nodes
+        if (thisJVMURI.equals(CLUSTER_JVM4_URI)) {
             for (int i = 30; i < 40; i++) {
                 NodeComponentInfo node = nodes.get(i);
                 ArrayList<SensorDataI> data = createSensorDataForNode(node, valuesList, index);
-                String uriNode = "uri" + node.getName();
                 String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                        new Object[] {
-                                uriNode, node.getName(), node.getX(), node.getY(),
+                        new Object[] { node.getName(), node.getX(), node.getY(),
                                 node.getRange(),
                                 REGISTER_IN_BOUND_PORT_URI,
                                 data,
@@ -372,26 +384,28 @@ public class DistributedCVM
             }
 
             // Create the client
-            // AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
-            // new Object[] {
-            // CLIENT_COMPONENT_URI + "4",
-            // LOOKUP_IN_BOUND_PORT_URI,
-            // REG_START_INSTANT.plusSeconds(100L),
-            // nodes.size(), nodes.size(),
-            // "client4"
-            // });
+            HashMap<String, List<QueryI>> queriesClient4 = new HashMap<>();
+            queriesClient4.put("node34", Queries.queries4);
+            String uriClientURI4 = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
+                    new Object[] {
+                            LOOKUP_IN_BOUND_PORT_URI,
+                            REG_START_INSTANT.plusSeconds(150L),
+                            nodes.size(), nodes.size(),
+                            "client4",
+                            queriesClient4,
+                            intervals,
+                            false,
+                            filename
+                    });
+            this.toggleTracing(uriClientURI4);
+            this.toggleLogging(uriClientURI4);
         }
-
-        if (AbstractCVM.getThisJVMURI().equals(CLUSTER_JVM5_URI)) {
-
-            // Create the nodes
+        if (thisJVMURI.equals(CLUSTER_JVM5_URI)) {
             for (int i = 40; i < 50; i++) {
                 NodeComponentInfo node = nodes.get(i);
                 ArrayList<SensorDataI> data = createSensorDataForNode(node, valuesList, index);
-                String uriNode = "uri" + node.getName();
                 String uri = AbstractComponent.createComponent(NodeComponent.class.getCanonicalName(),
-                        new Object[] {
-                                uriNode, node.getName(), node.getX(), node.getY(),
+                        new Object[] { node.getName(), node.getX(), node.getY(),
                                 node.getRange(), REGISTER_IN_BOUND_PORT_URI,
                                 data,
                                 REG_START_INSTANT.plusSeconds(1L),
@@ -407,14 +421,22 @@ public class DistributedCVM
             }
 
             // Create the client
-            // AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
-            // new Object[] {
-            // CLIENT_COMPONENT_URI + "5",
-            // LOOKUP_IN_BOUND_PORT_URI,
-            // REG_START_INSTANT.plusSeconds(100L),
-            // nodes.size(), nodes.size(),
-            // "client5"
-            // });
+            HashMap<String, List<QueryI>> queriesClient5 = new HashMap<>();
+            queriesClient5.put("node44", Queries.queries5);
+            String uriClientURI5 = AbstractComponent.createComponent(ClientComponent.class.getCanonicalName(),
+                    new Object[] {
+                            LOOKUP_IN_BOUND_PORT_URI,
+                            REG_START_INSTANT.plusSeconds(150L),
+                            nodes.size(), nodes.size(),
+                            "client5",
+                            queriesClient5,
+                            intervals,
+                            false,
+                            filename
+                    });
+            this.toggleTracing(uriClientURI5);
+            this.toggleLogging(uriClientURI5);
+
         } else {
             System.err.println("Unknown JVM URI: " + AbstractCVM.getThisJVMURI());
         }
@@ -423,6 +445,12 @@ public class DistributedCVM
 
     }
 
+    /**
+     * Create a list of values to be used to create the sensor data for the nodes.
+     * 
+     * @param size the number of values to create
+     * @return the list of values created
+     */
     private List<List<Double>> createValuesList(int size) {
         List<List<Double>> valuesList = new ArrayList<>();
         for (int j = 0; j < size; j++) {
@@ -436,6 +464,14 @@ public class DistributedCVM
         return valuesList;
     }
 
+    /**
+     * Create the sensor data for a given node and a given list of values.
+     * 
+     * @param node       the node for which to create the sensor data
+     * @param valuesList the list of values to use to create the sensor data
+     * @param index      the index of the values to use in the list
+     * @return the list of sensor data created for the node
+     */
     private ArrayList<SensorDataI> createSensorDataForNode(NodeComponentInfo node, List<List<Double>> valuesList,
             int index) {
         ArrayList<SensorDataI> data = new ArrayList<>();
@@ -450,7 +486,7 @@ public class DistributedCVM
     public static void main(String[] args) {
         try {
             DistributedCVM dda = new DistributedCVM(args);
-            dda.startStandardLifeCycle(75000L);
+            dda.startStandardLifeCycle(210000L);
             Thread.sleep(10000L);
             System.exit(0);
         } catch (Exception e) {

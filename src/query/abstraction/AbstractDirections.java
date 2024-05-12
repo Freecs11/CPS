@@ -9,5 +9,4 @@ import query.interfaces.IEval;
 public abstract class AbstractDirections implements IEval {
     @Override
     public abstract Set<Direction> eval(ExecutionStateI context);
-
 }

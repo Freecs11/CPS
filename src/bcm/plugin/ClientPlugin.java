@@ -133,11 +133,13 @@ public class ClientPlugin
         // --------- Methodes du plugin ---------
 
         /**
-         * Execute a sync request to a node with a certain delay to launch the request
+         * Execute a synchronous request to a node with a certain delay to launch the
+         * request
          * 
-         * @param request the request to be sent
-         * @param nodeId  the id of the node to send the request to
-         * @param delay   the delay to wait before sending the request
+         * @param requestURI the URI of the request
+         * @param query      the query to be sent
+         * @param nodeId     the id of the node to send the request to
+         * @param delay      the delay to wait before sending the request
          */
         public void executeSyncRequest(String requestURI, QueryI query, String nodeId, long delay) {
 
@@ -232,11 +234,12 @@ public class ClientPlugin
 
         /**
          * Execute an async request to a node with a certain delay to launch the request
-         * and a certain timeout to wait for the results to be gathered and combined
          * 
-         * @param request the request to be sent
-         * @param nodeId  the id of the node to send the request to
-         * @param delay   the delay to wait before sending the request
+         * @param requestURI   the URI of the request
+         * @param query        the query to be sent
+         * @param nodeId       the id of the node to send the request to
+         * @param delay        the delay to wait before sending the request
+         * @param asyncTimeout the timeout to wait for the results
          * @throws Exception
          */
         public void executeAsyncRequest(String requestURI, QueryI query, String nodeId, long delay, long asyncTimeout)

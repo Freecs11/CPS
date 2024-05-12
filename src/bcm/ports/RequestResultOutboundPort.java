@@ -43,7 +43,7 @@ public class RequestResultOutboundPort extends AbstractOutboundPort implements R
 
     /**
      * See
-     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestResultCI#acceptRequestResult(String, QueryResultI)}
+     * {@link RequestResultCI#acceptRequestResult(String, QueryResultI)}
      */
     @Override
     public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {

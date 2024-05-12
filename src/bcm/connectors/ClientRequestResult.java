@@ -17,9 +17,9 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI;
 public class ClientRequestResult extends AbstractConnector
         implements RequestResultCI {
 
-    /**
-     * @see
-     *      fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI#acceptRequestResult(java.lang.String)
+	 /**
+     * See
+     * {@link RequestResultCI#acceptRequestResult(String, QueryResultI)}
      */
     @Override
     public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {

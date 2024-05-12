@@ -1,7 +1,7 @@
 <deployment>
     <hosts>
     <host name="localhost"
-            dir="C:/Users/Freecs/Desktop/M1/CPS/cps_repo/cps_project/CPS/deployement/"/>
+            dir="C:\Users\Admin\Documents\SU2023\CPS\CPS\deployement\"/>
     </hosts>
     <cyclicBarrier   hostname="localhost" port="55253"/>
     <globalRegistry  hostname="localhost" port="55252"/>
@@ -19,18 +19,17 @@
         rmiRegistryCreator="false"
         hostname="localhost"
         mainclass="bcm.DistributedCVM"/>
-<!--     
-        <jvm2hostname jvmuri="cluster-jvm3"
+    <jvm2hostname jvmuri="clusterjvm3"
         rmiRegistryCreator="false"
         hostname="localhost"
         mainclass="bcm.DistributedCVM"/>
-    <jvm2hostname jvmuri="cluster-jvm4"
+    <jvm2hostname jvmuri="clusterjvm4"
         rmiRegistryCreator="false"
         hostname="localhost"
         mainclass="bcm.DistributedCVM"/>
-    <jvm2hostname jvmuri="cluster-jvm5"
+    <jvm2hostname jvmuri="clusterjvm5"
         rmiRegistryCreator="false"
         hostname="localhost"
-        mainclass="bcm.DistributedCVM"/> -->
+        mainclass="bcm.DistributedCVM"/>
     </jvms2hostnames>
 </deployment>

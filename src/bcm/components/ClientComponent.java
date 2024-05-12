@@ -157,10 +157,10 @@ public class ClientComponent extends AbstractComponent {
                                                 String requestURI = generateRequestURI(Instant.now());
 
                                                 try {
-                                                        plugin.executeSyncRequest(requestURI, query, nodeID,
-                                                                        currentDelay);
-                                                        // plugin.executeAsyncRequest(requestURI, query, nodeID,
-                                                        // currentDelay, asyncTimeout);
+//                                                        plugin.executeSyncRequest(requestURI, query, nodeID,
+//                                                                        currentDelay);
+                                                         plugin.executeAsyncRequest(requestURI, query, nodeID,
+                                                         currentDelay, asyncTimeout);
                                                 } catch (Exception e) {
                                                         logError(e);
                                                 }

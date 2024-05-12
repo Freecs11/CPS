@@ -1,7 +1,7 @@
 grant {
   permission java.io.FilePermission "./*", "write";
   permission java.io.FilePermission "./jars/*", "read,write";
-  permission java.io.FilePermission "C:/Program Files/Eclipse Adoptium/jdk-17.0.5.8-hotspot/lib/*", "read";
+  permission java.io.FilePermission "C:\Program Files\Java\jdk-19\lib\*", "read";
   permission java.lang.RuntimePermission "accessDeclaredMembers" ;
   permission java.lang.RuntimePermission "getClassLoader" ;
   permission java.util.PropertyPermission "javax.xml.validation.SchemaFactory:http://relaxng.org/ns/structure/1.0", "read,write";

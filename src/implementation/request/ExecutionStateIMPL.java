@@ -14,7 +14,7 @@ import implementation.QueryResultIMPL;
  * <strong>Description</strong>
  * </p>
  * <p>
- * The class <code>ExecutionStateIMPL</code> acts as the implementation of the
+ * The class <code>	</code> acts as the implementation of the
  * <code>ExecutionStateI</code> interface. It is used to store the state of the
  * execution of a request on a node.
  * </p>
@@ -131,7 +131,7 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 	/**
 	 * Update the maximum number of hops
 	 * 
-	 * @params maxDistance
+	 * @param maxDistance
 	 */
 	public void updateMaxDistance(Double maxDistance) {
 		this.maxDistance = maxDistance;
@@ -281,7 +281,7 @@ public class ExecutionStateIMPL implements ExecutionStateI {
 
 	/**
 	 * See
-	 * {@link fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI#toString()}
+	 * {@link fr.sorbonne_u.cps.sensor_network.requests.interfaces.ExecutionStateI#isContinuationSet()}
 	 */
 	@Override
 	public String toString() {

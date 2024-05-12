@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"bcm"},{"l":"bcm.components"},{"l":"bcm.connectors"},{"l":"bcm.plugin"},{"l":"bcm.ports"},{"l":"implementation"},{"l":"implementation.request"},{"l":"query.abstraction"},{"l":"query.ast"},{"l":"query.interfaces"},{"l":"utils"}];updateSearchResults();

@@ -83,6 +83,40 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     /**
+     * Constructor of the registry component with default uri
+     * 
+     * @param nbThreads
+     * @param nbSchedulableThreads
+     * @param lookupInboundPortURI
+     * @param registerInboundPortURI
+     * @param registeryPoolURI
+     * @param registeryPoolnbThreads
+     */
+    protected RegistryComponent(
+            int nbThreads, int nbSchedulableThreads,
+            String lookupInboundPortURI,
+            String registerInboundPortURI,
+            String registeryPoolURI,
+            int registeryPoolnbThreads) {
+        super(nbThreads, nbSchedulableThreads);
+        assert lookupInboundPortURI != null;
+        assert registerInboundPortURI != null;
+        assert registeryPoolURI != null;
+        assert registeryPoolnbThreads > 0;
+        this.nodeIDToNodeInfoMap = new ConcurrentHashMap<>();
+        this.registeryPoolURI = registeryPoolURI;
+        this.registeryPoolIndex = createNewExecutorService(registeryPoolURI, registeryPoolnbThreads, false);
+        try {
+            this.lookUpInboundPort = new LookupInboundPort(lookupInboundPortURI, this);
+            this.registryInboundPort = new RegistrationInboundPort(registerInboundPortURI, this);
+            this.lookUpInboundPort.publishPort();
+            this.registryInboundPort.publishPort();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * See {@link fr.sorbonne_u.components.AbstractComponent#start()}
      */
     @Override
@@ -280,7 +314,7 @@ public class RegistryComponent extends AbstractComponent {
     }
 
     /**
-     * See {@link fr.sorbonne_u.cps.components.AbstractComponent#execute()}
+     * See {@link AbstractComponent#execute()}
      */
     @Override
     public synchronized void execute() throws Exception {
