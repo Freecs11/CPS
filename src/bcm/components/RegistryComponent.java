@@ -23,6 +23,16 @@ import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 import fr.sorbonne_u.utils.aclocks.ClocksServerCI;
 import implementation.ConnectionInfoImpl;
 
+/**
+ * <p>
+ * <strong> Description </strong>
+ * </p>
+ * The registry component is responsible for registering and looking up nodes in
+ * the network. It is also responsible for finding neighbours of a node.
+ * <p>
+ * <strong>Invariant</strong>
+ * </p>
+ */
 @OfferedInterfaces(offered = { LookupCI.class, RegistrationCI.class })
 @RequiredInterfaces(required = { ClocksServerCI.class })
 public class RegistryComponent extends AbstractComponent {
@@ -36,6 +46,17 @@ public class RegistryComponent extends AbstractComponent {
     // -------- index of the pool of threads
     protected final int registeryPoolIndex;
 
+    /**
+     * Constructor of the registry component
+     * 
+     * @param uri
+     * @param nbThreads
+     * @param nbSchedulableThreads
+     * @param lookupInboundPortURI
+     * @param registerInboundPortURI
+     * @param registeryPoolURI
+     * @param registeryPoolnbThreads
+     */
     protected RegistryComponent(String uri,
             int nbThreads, int nbSchedulableThreads,
             String lookupInboundPortURI,
@@ -43,6 +64,11 @@ public class RegistryComponent extends AbstractComponent {
             String registeryPoolURI,
             int registeryPoolnbThreads) {
         super(uri, nbThreads, nbSchedulableThreads);
+        assert uri != null;
+        assert lookupInboundPortURI != null;
+        assert registerInboundPortURI != null;
+        assert registeryPoolURI != null;
+        assert registeryPoolnbThreads > 0;
         this.nodeIDToNodeInfoMap = new ConcurrentHashMap<>();
         this.registeryPoolURI = registeryPoolURI;
         this.registeryPoolIndex = createNewExecutorService(registeryPoolURI, registeryPoolnbThreads, false);
@@ -56,18 +82,32 @@ public class RegistryComponent extends AbstractComponent {
         }
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#start()}
+     */
     @Override
     public synchronized void start() throws ComponentStartException {
         super.start();
         this.logMessage("starting Registry component.");
     }
 
+    /**
+     * Get the index of the pool of threads
+     * 
+     * @return the index of the pool of threads
+     */
     public int getRegisteryPoolIndex() {
         return registeryPoolIndex;
     }
 
-    // --- CLIENT METHODS
-
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI#findByIdentifier(String)}
+     * 
+     * @param sensorNodeId
+     * @return the connection info
+     * @throws Exception
+     */
     public ConnectionInfoI findByIdentifier(String sensorNodeId) throws Exception {
         try {
             NodeInfoI nodeInfo = this.nodeIDToNodeInfoMap.get(sensorNodeId);
@@ -77,6 +117,14 @@ public class RegistryComponent extends AbstractComponent {
         }
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI#findByZone(GeographicalZoneI)}
+     * 
+     * @param z the geographical zone
+     * @return the set of connection info
+     * @throws Exception
+     */
     public Set<ConnectionInfoI> findByZone(GeographicalZoneI z) throws Exception {
         try {
             assert z != null;
@@ -92,12 +140,23 @@ public class RegistryComponent extends AbstractComponent {
         }
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#registered(String)}
+     * 
+     * @param nodeIdentifier
+     * @return true if the node is registered
+     * @throws Exception
+     */
     public boolean registered(String nodeIdentifier) throws Exception {
         return this.nodeIDToNodeInfoMap.containsKey(nodeIdentifier);
     }
 
-    // --- REGISTRY METHODS
-
+    /**
+     * Print all the nodes
+     * 
+     * @return the string to print out
+     */
     private String printAllNodes() {
         StringBuilder sb = new StringBuilder();
         sb.append("Nodes " + nodeIDToNodeInfoMap.size() + ": ");
@@ -107,12 +166,27 @@ public class RegistryComponent extends AbstractComponent {
         return sb.toString();
     }
 
+    /**
+     * Check if two nodes are in range of each other
+     * 
+     * @param n        the first node
+     * @param nodeInfo the second node
+     * @return true if the nodes are in range of each other
+     */
     private boolean inRangeOfEachOther(NodeInfoI n, NodeInfoI nodeInfo) {
         return n.nodePosition().distance(nodeInfo.nodePosition()) < n.nodeRange()
                 || nodeInfo.nodePosition().distance(n.nodePosition()) < nodeInfo.nodeRange()
                         && (!n.nodeIdentifier().equals(nodeInfo.nodeIdentifier()));
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#register(NodeInfoI)}
+     * 
+     * @param nodeInfo
+     * @return the set of neighbours
+     * @throws Exception
+     */
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
         try { // Init the result set
             Set<NodeInfoI> result = new HashSet<>();
@@ -156,6 +230,15 @@ public class RegistryComponent extends AbstractComponent {
         }
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#findNewNeighbour(NodeInfoI, Direction)}
+     * 
+     * @param nodeInfo
+     * @param d        The direction to look for a new neighbour
+     * @return The new neighbour
+     * @throws Exception
+     */
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
         try {
             Double minDist = Double.POSITIVE_INFINITY;
@@ -180,6 +263,13 @@ public class RegistryComponent extends AbstractComponent {
         }
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#unregister(String)}
+     * 
+     * @param nodeIdentifier
+     * @throws Exception
+     */
     public void unregister(String nodeIdentifier) throws Exception {
         try {
             this.nodeIDToNodeInfoMap.remove(nodeIdentifier);
@@ -189,12 +279,18 @@ public class RegistryComponent extends AbstractComponent {
         }
     }
 
+    /**
+     * See {@link fr.sorbonne_u.cps.components.AbstractComponent#execute()}
+     */
     @Override
     public synchronized void execute() throws Exception {
         super.execute();
         this.logMessage("executing Registry component.");
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#finalise()}
+     */
     @Override
     public synchronized void finalise() throws Exception {
         this.logMessage("finalising Registry component.");
@@ -202,6 +298,9 @@ public class RegistryComponent extends AbstractComponent {
         super.finalise();
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#shutdown()}
+     */
     @Override
     public synchronized void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
@@ -214,6 +313,9 @@ public class RegistryComponent extends AbstractComponent {
         super.shutdown();
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#shutdownNow()}
+     */
     @Override
     public synchronized void shutdownNow() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.

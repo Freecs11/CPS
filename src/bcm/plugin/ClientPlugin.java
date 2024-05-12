@@ -40,6 +40,16 @@ import implementation.QueryResultIMPL;
 import implementation.RequestIMPL;
 import utils.QueryMetrics;
 
+/**
+ * <p>
+ * <strong>Description</strong>
+ * </p>
+ * <p>
+ * The class <code>ClientPlugin</code> acts as the plugin that allows the client
+ * component to send requests to the nodes and accept the results of the
+ * requests.
+ * </p>
+ */
 public class ClientPlugin
                 extends AbstractPlugin {
 
@@ -49,22 +59,36 @@ public class ClientPlugin
         protected String registryInboundPortURI;
 
         public final String clientIdentifer;
-
+        private boolean TESTMODE;
         private ConcurrentMap<String, List<QueryResultI>> resultsMap;
 
         public ConcurrentMap<String, QueryMetrics> queryMetrics;
 
         private final String filename;
 
+        /**
+         * Constructor of the client plugin
+         * 
+         * @param registryInboundPortURI
+         * @param clientIdentifer
+         * @param TESTMODE
+         * @param filename
+         */
         public ClientPlugin(String registryInboundPortURI, String clientIdentifer,
+                        boolean TESTMODE,
                         String filename) {
                 this.registryInboundPortURI = registryInboundPortURI;
                 this.clientIdentifer = clientIdentifer;
+                this.TESTMODE = TESTMODE;
                 this.filename = filename;
                 this.resultsMap = new ConcurrentHashMap<>();
                 this.queryMetrics = new ConcurrentHashMap<>();
         }
 
+        /**
+         * See
+         * {@link fr.sorbonne_u.components.AbstractPlugin#installOn(fr.sorbonne_u.components.ComponentI)}
+         */
         @Override
         public void installOn(ComponentI owner) throws Exception {
                 super.installOn(owner);
@@ -73,19 +97,12 @@ public class ClientPlugin
                 this.addOfferedInterface(RequestResultCI.class);
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractPlugin#initialise()}
+         */
         @Override
         public void initialise() throws Exception {
                 // ---------Init the ports---------
-                // this.LookupOutboundPort = new LookupOutboundPort(
-                // AbstractOutboundPort.generatePortURI(),
-                // this.getOwner());
-                // this.LookupOutboundPort.publishPort();
-
-                // this.getOwner().doPortConnection(
-                // this.LookupOutboundPort.getPortURI(),
-                // this.registryInboundPortURI,
-                // LookUpRegistryConnector.class.getCanonicalName());
-
                 this.clientRequestResultInboundPort = new RequestResultInboundPort(
                                 AbstractOutboundPort.generatePortURI(),
                                 this.getOwner());
@@ -94,64 +111,26 @@ public class ClientPlugin
                 super.initialise();
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractPlugin#finalise()}
+         */
         @Override
         public void finalise() throws Exception {
-                // if (this.LookupOutboundPort.connected())
-                // this.getOwner().doPortDisconnection(this.LookupOutboundPort.getPortURI());
-                // if (this.LookupOutboundPort.isPublished())
-                // this.LookupOutboundPort.unpublishPort();
-
-                storeTestResults();
+                if (TESTMODE) {
+                        storeTestResults();
+                }
                 super.finalise();
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractPlugin#uninstall()}
+         */
         @Override
         public void uninstall() throws Exception {
                 if (this.clientRequestResultInboundPort.isPublished())
                         this.clientRequestResultInboundPort.unpublishPort();
 
                 super.uninstall();
-        }
-
-        private void storeTestResults() throws Exception {
-                File file = new File(filename);
-                if (!file.exists()) {
-                        file.createNewFile();
-                }
-
-                try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
-                                FileChannel channel = randomAccessFile.getChannel()) {
-                        // Acquire the lock
-                        try (FileLock lock = channel.lock()) {
-                                // Move to the end of the file to append data
-                                randomAccessFile.seek(randomAccessFile.length());
-
-                                // If file length is 0, write headers
-                                if (randomAccessFile.length() == 0) {
-                                        randomAccessFile.writeBytes(
-                                                        "RequestURI,StartTime,EndTime,Interval,Duration,nbSensors\n");
-                                }
-
-                                // Write each entry to the file
-                                for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
-                                        QueryMetrics metrics = entry.getValue();
-                                        StringBuilder data = new StringBuilder();
-                                        data.append(entry.getKey()).append(",");
-                                        data.append(metrics.getStartTime()).append(",");
-                                        data.append(metrics.getEndTime()).append(",");
-                                        data.append(metrics.getInterval()).append(",");
-                                        data.append(metrics.getDuration()).append(",");
-                                        data.append(metrics.getNbSensors()).append("\n");
-
-                                        randomAccessFile.writeBytes(data.toString());
-                                }
-                        } catch (OverlappingFileLockException e) {
-                                System.err.println(
-                                                "File is already locked in this thread or virtual machine: testResults.csv");
-                        }
-                } catch (IOException e) {
-                        System.err.println("Failed to write to file: " + e.getMessage());
-                }
         }
 
         // --------- Methodes du plugin ---------
@@ -211,6 +190,7 @@ public class ClientPlugin
                                                                         .currentInstant().toEpochMilli();
                                                         metric.setEndTime(tf);
                                                         metric.setDuration(metric.getEndTime() - metric.getStartTime());
+
                                                         if (res.isGatherRequest()) {
                                                                 ClientPlugin.this.getOwner()
                                                                                 .logMessage("Gathered size : " + res
@@ -231,13 +211,13 @@ public class ClientPlugin
                                                                                         + request.requestURI()
                                                                                         + " : "
                                                                                         + res.toString());
+                                                        ClientPlugin.this.queryMetrics.put(requestURI, metric);
                                                         ClientPlugin.this.getOwner().doPortDisconnection(
                                                                         clientRequestingOutboundPort.getPortURI());
                                                         clientRequestingOutboundPort.unpublishPort();
                                                         clientRequestingOutboundPort.destroyPort();
                                                         LookupOutboundPort.unpublishPort();
                                                         LookupOutboundPort.destroyPort();
-                                                        ClientPlugin.this.queryMetrics.put(requestURI, metric);
                                                 } catch (Exception e) {
                                                         e.printStackTrace();
                                                 }
@@ -332,7 +312,7 @@ public class ClientPlugin
                                                 try {
                                                         List<QueryResultI> results = ClientPlugin.this.resultsMap
                                                                         .get(requestURI);
-                                                        
+
                                                         if (results == null || results.isEmpty()) {
                                                                 return;
                                                         }
@@ -376,6 +356,13 @@ public class ClientPlugin
                                 }, delay + asyncTimeout, TimeUnit.NANOSECONDS);
         }
 
+        /**
+         * Accept the result of a request sent by a node component
+         * 
+         * @param requestURI the URI of the request
+         * @param result     the result of the request
+         * @throws Exception
+         */
         public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
                 this.getOwner().logMessage(
                                 "Received result for request with URI " + requestURI + " at " + Instant.now());
@@ -395,4 +382,49 @@ public class ClientPlugin
                 }
         }
 
+        /**
+         * Store the test results in a file
+         * 
+         * @throws Exception
+         */
+        private void storeTestResults() throws Exception {
+                File file = new File(filename);
+                if (!file.exists()) {
+                        file.createNewFile();
+                }
+
+                try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+                                FileChannel channel = randomAccessFile.getChannel()) {
+                        // Acquire the lock
+                        try (FileLock lock = channel.lock()) {
+                                // Move to the end of the file to append data
+                                randomAccessFile.seek(randomAccessFile.length());
+
+                                // If file length is 0, write headers
+                                if (randomAccessFile.length() == 0) {
+                                        randomAccessFile.writeBytes(
+                                                        "RequestURI,StartTime,EndTime,Interval,Duration,nbSensors\n");
+                                }
+
+                                // Write each entry to the file
+                                for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
+                                        QueryMetrics metrics = entry.getValue();
+                                        StringBuilder data = new StringBuilder();
+                                        data.append(entry.getKey()).append(",");
+                                        data.append(metrics.getStartTime()).append(",");
+                                        data.append(metrics.getEndTime()).append(",");
+                                        data.append(metrics.getInterval()).append(",");
+                                        data.append(metrics.getDuration()).append(",");
+                                        data.append(metrics.getNbSensors()).append("\n");
+
+                                        randomAccessFile.writeBytes(data.toString());
+                                }
+                        } catch (OverlappingFileLockException e) {
+                                System.err.println(
+                                                "File is already locked in this thread or virtual machine: testResults.csv");
+                        }
+                } catch (IOException e) {
+                        System.err.println("Failed to write to file: " + e.getMessage());
+                }
+        }
 }

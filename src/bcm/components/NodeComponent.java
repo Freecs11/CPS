@@ -29,6 +29,16 @@ import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import implementation.NodeInfoIMPL;
 import implementation.PositionIMPL;
 
+/**
+ * <p>
+ * <strong>Description</strong>
+ * </p>
+ * <p>
+ * The class <code>NodeComponent</code> implements the component representing a
+ * sensor node in the sensor network. It is responsible for the management of
+ * the node's lifecycle, it contains the sensor data and the node's information.
+ * </p>
+ */
 @RequiredInterfaces(required = { ClocksServerCI.class })
 public class NodeComponent extends AbstractComponent
         implements RequestingImplI, SensorNodeP2PImplI {
@@ -53,6 +63,25 @@ public class NodeComponent extends AbstractComponent
     // Plugin
     protected NodePlugin nodePlugin;
 
+    /**
+     * Constructor of the class NodeComponent
+     * 
+     * @param uri
+     * @param nodeId
+     * @param x
+     * @param y
+     * @param range
+     * @param registryInboundPortURI
+     * @param sensorData
+     * @param startInstant
+     * @param nbAsyncThreads
+     * @param nbSyncThreads
+     * @param syncRequestPoolUri
+     * @param asyncRequestPoolUri
+     * @param syncContPoolUri
+     * @param asyncContPoolUri
+     * @throws Exception
+     */
     protected NodeComponent(String uri,
             String nodeId,
             Double x, Double y,
@@ -107,7 +136,24 @@ public class NodeComponent extends AbstractComponent
         AbstractComponent.checkInvariant(this);
     }
 
-    // Constructeur avec auto-génération de l'URI
+    /**
+     * Constructor of the class NodeComponent with auto-generated URI
+     * 
+     * @param nodeId
+     * @param x
+     * @param y
+     * @param range
+     * @param registryInboundPortURI
+     * @param sensorData
+     * @param startInstant
+     * @param nbAsyncThreads
+     * @param nbSyncThreads
+     * @param syncRequestPoolUri
+     * @param asyncRequestPoolUri
+     * @param syncContPoolUri
+     * @param asyncContPoolUri
+     * @throws Exception
+     */
     protected NodeComponent(
             String nodeId,
             Double x, Double y,
@@ -160,22 +206,45 @@ public class NodeComponent extends AbstractComponent
         AbstractComponent.checkInvariant(this);
     }
 
+    /**
+     * Getter for the URI of the node
+     * 
+     * @return index of the pool of thread of synchronous request
+     */
     public int getSyncRequestPoolIndex() {
         return syncRequestPoolIndex;
     }
 
+    /**
+     * Getter for the URI of the node
+     * 
+     * @return index of the pool of thread of asynchronous request
+     */
     public int getAsyncRequestPoolIndex() {
         return asyncRequestPoolIndex;
     }
 
+    /**
+     * Getter for the URI of the node
+     * 
+     * @return index of the pool of thread of synchronous continuation
+     */
     public int getSyncContPoolIndex() {
         return syncContPoolIndex;
     }
 
+    /**
+     * Getter for the URI of the node
+     * 
+     * @return index of the pool of thread of asynchronous continuation
+     */
     public int getAsyncContPoolIndex() {
         return asyncContPoolIndex;
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#start()}
+     */
     @Override
     public void start() throws ComponentStartException {
         try {
@@ -188,33 +257,18 @@ public class NodeComponent extends AbstractComponent
         super.start();
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#execute()}
+     */
     @Override
     public void execute() throws Exception {
         // ------CONNECTION TO THE CLOCK SERVER------
-
-        this.logMessage("first line of execute() in NodeComponent");
-
-        ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
-                AbstractOutboundPort.generatePortURI(), this);
-        this.logMessage("Node component connecting to the clock server");
-        clockPort.publishPort();
-        this.doPortConnection(
-                clockPort.getPortURI(),
-                ClocksServer.STANDARD_INBOUNDPORT_URI,
-                ClocksServerConnector.class.getCanonicalName());
-        this.clock = clockPort.getClock(CVM.CLOCK_URI);
-        this.doPortDisconnection(clockPort.getPortURI());
-        clockPort.unpublishPort();
-        clockPort.destroyPort();
-
-        this.logMessage("Node component connected to the clock server");
-
-        this.clock.waitUntilStart();
+        prepareClockConnection();
         // ----------------- DELAYED STARTUP -----------------
 
         this.logMessage("Node component waiting.......");
-        // on bloque le thread courant jusqu'à ce que le client soit prêt à démarrer (
-        // on utilisant l'instant de démarrage calculé précédemment)
+        // We block the current thread until the client is ready to start (using the
+        // calculated start instant)
         while (true) {
             long delay = this.clock.nanoDelayUntilInstant(this.startInstant);
             if (delay <= 0) {
@@ -238,92 +292,101 @@ public class NodeComponent extends AbstractComponent
                 }, delayRegister, TimeUnit.NANOSECONDS);
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI#ask4Connection(NodeInfoI)}
+     */
     public void ask4Connection(NodeInfoI newNeighbour)
             throws Exception {
         this.nodePlugin.ask4Connection(newNeighbour);
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.network.interfaces.SensorNodeP2PCI#ask4Disconnection(NodeInfoI)}
+     */
     public void ask4Disconnection(NodeInfoI neighbour) {
         this.nodePlugin.ask4Disconnection(neighbour);
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#finalise()}
+     */
     @Override
     public void finalise() throws Exception {
         this.logMessage("stopping node component : " + this.nodeURI);
-        // ----- NO CALL TO SERVICES IN FINALISE -----
-
-        this.nodePlugin.finalise();
-
-        // if (this.RegistrationOutboundPort.connected()) {
-        // this.doPortDisconnection(this.RegistrationOutboundPort.getPortURI());
-        // }
-        // this.RegistrationOutboundPort.unpublishPort();
-        // for (SensorNodeP2POutboundPort p2poutboundPort :
-        // this.nodeInfoToP2POutboundPortMap.values()) {
-        // if (p2poutboundPort.connected()) {
-        // this.doPortDisconnection(p2poutboundPort.getPortURI());
-        // }
-        // p2poutboundPort.unpublishPort();
-        // }
-
-        // if (this.requestResultOutboundPort.connected()) {
-        // this.doPortDisconnection(this.requestResultOutboundPort.getPortURI());
-
-        // }
-        // this.requestResultOutboundPort.unpublishPort();
-        // clock
-
         super.finalise();
     }
 
+    /**
+     * See {@link fr.sorbonne_u.components.AbstractComponent#shutdown()}
+     */
     @Override
     public void shutdown() throws ComponentShutdownException {
         // the shutdown is a good place to unpublish inbound ports.
         try {
             this.nodePlugin.uninstall();
-            // if (this.requestingInboundPort.isPublished())
-            // this.requestingInboundPort.unpublishPort();
-            // if (this.sensorNodeP2PInboundPort.isPublished())
-            // this.sensorNodeP2PInboundPort.unpublishPort();
-
         } catch (Exception e) {
             throw new ComponentShutdownException(e);
         }
         super.shutdown();
     }
 
-    @Override
-    public void shutdownNow() throws ComponentShutdownException {
-        // the shutdown is a good place to unpublish inbound ports.
-        try {
-            // if (this.requestingInboundPort.isPublished())
-            // this.requestingInboundPort.unpublishPort();
-            // if (this.sensorNodeP2PInboundPort.isPublished())
-            // this.sensorNodeP2PInboundPort.unpublishPort();
-
-        } catch (Exception e) {
-            throw new ComponentShutdownException(e);
-        }
-        super.shutdownNow();
-    }
-
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI#execute(RequestContinuationI)}
+     */
     @Override
     public QueryResultI execute(RequestContinuationI request) throws Exception {
         return this.nodePlugin.execute(request);
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI#execute(RequestI)}
+     */
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
         return this.nodePlugin.execute(request);
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI#executeAsync(RequestI)}
+     */
     @Override
     public void executeAsync(RequestI request) throws Exception {
         this.nodePlugin.executeAsync(request);
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI#executeAsync(RequestContinuationI)}
+     */
     @Override
     public void executeAsync(RequestContinuationI requestContinuation) throws Exception {
         this.nodePlugin.executeAsync(requestContinuation);
+    }
+
+    /**
+     * Init the connection to the clock component and wait to start
+     * 
+     * @throws Exception
+     */
+    private void prepareClockConnection() throws Exception {
+        ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
+                AbstractOutboundPort.generatePortURI(), this);
+        this.logMessage("Node component connecting to the clock server");
+        clockPort.publishPort();
+        this.doPortConnection(
+                clockPort.getPortURI(),
+                ClocksServer.STANDARD_INBOUNDPORT_URI,
+                ClocksServerConnector.class.getCanonicalName());
+        this.clock = clockPort.getClock(CVM.CLOCK_URI);
+        this.doPortDisconnection(clockPort.getPortURI());
+        clockPort.unpublishPort();
+        clockPort.destroyPort();
+        this.clock.waitUntilStart();
+        this.logMessage("Node component connected to the clock server");
     }
 }

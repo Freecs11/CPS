@@ -8,8 +8,23 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.QueryResultI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.RequestI;
 import fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI;
 
+/**
+ * <p>
+ * <strong>Description</strong>
+ * </p>
+ * <p>
+ * The class <code>RequestingInboundPort</code> acts as the inbound port that
+ * allows the connection between the client component and the node component
+ */
 public class RequestingInboundPort extends AbstractInboundPort
         implements RequestingCI {
+    /**
+     * Constructor of the RequestingInboundPort
+     * 
+     * @param uri   the uri of the port
+     * @param owner the owner component
+     * @throws Exception
+     */
     public RequestingInboundPort(
             String uri,
             ComponentI owner) throws Exception {
@@ -18,12 +33,22 @@ public class RequestingInboundPort extends AbstractInboundPort
         assert owner instanceof NodeComponent;
     }
 
+    /**
+     * Constructor of the RequestingInboundPort
+     * 
+     * @param owner the owner component
+     * @throws Exception
+     */
     public RequestingInboundPort(ComponentI owner)
             throws Exception {
         super(RequestingCI.class, owner);
         assert owner instanceof NodeComponent;
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI#execute(RequestI)}
+     */
     @Override
     public QueryResultI execute(RequestI request) throws Exception {
         return this.owner.handleRequest((((NodeComponent) this.getOwner()).getSyncRequestPoolIndex()),
@@ -36,6 +61,10 @@ public class RequestingInboundPort extends AbstractInboundPort
                 });
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.nodes.interfaces.RequestingCI#executeAsync(RequestI)}
+     */
     @Override
     public void executeAsync(RequestI request) throws Exception {
         this.getOwner().runTask((((NodeComponent) this.getOwner()).getAsyncRequestPoolIndex()),
@@ -50,5 +79,4 @@ public class RequestingInboundPort extends AbstractInboundPort
                     }
                 });
     }
-
 }

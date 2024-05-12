@@ -7,6 +7,16 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.ConnectionInfoI;
 import fr.sorbonne_u.cps.sensor_network.interfaces.GeographicalZoneI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.LookupCI;
 
+/**
+ * <p>
+ * <strong>Description</strong>
+ * </p>
+ * <p>
+ * The class <code>LookUpRegistryConnector</code> acts as the connector that
+ * allows the client component to lookup the registry component to find the
+ * connection information of a sensor node.
+ * </p>
+ */
 public class LookUpRegistryConnector extends AbstractConnector
         implements LookupCI {
 

@@ -10,13 +10,27 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 
+/**
+ * <p>
+ * <strong>Description</strong>
+ * </p>
+ * <p>
+ * The class <code>RegistrationInboundPort</code> acts as the inbound port that
+ * allows the connection between the client component and the registry component
+ * </p>
+ * 
+ */
 public class RegistrationInboundPort extends AbstractInboundPort
         implements RegistrationCI {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2017915843726837790L;
 
+    /**
+     * Constructor of the RegistrationInboundPort
+     * 
+     * @param uri   the uri of the port
+     * @param owner the owner component
+     * @throws Exception
+     */
     public RegistrationInboundPort(
             String uri,
             ComponentI owner) throws Exception {
@@ -25,10 +39,20 @@ public class RegistrationInboundPort extends AbstractInboundPort
 
     }
 
+    /**
+     * Constructor of the RegistrationInboundPort
+     * 
+     * @param owner
+     * @throws Exception
+     */
     public RegistrationInboundPort(ComponentI owner) throws Exception {
         super(RegistrationCI.class, owner);
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#registered(String)}
+     */
     @Override
     public boolean registered(String nodeIdentifier) throws Exception {
         return this.owner.handleRequest(
@@ -43,6 +67,10 @@ public class RegistrationInboundPort extends AbstractInboundPort
 
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#register(NodeInfoI)}
+     */
     @Override
     public Set<NodeInfoI> register(NodeInfoI nodeInfo) throws Exception {
         return this.owner.handleRequest(
@@ -56,6 +84,10 @@ public class RegistrationInboundPort extends AbstractInboundPort
                 });
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#findNewNeighbour(NodeInfoI, Direction)}
+     */
     @Override
     public NodeInfoI findNewNeighbour(NodeInfoI nodeInfo, Direction d) throws Exception {
         return this.owner.handleRequest(((RegistryComponent) this.owner).getRegisteryPoolIndex(),
@@ -68,6 +100,10 @@ public class RegistrationInboundPort extends AbstractInboundPort
                 });
     }
 
+    /**
+     * See
+     * {@link fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI#unregister(String)}
+     */
     @Override
     public void unregister(String nodeIdentifier) throws Exception {
         this.owner.handleRequest(

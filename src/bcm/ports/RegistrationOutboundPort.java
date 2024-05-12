@@ -8,6 +8,17 @@ import fr.sorbonne_u.cps.sensor_network.interfaces.Direction;
 import fr.sorbonne_u.cps.sensor_network.interfaces.NodeInfoI;
 import fr.sorbonne_u.cps.sensor_network.registry.interfaces.RegistrationCI;
 
+/**
+ * <p>
+ * <strong> Description </strong>
+ * </p>
+ * <p>
+ * The class <code>RegistrationOutboundPort</code> acts as the outbound port
+ * that
+ * allows the connection between the other components and the registry component
+ * for the registration of a sensor node.
+ * </p>
+ */
 public class RegistrationOutboundPort extends AbstractOutboundPort
         implements RegistrationCI {
 
@@ -19,7 +30,6 @@ public class RegistrationOutboundPort extends AbstractOutboundPort
 
     public RegistrationOutboundPort(ComponentI owner) throws Exception {
         super(RegistrationCI.class, owner);
-        // assert owner instanceof RegistryComponent;
     }
 
     @Override

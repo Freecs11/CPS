@@ -32,6 +32,19 @@ import fr.sorbonne_u.utils.aclocks.ClocksServerConnector;
 import fr.sorbonne_u.utils.aclocks.ClocksServerOutboundPort;
 import utils.QueryMetrics;
 
+/**
+ * <p>
+ * <strong> Description </strong>
+ * </p>
+ * <p>
+ * The class <code>ClientComponent</code> represents a client component that
+ * sends queries to the target node and waits for the results to be
+ * gathered and combined. The client component can be in test mode or not. In
+ * test mode, the client sends the queries in the list with the intervals
+ * specified in the list. If not in test mode, the client sends the queries in
+ * the list with a default interval of 20 seconds.
+ * </p>
+ */
 @RequiredInterfaces(required = { ClocksServerCI.class })
 public class ClientComponent extends AbstractComponent {
 
@@ -57,6 +70,23 @@ public class ClientComponent extends AbstractComponent {
         private String filename;
         private boolean TESTMODE;
 
+        /**
+         * Constructor of the client component
+         * 
+         * @param uri
+         * @param registryInboundPortURI
+         * @param startInstant
+         * @param nbThreads
+         * @param nbSchedulableThreads
+         * @param clientIdentifer
+         * @param queries                Hash map to store queries and target nodes
+         * @param intervals              List of intervals to wait before sending the
+         *                               requests
+         * @param isTestMode             Boolean to indicate if the client is in test
+         *                               mode
+         * @param filename               CSV file to store the results
+         * @throws Exception
+         */
         protected ClientComponent(String uri, String registryInboundPortURI, Instant startInstant,
                         int nbThreads,
                         int nbSchedulableThreads, String clientIdentifer,
@@ -65,13 +95,25 @@ public class ClientComponent extends AbstractComponent {
                         boolean isTestMode,
                         String filename) throws Exception {
                 super(uri, nbThreads, nbSchedulableThreads);
+                assert uri != null;
+                assert registryInboundPortURI != null;
+                assert startInstant != null;
+                assert nbThreads > 0;
+                assert nbSchedulableThreads >= 0;
+                assert clientIdentifer != null;
+                assert queries != null;
+                assert intervals != null;
                 this.TESTMODE = isTestMode;
                 this.startInstant = startInstant;
                 this.queries = queries;
                 this.intervals = intervals;
-                this.filename = filename;
+                if (TESTMODE) {
+                        this.filename = filename;
+                } else {
+                        this.filename = "results.csv";
+                }
                 // ---------Init the plugin---------
-                this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer, filename);
+                this.plugin = new ClientPlugin(registryInboundPortURI, clientIdentifer, TESTMODE, filename);
                 this.plugin.setPluginURI(AbstractPort.generatePortURI());
                 this.installPlugin(plugin);
 
@@ -81,12 +123,18 @@ public class ClientComponent extends AbstractComponent {
                 AbstractComponent.checkInvariant(this);
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractComponent#start()}
+         */
         @Override
         public synchronized void start() throws ComponentStartException {
                 this.logMessage("starting client component.");
                 super.start();
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractComponent#execute()}
+         */
         @Override
         public synchronized void execute() throws Exception {
                 this.prepareClockConnection();
@@ -108,12 +156,7 @@ public class ClientComponent extends AbstractComponent {
                 }
 
                 if (this.TESTMODE) {
-                        // this.logMessage("queryList received: " + queries.toString() + " intervals: "
-                        // + intervals.toString());
                         for (Long interval : intervals) {
-                                // long currentDelay = this.clock
-                                // .nanoDelayUntilInstant(
-                                // startInstant.plusSeconds(interval));
                                 for (Map.Entry<String, List<QueryI>> entry : queries.entrySet()) {
                                         for (QueryI query : entry.getValue()) {
                                                 final String nodeID = entry.getKey();
@@ -123,18 +166,13 @@ public class ClientComponent extends AbstractComponent {
                                                 String requestURI = generateRequestURI(Instant.now());
 
                                                 try {
+                                                        plugin.executeSyncRequest(requestURI, query, nodeID,
+                                                                        currentDelay);
                                                         // plugin.executeAsyncRequest(requestURI, query, nodeID,
                                                         // currentDelay, asyncTimeout);
-                                                        plugin.executeAsyncRequest(requestURI, query, nodeID,
-                                                                        currentDelay, asyncTimeout);
                                                 } catch (Exception e) {
                                                         logError(e);
                                                 }
-                                                // queryMetrics.put(requestURI,
-                                                // new QueryMetrics(startTime,
-                                                // startTime + asyncTimeout / 1000000,
-                                                // interval, 0));
-
                                         }
                                 }
                         }
@@ -161,6 +199,11 @@ public class ClientComponent extends AbstractComponent {
                 }
         }
 
+        /**
+         * Init the connection to the clock component and wait to start
+         * 
+         * @throws Exception
+         */
         private void prepareClockConnection() throws Exception {
                 ClocksServerOutboundPort clockPort = new ClocksServerOutboundPort(
                                 AbstractOutboundPort.generatePortURI(), this);
@@ -178,85 +221,51 @@ public class ClientComponent extends AbstractComponent {
                 this.clock.waitUntilStart();
         }
 
-        private void storeTestResults() throws Exception {
-                File file = new File(filename);
-                if (!file.exists()) {
-                        file.createNewFile();
-                }
-
-                try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
-                                FileChannel channel = randomAccessFile.getChannel()) {
-                        // Acquire the lock
-                        try (FileLock lock = channel.lock()) {
-                                // Move to the end of the file to append data
-                                randomAccessFile.seek(randomAccessFile.length());
-
-                                // If file length is 0, write headers
-                                if (randomAccessFile.length() == 0) {
-                                        randomAccessFile.writeBytes("RequestURI,StartTime,EndTime,Interval,Duration\n");
-                                }
-
-                                // Write each entry to the file
-                                for (Map.Entry<String, QueryMetrics> entry : queryMetrics.entrySet()) {
-                                        QueryMetrics metrics = entry.getValue();
-                                        StringBuilder data = new StringBuilder();
-                                        data.append(entry.getKey()).append(",");
-                                        data.append(metrics.getStartTime()).append(",");
-                                        data.append(metrics.getEndTime()).append(",");
-                                        data.append(metrics.getInterval()).append(",");
-                                        data.append(metrics.getDuration()).append("\n");
-
-                                        randomAccessFile.writeBytes(data.toString());
-                                }
-                        } catch (OverlappingFileLockException e) {
-                                System.err.println(
-                                                "File is already locked in this thread or virtual machine: testResults.csv");
-                        }
-                } catch (IOException e) {
-                        System.err.println("Failed to write to file: " + e.getMessage());
-                }
-        }
-
+        /**
+         * Generate a request URI based on the current time and a random number
+         * 
+         * @param start
+         * @return
+         */
         private String generateRequestURI(Instant start) {
                 return "req" + start.toString() + Math.random();
         }
 
+        /**
+         * Log an error message
+         * 
+         * @param e
+         */
         private void logError(Exception e) {
                 this.logMessage("Error: " + e.getMessage());
         }
 
+        /**
+         * See
+         * {@link fr.sorbonne_u.cps.sensor_network.interfaces.RequestResultCI#acceptRequestResult(String,
+         * QueryResultI)}
+         */
         public void acceptRequestResult(String requestURI, QueryResultI result) throws Exception {
                 this.plugin.acceptRequestResult(requestURI, result);
-
-                // if (this.TESTMODE) {
-                // long endTime = this.clock.currentInstant().toEpochMilli();
-                // QueryMetrics metrics = queryMetrics.get(requestURI);
-                // this.logMessage("Request " + requestURI + " , endTime: " + endTime + " ,
-                // registered endTime: "
-                // + metrics.endTime);
-
-                // // si le temps de la récéoption du résultat est inférieur au temps de fin (
-                // // temps que le client regroupe les résultats)
-                // if (endTime < metrics.endTime) {
-                // metrics.duration = endTime - metrics.startTime;
-                // queryMetrics.put(requestURI, metrics);
-                // }
-                // }
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractComponent#execute()}
+         */
         @Override
         public synchronized void finalise() throws Exception {
-                // this.plugin.finalise();
                 super.finalise();
                 if (this.TESTMODE)
                         try {
-                                // storeTestResults();
                                 this.printExecutionLogOnFile("logRegistry");
                         } catch (Exception e) {
                                 e.printStackTrace();
                         }
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractComponent#shutdown()}
+         */
         @Override
         public synchronized void shutdown() throws ComponentShutdownException {
                 try {
@@ -267,6 +276,9 @@ public class ClientComponent extends AbstractComponent {
                 super.shutdown();
         }
 
+        /**
+         * See {@link fr.sorbonne_u.components.AbstractComponent#shutdownNow()}
+         */
         @Override
         public synchronized void shutdownNow() throws ComponentShutdownException {
                 super.shutdown();
